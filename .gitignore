@@ -4,6 +4,9 @@ build/
 .cxx/
 .externalNativeBuild/
 
+# Ignore google services json
+/app/google-services.json
+
 # Ignore local SDK path
 local.properties
 
@@ -29,4 +32,4 @@ Desktop.ini
 
 # Android specific
 captures/
-output.json
+output.json/
