@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "305704363712",
+    "project_id": "heroic-organizer",
+    "storage_bucket": "heroic-organizer.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:305704363712:android:e789d9fb5d458a91776f25",
+        "android_client_info": {
+          "package_name": "com.example.heroicorganizer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNQrYYsZJqO4kcGsLN4bLVkysTHOWaZkc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
