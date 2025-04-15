@@ -24,11 +24,5 @@ Supported Devices
 - Android smartphones and tablets
 - Requires Android X.X or later
 
-Contributing
-Contributions, feature suggestions, and bug reports are welcome! If you'd like to get involved, please reach out or submit an issue through our GitHub repository (if applicable).
-
-License
-Heroic Organizer is licensed under [Your License Here].
-
 Author
 Developed by Wendell Wilhelm, Alvaro (Al) Torres, and Sora Galavis Delgado.
