@@ -1,0 +1,32 @@
+# Ignore Gradle files
+.gradle/
+build/
+.cxx/
+.externalNativeBuild/
+
+# Ignore local SDK path
+local.properties
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+
+# Ignore compiled binaries
+*.class
+*.apk
+*.ap_
+
+# Ignore logs
+*.log
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# VSCode
+.vscode/
+
+# Android specific
+captures/
+output.json
