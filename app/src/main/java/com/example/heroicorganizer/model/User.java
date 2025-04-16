@@ -7,6 +7,7 @@ import java.util.List;
 
 public class User {
     // User fields
+    private String uid;
     private String firstName;
     private String lastName;
     private String dateOfBirth;
@@ -38,6 +39,7 @@ public class User {
     // Convert user object for Firestore presenter
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
+        map.put("uid", uid);
         map.put("firstName", firstName);
         map.put("lastName", lastName);
         map.put("dateOfBirth", dateOfBirth);
@@ -48,6 +50,9 @@ public class User {
     }
 
     // Getters
+    public String getUid() {
+        return uid;
+    }
     public String getFirstName() {
         return firstName;
     }
@@ -77,6 +82,9 @@ public class User {
     }
 
     // Setters
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
