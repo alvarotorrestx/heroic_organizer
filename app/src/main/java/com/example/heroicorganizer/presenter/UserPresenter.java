@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class UserPresenter {
 
@@ -37,5 +38,16 @@ public class UserPresenter {
                     }
                 })
                 .addOnFailureListener(e -> Log.e(TAG, "Firestore access failed", e));
+    }
+
+    // Create New User
+    public static void createUser(User user) {
+        FirebaseDB
+                .getDb()
+                .collection("users")
+                .document(Objects.requireNonNull(FirebaseDB.getAuth().getUid()))
+                .set(user.toMap())
+                .addOnSuccessListener(unused -> Log.d("UserPresenter", "User with Username: " + user.getUsername() + " created"))
+                .addOnFailureListener(e -> Log.e("UserPresenter", "Error creating user", e));
     }
 }
