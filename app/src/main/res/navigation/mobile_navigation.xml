@@ -22,4 +22,10 @@
             android:name="com.example.heroicorganizer.ui.slideshow.SlideshowFragment"
             android:label="@string/menu_slideshow"
             tools:layout="@layout/fragment_slideshow"/>
+    <fragment
+            android:id="@+id/nav_dev_test"
+            android:name="com.example.heroicorganizer.ui.DevTesting.DevTestFragment"
+            android:label="Dev Test"
+            tools:layout="@layout/fragment_dev_test" />
+
 </navigation>

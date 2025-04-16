@@ -1,0 +1,23 @@
+<!-- res/layout/fragment_dev_test.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="16dp"
+              android:orientation="vertical">
+
+    <Button
+            android:id="@+id/btnLogoutTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Test Logout"/>
+    <Button
+            android:id="@+id/btnLoginTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Test Login"/>
+    <Button
+            android:id="@+id/btnRegisterTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Test Register"/>
+</LinearLayout>
