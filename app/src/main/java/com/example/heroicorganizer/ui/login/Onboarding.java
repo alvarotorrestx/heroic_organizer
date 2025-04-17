@@ -17,7 +17,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.content.Intent;
+import com.example.heroicorganizer.MainActivity;
 import com.example.heroicorganizer.R;
 import com.example.heroicorganizer.databinding.ActivityOnboardingBinding;
 
@@ -40,6 +41,34 @@ private ActivityOnboardingBinding binding;
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.Login;
         final ProgressBar loadingProgressBar = binding.loading;
+
+        final View loginForm = findViewById(R.id.loginForm);
+        final View registerForm = findViewById(R.id.registerForm);
+        final View appTitle = findViewById(R.id.App_Title);
+        final Button loginBtn = findViewById(R.id.Login);
+        final Button registerBtn = findViewById(R.id.Register);
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginForm.setVisibility(View.VISIBLE);
+                registerForm.setVisibility(View.GONE);
+                appTitle.setVisibility(View.GONE);
+                registerBtn.setVisibility(View.GONE);
+            }
+        });
+
+        registerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginForm.setVisibility(View.GONE);
+                registerForm.setVisibility(View.VISIBLE);
+                appTitle.setVisibility(View.GONE);
+                loginBtn.setVisibility(View.GONE);
+            }
+        });
+
+
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -69,11 +98,10 @@ private ActivityOnboardingBinding binding;
                 }
                 if (loginResult.getSuccess() != null) {
                     updateUiWithUser(loginResult.getSuccess());
+                    Intent intent = new Intent(Onboarding.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
-                setResult(Activity.RESULT_OK);
-
-                //Complete and destroy login activity once successful
-                finish();
             }
         });
 

@@ -12,6 +12,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.heroicorganizer.databinding.ActivityMainBinding;
+import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +22,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ///
+        boolean isSignedIn = false; /// hardcoded for now
+        ///
+
+        if (!isSignedIn) {
+            Intent intent = new Intent(this, com.example.heroicorganizer.ui.login.Onboarding.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
