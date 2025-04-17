@@ -21,10 +21,12 @@ import android.widget.Toast;
 import android.content.Intent;
 import com.example.heroicorganizer.MainActivity;
 import com.example.heroicorganizer.R;
+import com.example.heroicorganizer.callback.LoginCallback;
 import com.example.heroicorganizer.callback.RegisterCallback;
 import com.example.heroicorganizer.databinding.ActivityOnboardingBinding;
 import android.app.DatePickerDialog;
 import com.example.heroicorganizer.model.User;
+import com.example.heroicorganizer.presenter.LoginPresenter;
 import com.example.heroicorganizer.presenter.RegisterPresenter;
 import android.content.SharedPreferences;
 
@@ -84,27 +86,52 @@ public class Onboarding extends AppCompatActivity {
         submitLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String inputUsername = usernameEditText.getText().toString().trim();
-                String inputPassword = passwordEditText.getText().toString().trim();
+                String email = usernameEditText.getText().toString().trim();
+                String password = passwordEditText.getText().toString().trim();
 
                 //
                 // TESTER CREDENTIALS JUST TO GET LOGIN WORKING
                 //
-                if (inputUsername.equals("tester1") && inputPassword.equals("Tester123!")) {
+//                if (inputUsername.equals("tester1") && inputPassword.equals("Tester123!")) {
+//
+//                    //storing a boolean state inside new preferences file
+//                    SharedPreferences.Editor editor = getSharedPreferences("heroic_preferences", MODE_PRIVATE).edit();
+//                    editor.putBoolean("isSignedIn", true);
+//                    editor.commit();
+//
+//                    Intent intent = new Intent(Onboarding.this, MainActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    startActivity(intent);
+//                } else {
+//                    Toast.makeText(Onboarding.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+//                }
 
-                    //storing a boolean state inside new preferences file
-                    SharedPreferences.Editor editor = getSharedPreferences("heroic_preferences", MODE_PRIVATE).edit();
-                    editor.putBoolean("isSignedIn", true);
-                    editor.commit();
+                if (email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(Onboarding.this, "Please fill out all the fields.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                    Intent intent = new Intent(Onboarding.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }  else {
-                Toast.makeText(Onboarding.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+                User loginUser = new User();
+                loginUser.setEmail(email);
+                loginUser.setPassword(password);
+
+//                LoginPresenter.loginUser(loginUser);
+
+                LoginPresenter.loginUser(loginUser, new LoginCallback() {
+                    @Override
+                    public void onSuccess(String email) {
+                        Toast.makeText(Onboarding.this, email + " successfully logged in!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(Onboarding.this, MainActivity.class));
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        Toast.makeText(Onboarding.this, errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        }
-    });
+        });
 
         submitRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,10 +276,10 @@ public class Onboarding extends AppCompatActivity {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
- //               if (actionId == EditorInfo.IME_ACTION_DONE) {
+                //               if (actionId == EditorInfo.IME_ACTION_DONE) {
 //                    loginViewModel.login(usernameEditText.getText().toString(),
 //                            passwordEditText.getText().toString());
- //               }
+                //               }
                 return false;
             }
         });
