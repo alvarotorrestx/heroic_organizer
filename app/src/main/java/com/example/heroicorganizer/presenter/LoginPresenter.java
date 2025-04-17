@@ -21,7 +21,7 @@ public class LoginPresenter {
                         FirebaseUser firebaseUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser(), "Firebase user not found");
 
                         // Temporary log for development
-                        Log.d(TAG, "User logged in: " + user.getUsername() + " with uid: " + firebaseUser.getUid());
+                        Log.d(TAG, "User logged in: " + firebaseUser.getEmail() + " with uid: " + firebaseUser.getUid());
                     } else {
                         Log.w("Auth", "Error logging in", task.getException());
                     }
