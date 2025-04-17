@@ -21,11 +21,14 @@ import android.content.Intent;
 import com.example.heroicorganizer.MainActivity;
 import com.example.heroicorganizer.R;
 import com.example.heroicorganizer.databinding.ActivityOnboardingBinding;
+import android.app.DatePickerDialog;
+import java.util.Calendar;
 
 public class Onboarding extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
 private ActivityOnboardingBinding binding;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,62 @@ private ActivityOnboardingBinding binding;
         final View appTitle = findViewById(R.id.App_Title);
         final Button loginBtn = findViewById(R.id.Login);
         final Button registerBtn = findViewById(R.id.Register);
+        final EditText firstNameEditText = findViewById(R.id.createFirstName);
+        final EditText lastNameEditText = findViewById(R.id.createLastName);
+        final EditText dobEditText = findViewById(R.id.dateOfBirth);
+        final Button submitRegisterBtn = findViewById(R.id.submitRegister);
+        final EditText emailEditText = findViewById(R.id.email);
+        final EditText createPasswordEditText = findViewById(R.id.createPassword);
+        final EditText confirmPasswordEditText = findViewById(R.id.confirmPassword);
+
+        dobEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(Onboarding.this,
+                        (view, selectedYear, selectedMonth, selectedDay) -> {
+                            //YYYY-MM-DD
+                            String dob = selectedYear + "-" + String.format("%02d", selectedMonth + 1)
+                                    + "-" + String.format("%02d", selectedDay);
+                            dobEditText.setText(dob);
+                        }, year, month, day);
+
+                datePickerDialog.show();
+            }
+        });
+
+        submitRegisterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String firstName = firstNameEditText.getText().toString().trim();
+                String lastName = lastNameEditText.getText().toString().trim();
+                String dob = dobEditText.getText().toString().trim();
+                String username = usernameEditText.getText().toString().trim();
+                String email = emailEditText.getText().toString().trim();
+                String password = createPasswordEditText.getText().toString().trim();
+                String confirmPassword = confirmPasswordEditText.getText().toString().trim();
+
+                if (firstName.isEmpty() || lastName.isEmpty() || dob.isEmpty() ||
+                        username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+                    Toast.makeText(Onboarding.this, "Please fill out all fields", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (!password.equals(confirmPassword)) {
+                    Toast.makeText(Onboarding.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                /// verify and save credentials here
+
+                startActivity(new Intent(Onboarding.this, MainActivity.class));
+                finish();
+            }
+        });
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,8 +122,10 @@ private ActivityOnboardingBinding binding;
             public void onClick(View v) {
                 loginForm.setVisibility(View.GONE);
                 registerForm.setVisibility(View.VISIBLE);
+                submitRegisterBtn.setVisibility(View.VISIBLE);
                 appTitle.setVisibility(View.GONE);
                 loginBtn.setVisibility(View.GONE);
+                registerBtn.setVisibility(View.GONE);
             }
         });
 
