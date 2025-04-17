@@ -11,8 +11,6 @@ import java.util.Objects;
 
 public class LoginPresenter {
 
-    private static final String TAG = "LoginPresenter";
-
     public static void loginUser(User user, LoginCallback callback) {
         FirebaseDB
                 .getAuth()
@@ -22,15 +20,12 @@ public class LoginPresenter {
                         FirebaseUser firebaseUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser(), "Firebase user not found");
 
                         callback.onSuccess(firebaseUser.getEmail());
-                        Log.d(TAG, "User logged in: " + firebaseUser.getEmail() + " with uid: " + firebaseUser.getUid());
                     } else {
-                        callback.onFailure("Error logging in: " + task.getException().getMessage());
-                        Log.w("Auth", "Error logging in", task.getException());
+                        callback.onFailure("Invalid user credentials.");
                     }
                 })
                 .addOnFailureListener(e -> {
-                    callback.onFailure("Error logging in: " + e.getMessage());
-                    Log.w(TAG, "Error logging in", e);
+                    callback.onFailure("Login failed. Please try again.");
                 });
     }
 }

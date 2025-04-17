@@ -14,14 +14,12 @@ import java.util.regex.Pattern;
 
 public class RegisterPresenter {
 
-    private static final String TAG = "RegisterPresenter";
-
     private static final Pattern USERNAME_REGEX = Pattern.compile("^[a-z0-9-]{5,30}$");
 
     public static void registerUser(User user, RegisterCallback callback) {
         // Validate username format before registering
         if (!USERNAME_REGEX.matcher(user.getUsername()).matches()) {
-            Log.w(TAG, "Invalid username format: " + user.getUsername());
+            callback.onFailure("Invalid username format: " + user.getUsername());
             return;
         }
 
@@ -50,11 +48,11 @@ public class RegisterPresenter {
 
                                     callback.onSuccess(user.getUsername());
                                 } else {
-                                    callback.onFailure("Error registering: " + authTask.getException().getMessage());
+                                    callback.onFailure("Email is already in use.");
                                 }
                             })
                             .addOnFailureListener(e -> {
-                                callback.onFailure("Error registering: " + e.getMessage());
+                                callback.onFailure("Registration failed. Please try again.");
                             });
                 })
                 .addOnFailureListener(e -> callback.onFailure("Username check failed: " + e.getMessage()));

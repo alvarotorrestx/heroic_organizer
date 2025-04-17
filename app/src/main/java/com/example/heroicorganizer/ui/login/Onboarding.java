@@ -2,6 +2,7 @@ package com.example.heroicorganizer.ui.login;
 
 import android.app.Activity;
 import android.util.Log;
+import android.util.Patterns;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
@@ -89,25 +90,14 @@ public class Onboarding extends AppCompatActivity {
                 String email = usernameEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
 
-                //
-                // TESTER CREDENTIALS JUST TO GET LOGIN WORKING
-                //
-//                if (inputUsername.equals("tester1") && inputPassword.equals("Tester123!")) {
-//
-//                    //storing a boolean state inside new preferences file
-//                    SharedPreferences.Editor editor = getSharedPreferences("heroic_preferences", MODE_PRIVATE).edit();
-//                    editor.putBoolean("isSignedIn", true);
-//                    editor.commit();
-//
-//                    Intent intent = new Intent(Onboarding.this, MainActivity.class);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    startActivity(intent);
-//                } else {
-//                    Toast.makeText(Onboarding.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
-//                }
 
                 if (email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(Onboarding.this, "Please fill out all the fields.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    Toast.makeText(Onboarding.this, "Invalid email format", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -115,18 +105,33 @@ public class Onboarding extends AppCompatActivity {
                 loginUser.setEmail(email);
                 loginUser.setPassword(password);
 
-//                LoginPresenter.loginUser(loginUser);
+                // Disable the login button
+                submitLoginBtn.setEnabled(false);
+                // Show loading on login submit
+                Toast.makeText(Onboarding.this, "Loading...", Toast.LENGTH_SHORT).show();
 
                 LoginPresenter.loginUser(loginUser, new LoginCallback() {
                     @Override
                     public void onSuccess(String email) {
+                        submitLoginBtn.setEnabled(true);
                         Toast.makeText(Onboarding.this, email + " successfully logged in!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Onboarding.this, MainActivity.class));
+
+                        //storing a boolean state inside new preferences file
+                        SharedPreferences.Editor editor = getSharedPreferences("heroic_preferences", MODE_PRIVATE).edit();
+                        editor.putBoolean("isSignedIn", true);
+                        editor.apply();
+
+                        // Update to MainActivity to Dashboard once ready
+                        Intent intent = new Intent(Onboarding.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+
                         finish();
                     }
 
                     @Override
                     public void onFailure(String errorMessage) {
+                        submitLoginBtn.setEnabled(true);
                         Toast.makeText(Onboarding.this, errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -188,8 +193,8 @@ public class Onboarding extends AppCompatActivity {
                     return;
                 }
 
-                if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-                    Toast.makeText(Onboarding.this, "Email must be valid.\ne.g. bwayne@wayneenterprises.com", Toast.LENGTH_SHORT).show();
+                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    Toast.makeText(Onboarding.this, "Invalid email format", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -205,6 +210,8 @@ public class Onboarding extends AppCompatActivity {
                     return;
                 }
 
+                // Disable the register button
+                submitRegisterBtn.setEnabled(false);
                 // Show loading on register submit
                 Toast.makeText(Onboarding.this, "Loading...", Toast.LENGTH_SHORT).show();
 
@@ -214,6 +221,7 @@ public class Onboarding extends AppCompatActivity {
                 RegisterPresenter.registerUser(newUser, new RegisterCallback() {
                     @Override
                     public void onSuccess(String username) {
+                        submitRegisterBtn.setEnabled(true);
                         Toast.makeText(Onboarding.this, username + " successfully registered!", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(Onboarding.this, MainActivity.class));
                         finish();
@@ -221,6 +229,7 @@ public class Onboarding extends AppCompatActivity {
 
                     @Override
                     public void onFailure(String errorMessage) {
+                        submitRegisterBtn.setEnabled(true);
                         Toast.makeText(Onboarding.this, errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
