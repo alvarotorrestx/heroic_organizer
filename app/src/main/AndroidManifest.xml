@@ -23,6 +23,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".ui.login.Onboarding"
+                  android:exported="true"
+                  android:label="Onboarding"
+                  android:theme="@style/Theme.HeroicOrganizer.NoActionBar"/>
     </application>
 
 </manifest>
