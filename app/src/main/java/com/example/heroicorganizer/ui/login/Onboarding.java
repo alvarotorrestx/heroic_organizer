@@ -21,6 +21,7 @@ import android.widget.Toast;
 import android.content.Intent;
 import com.example.heroicorganizer.MainActivity;
 import com.example.heroicorganizer.R;
+import com.example.heroicorganizer.callback.RegisterCallback;
 import com.example.heroicorganizer.databinding.ActivityOnboardingBinding;
 import android.app.DatePickerDialog;
 import com.example.heroicorganizer.model.User;
@@ -90,6 +91,7 @@ public class Onboarding extends AppCompatActivity {
                 String password = createPasswordEditText.getText().toString().trim();
                 String confirmPassword = confirmPasswordEditText.getText().toString().trim();
 
+
                 if (firstName.isEmpty() || lastName.isEmpty() || dob.isEmpty() ||
                         username.isEmpty() || email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(Onboarding.this, "Please fill out all the fields.", Toast.LENGTH_SHORT).show();
@@ -103,6 +105,28 @@ public class Onboarding extends AppCompatActivity {
 
                 if (!lastName.matches("^[a-zA-Z][a-zA-Z\\- ]{1,49}$")) {
                     Toast.makeText(Onboarding.this, "Last Name must be 2–50 characters.\nLetters, spaces, and hyphens (-) allowed.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Age limiter - 13 yrs
+                String[] parts = dob.split("-");
+                if (parts.length != 3) {
+                    Toast.makeText(Onboarding.this, "Date of Birth must be in format YYYY-MM-DD", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                int year = Integer.parseInt(parts[0]);
+                int month = Integer.parseInt(parts[1]) - 1;
+                int day = Integer.parseInt(parts[2]);
+
+                Calendar birthDate = Calendar.getInstance();
+                birthDate.set(year, month, day);
+
+                Calendar todayMinus13 = Calendar.getInstance();
+                todayMinus13.add(Calendar.YEAR, -13);
+
+                // If birthDate is less than 13 years
+                if (birthDate.after(todayMinus13)) {
+                    Toast.makeText(Onboarding.this, "You must be at least 13 years old to register.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -128,12 +152,24 @@ public class Onboarding extends AppCompatActivity {
                     return;
                 }
 
+                // Show loading on register submit
+                Toast.makeText(Onboarding.this, "Loading...", Toast.LENGTH_SHORT).show();
+
                 /// verify and save credentials here
                 User newUser = new User(firstName, lastName, dob, email, username, password, "user");
-                RegisterPresenter.registerUser(newUser);
+                RegisterPresenter.registerUser(newUser, new RegisterCallback() {
+                    @Override
+                    public void onSuccess(String username) {
+                        Toast.makeText(Onboarding.this, username + " successfully registered!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(Onboarding.this, MainActivity.class));
+                        finish();
+                    }
 
-                startActivity(new Intent(Onboarding.this, MainActivity.class));
-                finish();
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        Toast.makeText(Onboarding.this, errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
