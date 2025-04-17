@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.heroicorganizer.databinding.ActivityMainBinding;
 import android.content.Intent;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -24,13 +25,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         ///
-        boolean isSignedIn = false; /// hardcoded for now
+        boolean isSignedIn = getSharedPreferences("heroic_preferences", MODE_PRIVATE)
+                .getBoolean("isSignedIn", false);
         ///
 
         if (!isSignedIn) {
             Intent intent = new Intent(this, com.example.heroicorganizer.ui.login.Onboarding.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish();
             return;
         }
 
