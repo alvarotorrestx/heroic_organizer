@@ -1,6 +1,7 @@
-package  com.example.heroicorganizer.ui.login;
+package com.example.heroicorganizer.ui.login;
 
 import android.app.Activity;
+import android.util.Log;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
@@ -22,23 +23,22 @@ import com.example.heroicorganizer.MainActivity;
 import com.example.heroicorganizer.R;
 import com.example.heroicorganizer.databinding.ActivityOnboardingBinding;
 import android.app.DatePickerDialog;
+import com.example.heroicorganizer.model.User;
+import com.example.heroicorganizer.presenter.RegisterPresenter;
+
 import java.util.Calendar;
 
 public class Onboarding extends AppCompatActivity {
 
-    private LoginViewModel loginViewModel;
-private ActivityOnboardingBinding binding;
+    private ActivityOnboardingBinding binding;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-     binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
-     setContentView(binding.getRoot());
-
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+        binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
@@ -53,6 +53,7 @@ private ActivityOnboardingBinding binding;
         final EditText firstNameEditText = findViewById(R.id.createFirstName);
         final EditText lastNameEditText = findViewById(R.id.createLastName);
         final EditText dobEditText = findViewById(R.id.dateOfBirth);
+        final EditText registerUsernameEditText = findViewById(R.id.createUsername);
         final Button submitRegisterBtn = findViewById(R.id.submitRegister);
         final EditText emailEditText = findViewById(R.id.email);
         final EditText createPasswordEditText = findViewById(R.id.createPassword);
@@ -84,14 +85,41 @@ private ActivityOnboardingBinding binding;
                 String firstName = firstNameEditText.getText().toString().trim();
                 String lastName = lastNameEditText.getText().toString().trim();
                 String dob = dobEditText.getText().toString().trim();
-                String username = usernameEditText.getText().toString().trim();
+                String username = registerUsernameEditText.getText().toString().trim();
                 String email = emailEditText.getText().toString().trim();
                 String password = createPasswordEditText.getText().toString().trim();
                 String confirmPassword = confirmPasswordEditText.getText().toString().trim();
 
                 if (firstName.isEmpty() || lastName.isEmpty() || dob.isEmpty() ||
-                        username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                    Toast.makeText(Onboarding.this, "Please fill out all fields", Toast.LENGTH_SHORT).show();
+                        username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(Onboarding.this, "Please fill out all the fields.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (!firstName.matches("^[a-zA-Z][a-zA-Z\\- ]{1,49}$")) {
+                    Toast.makeText(Onboarding.this, "First Name must be 2–50 characters.\nLetters, spaces, and hyphens (-) allowed.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (!lastName.matches("^[a-zA-Z][a-zA-Z\\- ]{1,49}$")) {
+                    Toast.makeText(Onboarding.this, "Last Name must be 2–50 characters.\nLetters, spaces, and hyphens (-) allowed.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (!username.matches("^[a-z0-9-]{5,30}$")) {
+                    Toast.makeText(Onboarding.this, "Username must be 5–30 lowercase characters.\nLetters, numbers, and hyphens (-) allowed.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+                    Toast.makeText(Onboarding.this, "Email must be valid.\ne.g. bwayne@wayneenterprises.com", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$")) {
+                    Toast.makeText(Onboarding.this,
+                            "Password must be 8–24 characters. Uppercase letter. Lowercase letter. Number. Special character (!@#$%).",
+                            Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -101,6 +129,8 @@ private ActivityOnboardingBinding binding;
                 }
 
                 /// verify and save credentials here
+                User newUser = new User(firstName, lastName, dob, email, username, password, "user");
+                RegisterPresenter.registerUser(newUser);
 
                 startActivity(new Intent(Onboarding.this, MainActivity.class));
                 finish();
@@ -130,42 +160,6 @@ private ActivityOnboardingBinding binding;
         });
 
 
-
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
-            @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) {
-                    return;
-                }
-                loginButton.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
-                }
-                if (loginFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
-                }
-            }
-        });
-
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
-            @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-                loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
-                    Intent intent = new Intent(Onboarding.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-        });
-
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -179,8 +173,8 @@ private ActivityOnboardingBinding binding;
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+//                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
+//                        passwordEditText.getText().toString());
             }
         };
         usernameEditText.addTextChangedListener(afterTextChangedListener);
@@ -190,8 +184,8 @@ private ActivityOnboardingBinding binding;
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
+//                    loginViewModel.login(usernameEditText.getText().toString(),
+//                            passwordEditText.getText().toString());
                 }
                 return false;
             }
@@ -201,8 +195,8 @@ private ActivityOnboardingBinding binding;
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+//                loginViewModel.login(usernameEditText.getText().toString(),
+//                        passwordEditText.getText().toString());
             }
         });
     }
