@@ -26,13 +26,13 @@ import com.example.heroicorganizer.databinding.ActivityOnboardingBinding;
 import android.app.DatePickerDialog;
 import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.RegisterPresenter;
+import android.content.SharedPreferences;
 
 import java.util.Calendar;
 
 public class Onboarding extends AppCompatActivity {
 
     private ActivityOnboardingBinding binding;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class Onboarding extends AppCompatActivity {
 
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
-        final Button loginButton = binding.Login;
+        ///final Button loginButton = binding.Login;
         final ProgressBar loadingProgressBar = binding.loading;
 
         final View loginForm = findViewById(R.id.loginForm);
@@ -56,6 +56,7 @@ public class Onboarding extends AppCompatActivity {
         final EditText dobEditText = findViewById(R.id.dateOfBirth);
         final EditText registerUsernameEditText = findViewById(R.id.createUsername);
         final Button submitRegisterBtn = findViewById(R.id.submitRegister);
+        final Button submitLoginBtn = findViewById(R.id.submitLogin);
         final EditText emailEditText = findViewById(R.id.email);
         final EditText createPasswordEditText = findViewById(R.id.createPassword);
         final EditText confirmPasswordEditText = findViewById(R.id.confirmPassword);
@@ -79,6 +80,31 @@ public class Onboarding extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
+
+        submitLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String inputUsername = usernameEditText.getText().toString().trim();
+                String inputPassword = passwordEditText.getText().toString().trim();
+
+                //
+                // TESTER CREDENTIALS JUST TO GET LOGIN WORKING
+                //
+                if (inputUsername.equals("tester1") && inputPassword.equals("Tester123!")) {
+
+                    //storing a boolean state inside new preferences file
+                    SharedPreferences.Editor editor = getSharedPreferences("heroic_preferences", MODE_PRIVATE).edit();
+                    editor.putBoolean("isSignedIn", true);
+                    editor.commit();
+
+                    Intent intent = new Intent(Onboarding.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }  else {
+                Toast.makeText(Onboarding.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+            }
+        }
+    });
 
         submitRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,6 +183,7 @@ public class Onboarding extends AppCompatActivity {
 
                 /// verify and save credentials here
                 User newUser = new User(firstName, lastName, dob, email, username, password, "user");
+
                 RegisterPresenter.registerUser(newUser, new RegisterCallback() {
                     @Override
                     public void onSuccess(String username) {
@@ -177,6 +204,8 @@ public class Onboarding extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loginForm.setVisibility(View.VISIBLE);
+                submitLoginBtn.setVisibility(View.VISIBLE);
+                loginBtn.setVisibility(View.GONE);
                 registerForm.setVisibility(View.GONE);
                 appTitle.setVisibility(View.GONE);
                 registerBtn.setVisibility(View.GONE);
@@ -213,28 +242,22 @@ public class Onboarding extends AppCompatActivity {
 //                        passwordEditText.getText().toString());
             }
         };
+
         usernameEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+ //               if (actionId == EditorInfo.IME_ACTION_DONE) {
 //                    loginViewModel.login(usernameEditText.getText().toString(),
 //                            passwordEditText.getText().toString());
-                }
+ //               }
                 return false;
             }
         });
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-//                loginViewModel.login(usernameEditText.getText().toString(),
-//                        passwordEditText.getText().toString());
-            }
-        });
+
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
