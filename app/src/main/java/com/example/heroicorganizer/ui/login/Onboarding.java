@@ -30,8 +30,9 @@ import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LoginPresenter;
 import com.example.heroicorganizer.presenter.RegisterPresenter;
 import android.content.SharedPreferences;
-
 import java.util.Calendar;
+import com.example.heroicorganizer.ui.ToastMsg;
+
 
 public class Onboarding extends AppCompatActivity {
 
@@ -46,9 +47,6 @@ public class Onboarding extends AppCompatActivity {
 
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
-        ///final Button loginButton = binding.Login;
-        final ProgressBar loadingProgressBar = binding.loading;
-
         final View loginForm = findViewById(R.id.loginForm);
         final View registerForm = findViewById(R.id.registerForm);
         final View appTitle = findViewById(R.id.App_Title);
@@ -63,6 +61,24 @@ public class Onboarding extends AppCompatActivity {
         final EditText emailEditText = findViewById(R.id.email);
         final EditText createPasswordEditText = findViewById(R.id.createPassword);
         final EditText confirmPasswordEditText = findViewById(R.id.confirmPassword);
+        final Button backBtn = findViewById(R.id.back);
+
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (loginForm.getVisibility() == View.VISIBLE || registerForm.getVisibility() == View.VISIBLE) {
+                    registerForm.setVisibility(View.GONE);
+                    loginForm.setVisibility(View.GONE);
+                    submitRegisterBtn.setVisibility(View.GONE);
+                    submitLoginBtn.setVisibility(View.GONE);
+                    appTitle.setVisibility(View.VISIBLE);
+                    loginBtn.setVisibility(View.VISIBLE);
+                    registerBtn.setVisibility(View.VISIBLE);
+                    backBtn.setVisibility(View.GONE);
+                }
+            }
+        });
 
         dobEditText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +103,7 @@ public class Onboarding extends AppCompatActivity {
         submitLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String email = usernameEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
 
@@ -152,17 +169,17 @@ public class Onboarding extends AppCompatActivity {
 
                 if (firstName.isEmpty() || lastName.isEmpty() || dob.isEmpty() ||
                         username.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(Onboarding.this, "Please fill out all the fields.", Toast.LENGTH_SHORT).show();
+                    ToastMsg.show(Onboarding.this, "Please fill out all the fields.");
                     return;
                 }
 
                 if (!firstName.matches("^[a-zA-Z][a-zA-Z\\- ]{1,49}$")) {
-                    Toast.makeText(Onboarding.this, "First Name must be 2–50 characters.\nLetters, spaces, and hyphens (-) allowed.", Toast.LENGTH_SHORT).show();
+                    ToastMsg.show(Onboarding.this, "First Name must be 2–50 characters.\nLetters, spaces, and hyphens (-) allowed.");
                     return;
                 }
 
                 if (!lastName.matches("^[a-zA-Z][a-zA-Z\\- ]{1,49}$")) {
-                    Toast.makeText(Onboarding.this, "Last Name must be 2–50 characters.\nLetters, spaces, and hyphens (-) allowed.", Toast.LENGTH_SHORT).show();
+                    ToastMsg.show(Onboarding.this, "Last Name must be 2–50 characters.\nLetters, spaces, and hyphens (-) allowed.");
                     return;
                 }
 
@@ -189,7 +206,7 @@ public class Onboarding extends AppCompatActivity {
                 }
 
                 if (!username.matches("^[a-z0-9-]{5,30}$")) {
-                    Toast.makeText(Onboarding.this, "Username must be 5–30 lowercase characters.\nLetters, numbers, and hyphens (-) allowed.", Toast.LENGTH_SHORT).show();
+                    ToastMsg.show(Onboarding.this, "Username must be 5–30 lowercase characters.\nLetters, numbers, and hyphens (-) allowed.");
                     return;
                 }
 
@@ -199,14 +216,13 @@ public class Onboarding extends AppCompatActivity {
                 }
 
                 if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$")) {
-                    Toast.makeText(Onboarding.this,
-                            "Password must be 8–24 characters. Uppercase letter. Lowercase letter. Number. Special character (!@#$%).",
-                            Toast.LENGTH_LONG).show();
+                    ToastMsg.show(Onboarding.this,
+                            "Password must be 8–24 characters. Uppercase letter. Lowercase letter. Number. Special character (!@#$%).");
                     return;
                 }
 
                 if (!password.equals(confirmPassword)) {
-                    Toast.makeText(Onboarding.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+                    ToastMsg.show(Onboarding.this, "Passwords do not match");
                     return;
                 }
 
@@ -217,6 +233,7 @@ public class Onboarding extends AppCompatActivity {
 
                 /// verify and save credentials here
                 User newUser = new User(firstName, lastName, dob, email, username, password, "user");
+
 
                 RegisterPresenter.registerUser(newUser, new RegisterCallback() {
                     @Override
@@ -245,6 +262,7 @@ public class Onboarding extends AppCompatActivity {
                 registerForm.setVisibility(View.GONE);
                 appTitle.setVisibility(View.GONE);
                 registerBtn.setVisibility(View.GONE);
+                backBtn.setVisibility(View.VISIBLE);
             }
         });
 
@@ -257,6 +275,7 @@ public class Onboarding extends AppCompatActivity {
                 appTitle.setVisibility(View.GONE);
                 loginBtn.setVisibility(View.GONE);
                 registerBtn.setVisibility(View.GONE);
+                backBtn.setVisibility(View.VISIBLE);
             }
         });
 
@@ -299,10 +318,10 @@ public class Onboarding extends AppCompatActivity {
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful logged in experience
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+        ToastMsg.show(getApplicationContext(), welcome);
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+
     }
 }

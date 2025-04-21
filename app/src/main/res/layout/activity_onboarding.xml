@@ -13,6 +13,19 @@
         tools:context=".ui.login.Onboarding" android:background="@drawable/h_o_bgimage">
 
 
+    <Button
+            android:id="@+id/back"
+            android:enabled="true"
+            android:layout_width="90dp"
+            android:layout_height="50dp"
+            android:layout_gravity="start"
+            android:text="Back"
+            android:backgroundTint="#4C0945" android:textColor="@color/white" app:strokeColor="@color/white"
+            app:strokeWidth="2.5sp"
+            android:visibility="gone" tools:visibility="visible"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="32dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="24dp"/>
     <LinearLayout
             android:id="@+id/loginForm"
             android:layout_width="0dp"
@@ -166,7 +179,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:id="@+id/Register"
             android:backgroundTint="#4C0945" android:textColor="@color/white"
-            app:strokeWidth="2.5sp" app:strokeColor="@color/white" />
+            app:strokeWidth="2.5sp" app:strokeColor="@color/white"/>
     <Button
             android:id="@+id/submitRegister" android:visibility="gone"
             android:enabled="true"
