@@ -1,6 +1,7 @@
 package com.example.heroicorganizer.presenter;
 
 import android.util.Log;
+import com.example.heroicorganizer.callback.LoginCallback;
 import com.example.heroicorganizer.config.FirebaseDB;
 import com.example.heroicorganizer.model.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -10,9 +11,7 @@ import java.util.Objects;
 
 public class LoginPresenter {
 
-    private static final String TAG = "LoginPresenter";
-
-    public static void loginUser(User user) {
+    public static void loginUser(User user, LoginCallback callback) {
         FirebaseDB
                 .getAuth()
                 .signInWithEmailAndPassword(user.getEmail(), user.getPassword())
@@ -20,14 +19,13 @@ public class LoginPresenter {
                     if (task.isSuccessful()) {
                         FirebaseUser firebaseUser = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser(), "Firebase user not found");
 
-                        // Temporary log for development
-                        Log.d(TAG, "User logged in: " + firebaseUser.getEmail() + " with uid: " + firebaseUser.getUid());
+                        callback.onSuccess(firebaseUser.getEmail());
                     } else {
-                        Log.w("Auth", "Error logging in", task.getException());
+                        callback.onFailure("Invalid user credentials.");
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.w(TAG, "Error logging in", e);
+                    callback.onFailure("Login failed. Please try again.");
                 });
     }
 }

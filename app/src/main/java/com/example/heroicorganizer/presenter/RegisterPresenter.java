@@ -1,6 +1,7 @@
 package com.example.heroicorganizer.presenter;
 
 import android.util.Log;
+import com.example.heroicorganizer.callback.RegisterCallback;
 import com.example.heroicorganizer.config.FirebaseDB;
 import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.UserPresenter;
@@ -13,14 +14,12 @@ import java.util.regex.Pattern;
 
 public class RegisterPresenter {
 
-    private static final String TAG = "RegisterPresenter";
-
     private static final Pattern USERNAME_REGEX = Pattern.compile("^[a-z0-9-]{5,30}$");
 
-    public static void registerUser(User user) {
+    public static void registerUser(User user, RegisterCallback callback) {
         // Validate username format before registering
         if (!USERNAME_REGEX.matcher(user.getUsername()).matches()) {
-            Log.w(TAG, "Invalid username format: " + user.getUsername());
+            callback.onFailure("Invalid username format: " + user.getUsername());
             return;
         }
 
@@ -32,7 +31,7 @@ public class RegisterPresenter {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        Log.w(TAG, "Username already exists: " + user.getUsername());
+                        callback.onFailure("Username already exists");
                         return;
                     }
 
@@ -43,19 +42,19 @@ public class RegisterPresenter {
                                 if (authTask.isSuccessful()) {
                                     FirebaseUser firebaseUser = Objects.requireNonNull(FirebaseDB.getAuth().getCurrentUser(), "Firebase user not found");
 
-                                    // Temporary log for development
-                                    Log.d(TAG, "User registered: " + user.getUsername() + " with uid: " + firebaseUser.getUid());
-
                                     user.setUid(firebaseUser.getUid());
+
                                     UserPresenter.createUser(user);
+
+                                    callback.onSuccess(user.getUsername());
                                 } else {
-                                    Log.w("Auth", "Error registering", authTask.getException());
+                                    callback.onFailure("Email is already in use.");
                                 }
                             })
                             .addOnFailureListener(e -> {
-                                Log.w(TAG, "Error registering", e);
+                                callback.onFailure("Registration failed. Please try again.");
                             });
                 })
-                .addOnFailureListener(e -> Log.w(TAG, "Error checking username uniqueness", e));
+                .addOnFailureListener(e -> callback.onFailure("Username check failed: " + e.getMessage()));
     }
 }
