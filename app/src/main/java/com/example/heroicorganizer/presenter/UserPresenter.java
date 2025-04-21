@@ -47,8 +47,8 @@ public class UserPresenter {
                 .collection("users")
                 .document(Objects.requireNonNull(FirebaseDB.getAuth().getUid()))
                 .set(user.toMap())
-                .addOnSuccessListener(unused -> Log.d("UserPresenter", "User with Username: " + user.getUsername() + " created"))
-                .addOnFailureListener(e -> Log.e("UserPresenter", "Error creating user", e));
+                .addOnSuccessListener(unused -> Log.d(TAG, "User with Username: " + user.getUsername() + " created"))
+                .addOnFailureListener(e -> Log.e(TAG, "Error creating user", e));
     }
 
     // Update User
@@ -65,6 +65,21 @@ public class UserPresenter {
                         Log.e(TAG, "You are not authorized to update this user.");
                     }
                 })
-                .addOnFailureListener(e -> Log.e("UserPresenter", "Error modifying user", e));
+                .addOnFailureListener(e -> Log.e(TAG, "Error modifying user", e));
+    }
+
+    // Delete User
+    public static void deleteUser(User user) {
+        FirebaseDB
+                .getDb()
+                .collection("users")
+                .document(Objects.requireNonNull(FirebaseDB.getAuth().getUid()))
+                .delete()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.e(TAG, "User deleted successfully.");
+                    }
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Error deleting user", e));
     }
 }
