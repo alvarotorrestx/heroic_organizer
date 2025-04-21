@@ -50,4 +50,21 @@ public class UserPresenter {
                 .addOnSuccessListener(unused -> Log.d("UserPresenter", "User with Username: " + user.getUsername() + " created"))
                 .addOnFailureListener(e -> Log.e("UserPresenter", "Error creating user", e));
     }
+
+    // Update User
+    public static void updateUser(User user) {
+        FirebaseDB
+                .getDb()
+                .collection("users")
+                .document(Objects.requireNonNull(FirebaseDB.getAuth().getUid()))
+                .update(user.toMap())
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.e(TAG, "User updated successfully.");
+                    } else {
+                        Log.e(TAG, "You are not authorized to update this user.");
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("UserPresenter", "Error modifying user", e));
+    }
 }
