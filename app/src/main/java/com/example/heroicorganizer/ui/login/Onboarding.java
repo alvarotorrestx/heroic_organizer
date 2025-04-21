@@ -2,6 +2,7 @@ package com.example.heroicorganizer.ui.login;
 
 import android.app.Activity;
 import android.util.Log;
+import android.util.Patterns;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
@@ -21,10 +22,12 @@ import android.widget.Toast;
 import android.content.Intent;
 import com.example.heroicorganizer.MainActivity;
 import com.example.heroicorganizer.R;
+import com.example.heroicorganizer.callback.LoginCallback;
 import com.example.heroicorganizer.callback.RegisterCallback;
 import com.example.heroicorganizer.databinding.ActivityOnboardingBinding;
 import android.app.DatePickerDialog;
 import com.example.heroicorganizer.model.User;
+import com.example.heroicorganizer.presenter.LoginPresenter;
 import com.example.heroicorganizer.presenter.RegisterPresenter;
 import android.content.SharedPreferences;
 
@@ -84,27 +87,56 @@ public class Onboarding extends AppCompatActivity {
         submitLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String inputUsername = usernameEditText.getText().toString().trim();
-                String inputPassword = passwordEditText.getText().toString().trim();
+                String email = usernameEditText.getText().toString().trim();
+                String password = passwordEditText.getText().toString().trim();
 
-                //
-                // TESTER CREDENTIALS JUST TO GET LOGIN WORKING
-                //
-                if (inputUsername.equals("tester1") && inputPassword.equals("Tester123!")) {
 
-                    //storing a boolean state inside new preferences file
-                    SharedPreferences.Editor editor = getSharedPreferences("heroic_preferences", MODE_PRIVATE).edit();
-                    editor.putBoolean("isSignedIn", true);
-                    editor.commit();
+                if (email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(Onboarding.this, "Please fill out all the fields.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                    Intent intent = new Intent(Onboarding.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }  else {
-                Toast.makeText(Onboarding.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
+                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    Toast.makeText(Onboarding.this, "Invalid email format", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                User loginUser = new User();
+                loginUser.setEmail(email);
+                loginUser.setPassword(password);
+
+                // Disable the login button
+                submitLoginBtn.setEnabled(false);
+                // Show loading on login submit
+                Toast.makeText(Onboarding.this, "Loading...", Toast.LENGTH_SHORT).show();
+
+                LoginPresenter.loginUser(loginUser, new LoginCallback() {
+                    @Override
+                    public void onSuccess(String email) {
+                        submitLoginBtn.setEnabled(true);
+                        Toast.makeText(Onboarding.this, email + " successfully logged in!", Toast.LENGTH_SHORT).show();
+
+                        //storing a boolean state inside new preferences file
+                        SharedPreferences.Editor editor = getSharedPreferences("heroic_preferences", MODE_PRIVATE).edit();
+                        editor.putBoolean("isSignedIn", true);
+                        editor.apply();
+
+                        // Update to MainActivity to Dashboard once ready
+                        Intent intent = new Intent(Onboarding.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        submitLoginBtn.setEnabled(true);
+                        Toast.makeText(Onboarding.this, errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        }
-    });
+        });
 
         submitRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,8 +193,8 @@ public class Onboarding extends AppCompatActivity {
                     return;
                 }
 
-                if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-                    Toast.makeText(Onboarding.this, "Email must be valid.\ne.g. bwayne@wayneenterprises.com", Toast.LENGTH_SHORT).show();
+                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    Toast.makeText(Onboarding.this, "Invalid email format", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -178,6 +210,8 @@ public class Onboarding extends AppCompatActivity {
                     return;
                 }
 
+                // Disable the register button
+                submitRegisterBtn.setEnabled(false);
                 // Show loading on register submit
                 Toast.makeText(Onboarding.this, "Loading...", Toast.LENGTH_SHORT).show();
 
@@ -187,6 +221,7 @@ public class Onboarding extends AppCompatActivity {
                 RegisterPresenter.registerUser(newUser, new RegisterCallback() {
                     @Override
                     public void onSuccess(String username) {
+                        submitRegisterBtn.setEnabled(true);
                         Toast.makeText(Onboarding.this, username + " successfully registered!", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(Onboarding.this, MainActivity.class));
                         finish();
@@ -194,6 +229,7 @@ public class Onboarding extends AppCompatActivity {
 
                     @Override
                     public void onFailure(String errorMessage) {
+                        submitRegisterBtn.setEnabled(true);
                         Toast.makeText(Onboarding.this, errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -249,10 +285,10 @@ public class Onboarding extends AppCompatActivity {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
- //               if (actionId == EditorInfo.IME_ACTION_DONE) {
+                //               if (actionId == EditorInfo.IME_ACTION_DONE) {
 //                    loginViewModel.login(usernameEditText.getText().toString(),
 //                            passwordEditText.getText().toString());
- //               }
+                //               }
                 return false;
             }
         });
