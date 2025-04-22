@@ -109,12 +109,12 @@ public class Onboarding extends AppCompatActivity {
 
 
                 if (email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(Onboarding.this, "Please fill out all the fields.", Toast.LENGTH_SHORT).show();
+                    ToastMsg.show(Onboarding.this, "Please fill out all the fields.");
                     return;
                 }
 
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    Toast.makeText(Onboarding.this, "Invalid email format", Toast.LENGTH_SHORT).show();
+                    ToastMsg.show(Onboarding.this, "Invalid email format");
                     return;
                 }
 
@@ -125,13 +125,13 @@ public class Onboarding extends AppCompatActivity {
                 // Disable the login button
                 submitLoginBtn.setEnabled(false);
                 // Show loading on login submit
-                Toast.makeText(Onboarding.this, "Loading...", Toast.LENGTH_SHORT).show();
+                ToastMsg.show(Onboarding.this, "Loading...");
 
                 LoginPresenter.loginUser(loginUser, new LoginCallback() {
                     @Override
                     public void onSuccess(String email) {
                         submitLoginBtn.setEnabled(true);
-                        Toast.makeText(Onboarding.this, email + " successfully logged in!", Toast.LENGTH_SHORT).show();
+                        ToastMsg.show(Onboarding.this, email + " successfully logged in!");
 
                         //storing a boolean state inside new preferences file
                         SharedPreferences.Editor editor = getSharedPreferences("heroic_preferences", MODE_PRIVATE).edit();
@@ -149,7 +149,7 @@ public class Onboarding extends AppCompatActivity {
                     @Override
                     public void onFailure(String errorMessage) {
                         submitLoginBtn.setEnabled(true);
-                        Toast.makeText(Onboarding.this, errorMessage, Toast.LENGTH_SHORT).show();
+                        ToastMsg.show(Onboarding.this, errorMessage);
                     }
                 });
             }
@@ -186,7 +186,7 @@ public class Onboarding extends AppCompatActivity {
                 // Age limiter - 13 yrs
                 String[] parts = dob.split("-");
                 if (parts.length != 3) {
-                    Toast.makeText(Onboarding.this, "Date of Birth must be in format YYYY-MM-DD", Toast.LENGTH_SHORT).show();
+                    ToastMsg.show(Onboarding.this, "Date of Birth must be in format YYYY-MM-DD");
                     return;
                 }
                 int year = Integer.parseInt(parts[0]);
@@ -201,7 +201,7 @@ public class Onboarding extends AppCompatActivity {
 
                 // If birthDate is less than 13 years
                 if (birthDate.after(todayMinus13)) {
-                    Toast.makeText(Onboarding.this, "You must be at least 13 years old to register.", Toast.LENGTH_SHORT).show();
+                    ToastMsg.show(Onboarding.this, "You must be at least 13 years old to register.");
                     return;
                 }
 
@@ -211,7 +211,7 @@ public class Onboarding extends AppCompatActivity {
                 }
 
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    Toast.makeText(Onboarding.this, "Invalid email format", Toast.LENGTH_SHORT).show();
+                    ToastMsg.show(Onboarding.this, "Invalid email format");
                     return;
                 }
 
@@ -229,7 +229,7 @@ public class Onboarding extends AppCompatActivity {
                 // Disable the register button
                 submitRegisterBtn.setEnabled(false);
                 // Show loading on register submit
-                Toast.makeText(Onboarding.this, "Loading...", Toast.LENGTH_SHORT).show();
+                ToastMsg.show(Onboarding.this, "Loading...");
 
                 /// verify and save credentials here
                 User newUser = new User(firstName, lastName, dob, email, username, password, "user");
@@ -239,7 +239,7 @@ public class Onboarding extends AppCompatActivity {
                     @Override
                     public void onSuccess(String username) {
                         submitRegisterBtn.setEnabled(true);
-                        Toast.makeText(Onboarding.this, username + " successfully registered!", Toast.LENGTH_SHORT).show();
+                        ToastMsg.show(Onboarding.this, username + " successfully registered!");
                         startActivity(new Intent(Onboarding.this, MainActivity.class));
                         finish();
                     }
@@ -247,7 +247,7 @@ public class Onboarding extends AppCompatActivity {
                     @Override
                     public void onFailure(String errorMessage) {
                         submitRegisterBtn.setEnabled(true);
-                        Toast.makeText(Onboarding.this, errorMessage, Toast.LENGTH_SHORT).show();
+                        ToastMsg.show(Onboarding.this, errorMessage);
                     }
                 });
             }
