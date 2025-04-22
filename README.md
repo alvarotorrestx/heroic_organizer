@@ -1,28 +1,63 @@
-**Heroic Organizer**
+# 📚 Heroic Organizer
 
-Heroic Organizer is a comic book organizer app for Android, designed to help collectors catalog and manage their physical comic book libraries with ease. Using image recognition, users can quickly retrieve detailed information about a comic simply by pointing their camera at the cover.
-Additionally, the app includes a wish-list feature with release date notifications and location services to help users discover nearby comic stores, making collecting more convenient than ever.
+Heroic Organizer is an Android mobile application designed to help comic book enthusiasts catalog, manage, and explore their comic collections with ease. Whether you’re keeping track of your personal library or building a wish list, Heroic Organizer provides an intuitive experience tailored to collectors.
 
-Features
-- 📷 Scan & Identify: Point your camera at a comic book cover to instantly fetch details.
-- 📚 Organize Your Collection: Track which comics you own and where they’re stored.
-- 🏷️ Detailed Cataloging: Store author, artist, cover design, publication year, series number, run number, and more.
-- 📅 Wish-List & Release Alerts: Get notified of upcoming releases in your wish-list.
-- 🏪 Find Nearby Comic Shops: Location services help you discover stores that sell comics near you.
+> ⚠️ **This project is currently in active development.** Expect frequent updates and feature enhancements as we continue building.
 
-Installation
-Heroic Organizer can be downloaded from the Google Play Store.
+---
 
-Usage
-- Open the app and allow camera permissions.
-- Scan a comic book cover to retrieve details.
-- Save scanned comics to your collection and organize them into storage boxes.
-- Add comics to your wish-list to receive release date alerts.
-- Enable location services to discover nearby comic shops.
+## 🚀 Features (In Progress)
 
-Supported Devices
-- Android smartphones and tablets
-- Requires Android X.X or later
+- 🔐 User authentication with **Firebase Auth**
+- 📝 Register, login, and persistent session state
+- 📄 User profile management (update & delete profile)
+- 🔍 Comic scanning support with **ML Kit** (upcoming)
+- 📦 Wishlist and personal library views
+- ⚙️ Role-based user access (user, admin, owner) *(planned)*
 
-Author
-Developed by Wendell Wilhelm, Alvaro (Al) Torres, and Sora Galavis Delgado.
+---
+
+## 🛠️ Technologies Used
+
+- **Java** — Core application language
+- **Android SDK** — Targeting API Level 24+
+- **Firebase**:
+    - Firebase Authentication
+    - Cloud Firestore
+- **ML Kit** *(planned)* — To support comic scanning via camera
+
+---
+
+## 📱 Supported Devices
+
+- Android phones and tablets running **Android 7.0 (API 24)** and above
+
+---
+
+## 👥 Authors
+
+- **Sora A. Galavis Delgado**
+- **Alvaro (Al) Torres**
+- **Wendell Wilhelm**
+
+---
+
+## 📌 Status
+
+The current build includes:
+- Firebase integration (auth + Firestore)
+- User registration, login, and logout
+- Basic shared preference management for session tracking
+- UI login/register flow integration with backend
+
+Stay tuned for:
+- Comic scanning
+- Dynamic dashboard views
+- Wishlist and collection database features
+
+---
+
+## 🧪 Contributions
+
+As this is a school-based collaborative project, contributions are currently limited to team members. Future open-source participation may be considered!
+

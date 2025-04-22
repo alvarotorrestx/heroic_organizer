@@ -60,9 +60,9 @@ public class UserPresenter {
                 .update(user.toMap())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Log.e(TAG, "User updated successfully.");
+                        Log.d(TAG, "User updated successfully.");
                     } else {
-                        Log.e(TAG, "You are not authorized to update this user.");
+                        Log.e(TAG, "Error modifying user.", task.getException());
                     }
                 })
                 .addOnFailureListener(e -> Log.e(TAG, "Error modifying user", e));
@@ -77,7 +77,21 @@ public class UserPresenter {
                 .delete()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Log.e(TAG, "User deleted successfully.");
+                        Log.d(TAG, "User deleted successfully.");
+                    } else {
+                        Log.e(TAG, "Error deleting user.", task.getException());
+                    }
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Error deleting user", e));
+        FirebaseDB
+                .getAuth()
+                .getCurrentUser()
+                .delete()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Firebase Auth account deleted successfully.");
+                    } else {
+                        Log.e(TAG, "Error deleting user.", task.getException());
                     }
                 })
                 .addOnFailureListener(e -> Log.e(TAG, "Error deleting user", e));
