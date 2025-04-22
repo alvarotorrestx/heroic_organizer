@@ -3,8 +3,8 @@ package com.example.heroicorganizer;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import androidx.core.view.GravityCompat;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.navigation.NavigationView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -24,10 +24,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ///
         boolean isSignedIn = getSharedPreferences("heroic_preferences", MODE_PRIVATE)
                 .getBoolean("isSignedIn", false);
-        ///
 
         if (!isSignedIn) {
             Intent intent = new Intent(this, com.example.heroicorganizer.ui.login.Onboarding.class);
@@ -40,30 +38,62 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
-        binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+
+        binding.appBarMain.fab.setOnClickListener(view ->
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null)
-                        .setAnchorView(R.id.fab).show();
-            }
-        });
+                        .setAnchorView(R.id.fab).show()
+        );
+
         DrawerLayout drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView;
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
-                .setOpenableLayout(drawer)
-                .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home  // fragments IDs for menu items here
+        ).setOpenableLayout(drawer).build();
+
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+
+        // drawer item click handling
+        findViewById(R.id.menu_home).setOnClickListener(v -> {
+            navController.navigate(R.id.nav_home);
+            drawer.closeDrawer(GravityCompat.START);
+        });
+
+        findViewById(R.id.menu_library).setOnClickListener(v -> {
+            navController.navigate(R.id.nav_library);
+            drawer.closeDrawer(GravityCompat.START);
+        });
+
+        findViewById(R.id.menu_wishlist).setOnClickListener(v -> {
+            navController.navigate(R.id.nav_wishlist);
+            drawer.closeDrawer(GravityCompat.START);
+        });
+
+        findViewById(R.id.menu_scan).setOnClickListener(v -> {
+            navController.navigate(R.id.nav_scan);
+            drawer.closeDrawer(GravityCompat.START);
+        });
+
+        findViewById(R.id.menu_locator).setOnClickListener(v -> {
+            navController.navigate(R.id.nav_locator);
+            drawer.closeDrawer(GravityCompat.START);
+        });
+
+        findViewById(R.id.menu_settings).setOnClickListener(v -> {
+            Intent intent = new Intent(this, com.example.heroicorganizer.ui.SettingsActivity.class);
+            startActivity(intent);
+            drawer.closeDrawer(GravityCompat.START);
+        });
+
+        View closeBtn = findViewById(R.id.btn_close_drawer);
+        if (closeBtn != null) {
+            closeBtn.setOnClickListener(v -> drawer.closeDrawer(GravityCompat.START));
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
