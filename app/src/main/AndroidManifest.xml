@@ -19,9 +19,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".LibraryActivity" />
 
         <activity android:name=".MainActivity" />
-        <activity android:name=".ui.SettingsActivity" />
+        
+      <activity android:name=".ui.SettingsActivity" />
     </application>
 
 </manifest>
