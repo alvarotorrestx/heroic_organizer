@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 public class LibraryComic {
-    // Comic fields
+    // Existing fields remain unchanged
     private String id;
-    private String upc; // Universal Product Code
+    private String upc;
     private String barcode;
-    private String parentId; // ID of the base comic (if this is a variant)
+    private String parentId;
     private String variant;
     private String title;
     private String publicationYear;
@@ -20,15 +20,28 @@ public class LibraryComic {
     private List<String> authors;
     private List<String> illustrators;
     private List<String> tags;
-    private String folder; // Folder the comic belongs to
+    private String folder;
     private String notes;
     private String coverImage;
     private String condition;
     private int quantity;
 
+    // Existing default constructor
     public LibraryComic() {}
 
-    public LibraryComic(String id, String upc, String barcode, String parentId, String variant, String title, String publicationYear, String releaseDate, String issue, List<String> publishers, List<String> authors, List<String> illustrators, List<String> tags, String folder, String notes, String coverImage, String condition, int quantity) {
+    // ✅ **NEW: Constructor for lightweight creation from search results**
+    public LibraryComic(String title, String issue, String publisher) {
+        this.title = title;
+        this.issue = issue;
+        this.publishers = new ArrayList<>(); // Ensure initialization
+        this.publishers.add(publisher);
+    }
+
+    // Existing full constructor remains unchanged
+    public LibraryComic(String id, String upc, String barcode, String parentId, String variant, String title,
+                        String publicationYear, String releaseDate, String issue, List<String> publishers,
+                        List<String> authors, List<String> illustrators, List<String> tags, String folder,
+                        String notes, String coverImage, String condition, int quantity) {
 
         if (id == null || (upc == null && barcode == null) || title == null || issue == null || folder == null) {
             throw new IllegalArgumentException("id, upc, title, and issue are all required.");
@@ -62,7 +75,7 @@ public class LibraryComic {
         this.quantity = quantity;
     }
 
-    // Convert folder object for Firestore presenter
+    // Convert to a Map for Firestore or database storage
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("id", id);
@@ -86,149 +99,20 @@ public class LibraryComic {
         return map;
     }
 
-    // Getters
-    public String getId() {
-        return id;
-    }
+    // Getters & Setters
+    public String getId() { return id; }
+    public String getTitle() { return title; }
+    public String getIssue() { return issue; }
+    public List<String> getPublishers() { return publishers; }
+    public String getCoverImage() { return coverImage; }
+    public String getCondition() { return condition; }
+    public int getQuantity() { return quantity; }
 
-    public String getUpc() {
-        return upc;
-    }
-
-    public String getBarcode() {
-        return barcode;
-    }
-
-    public String getParentId() {
-        return parentId;
-    }
-
-    public String getVariant() {
-        return variant;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getPublicationYear() {
-        return publicationYear;
-    }
-
-    public String getReleaseDate() {
-        return releaseDate;
-    }
-
-    public String getIssue() {
-        return issue;
-    }
-
-    public List<String> getPublishers() {
-        return publishers;
-    }
-
-    public List<String> getAuthors() {
-        return authors;
-    }
-
-    public List<String> getIllustrators() {
-        return illustrators;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public String getFolder() {
-        return folder;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public String getCoverImage() {
-        return coverImage;
-    }
-
-    public String getCondition() {
-        return condition;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    // Setters
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setUpc(String upc) {
-        this.upc = upc;
-    }
-
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
-
-    public void setVariant(String variant) {
-        this.variant = variant;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setPublicationYear(String publicationYear) {
-        this.publicationYear = publicationYear;
-    }
-
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public void setIssue(String issue) {
-        this.issue = issue;
-    }
-
-    public void setPublishers(List<String> publishers) {
-        this.publishers = publishers;
-    }
-
-    public void setAuthors(List<String> authors) {
-        this.authors = authors;
-    }
-
-    public void setIllustrators(List<String> illustrators) {
-        this.illustrators = illustrators;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
-    public void setFolder(String folder) {
-        this.folder = folder;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public void setCoverImage(String coverImage) {
-        this.coverImage = coverImage;
-    }
-
-    public void setCondition(String condition) {
-        this.condition = condition;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+    public void setId(String id) { this.id = id; }
+    public void setTitle(String title) { this.title = title; }
+    public void setIssue(String issue) { this.issue = issue; }
+    public void setPublishers(List<String> publishers) { this.publishers = publishers; }
+    public void setCoverImage(String coverImage) { this.coverImage = coverImage; }
+    public void setCondition(String condition) { this.condition = condition; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 }
