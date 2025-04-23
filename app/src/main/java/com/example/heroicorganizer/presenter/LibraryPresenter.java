@@ -6,6 +6,7 @@ import com.example.heroicorganizer.model.LibraryComic;
 import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -66,6 +67,23 @@ public class LibraryPresenter {
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error creating folder", e);
+                });
+    }
+
+    // Update folder for user
+    public static void updateFolder(User user, LibraryFolder folder) {
+        FirebaseDB
+                .getDb()
+                .collection("users")
+                .document(Objects.requireNonNull(FirebaseDB.getAuth().getUid()))
+                .collection("folders")
+                .document(folder.getId())
+                .set(folder.toMap(), SetOptions.merge())
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Folder updated successfully with ID: " + folder.getId());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error updating folder", e);
                 });
     }
 
