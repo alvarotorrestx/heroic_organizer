@@ -6,6 +6,7 @@ import com.example.heroicorganizer.model.LibraryComic;
 import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -21,7 +22,7 @@ public class ComicPresenter {
     // Get all Comics in Library - Folder
     public static void getComics(User user, LibraryFolder folder) {
         if (folder.getId() == null || folder.getId().isEmpty()) {
-            Log.e(TAG, "Folder ID is missing or Cannot retrieve comics.");
+            Log.e(TAG, "Folder ID is missing or wrong. Cannot retrieve comics.");
             return;
         }
 
@@ -73,11 +74,33 @@ public class ComicPresenter {
                     Log.d(TAG, "Added comic: " + comic.getTitle() + " (ID: " + comic.getId() + ") to Folder: " + folder.getName());
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error adding comic: " + comic + " to Folder: " + folder, e);
+                    Log.e(TAG, "Error adding comic: " + comic .getId() + " to Folder: " + folder.getName(), e);
                 });
     }
 
     // Update Comic in Library - Folder
+    public static void updateComic(User user, LibraryFolder folder, LibraryComic comic) {
+        if (comic.getId() == null || comic.getId().isEmpty()) {
+            Log.e(TAG, "Cannot update comic: Missing comic ID or is wrong.");
+            return;
+        }
+
+        FirebaseDB
+                .getDb()
+                .collection("users")
+                .document(Objects.requireNonNull(user.getUid()))
+                .collection("folders")
+                .document(folder.getId())
+                .collection("comics")
+                .document(comic.getId())
+                .set(comic, SetOptions.merge())
+                .addOnCompleteListener(aVoid -> {
+                    Log.d(TAG, "Updated comic: " + comic.getTitle() + " (ID: " + comic.getId() + ") in Folder: " + folder.getName());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error updating comic: " + comic.getId() + " in Folder: " + folder.getName(), e);
+                });
+    }
 
     // Remove Comic from Library - Folder
 }
