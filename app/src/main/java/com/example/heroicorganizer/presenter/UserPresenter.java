@@ -47,7 +47,53 @@ public class UserPresenter {
                 .collection("users")
                 .document(Objects.requireNonNull(FirebaseDB.getAuth().getUid()))
                 .set(user.toMap())
-                .addOnSuccessListener(unused -> Log.d("UserPresenter", "User with Username: " + user.getUsername() + " created"))
-                .addOnFailureListener(e -> Log.e("UserPresenter", "Error creating user", e));
+                .addOnSuccessListener(unused -> Log.d(TAG, "User with Username: " + user.getUsername() + " created"))
+                .addOnFailureListener(e -> Log.e(TAG, "Error creating user", e));
+    }
+
+    // Update User
+    public static void updateUser(User user) {
+        FirebaseDB
+                .getDb()
+                .collection("users")
+                .document(Objects.requireNonNull(FirebaseDB.getAuth().getUid()))
+                .update(user.toMap())
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "User updated successfully.");
+                    } else {
+                        Log.e(TAG, "Error modifying user.", task.getException());
+                    }
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Error modifying user", e));
+    }
+
+    // Delete User
+    public static void deleteUser(User user) {
+        FirebaseDB
+                .getDb()
+                .collection("users")
+                .document(Objects.requireNonNull(FirebaseDB.getAuth().getUid()))
+                .delete()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "User deleted successfully.");
+                    } else {
+                        Log.e(TAG, "Error deleting user.", task.getException());
+                    }
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Error deleting user", e));
+        FirebaseDB
+                .getAuth()
+                .getCurrentUser()
+                .delete()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Firebase Auth account deleted successfully.");
+                    } else {
+                        Log.e(TAG, "Error deleting user.", task.getException());
+                    }
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Error deleting user", e));
     }
 }
