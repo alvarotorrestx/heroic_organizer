@@ -17,8 +17,8 @@ public class LibraryFolder {
 
     public LibraryFolder(String id, String name, String description, String coverImage, String colorTag) {
 
-        if (id == null || name == null || description == null) {
-            throw new IllegalArgumentException("id, name, and description are required.");
+        if (id == null || name == null) {
+            throw new IllegalArgumentException("id and name are required.");
         }
 
         // If no image, fallback to colorTag
