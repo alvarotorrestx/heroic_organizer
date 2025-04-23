@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.heroicorganizer.R;
+import com.example.heroicorganizer.presenter.LogoutPresenter;
 import com.example.heroicorganizer.ui.login.Onboarding;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -31,6 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
                 ToastMsg.show(this, "Account Settings"));
 
         findViewById(R.id.pref_logout).setOnClickListener(v -> {
+            LogoutPresenter.logoutUser();
             ToastMsg.show(this, "Logging out...");
             Intent intent = new Intent(this, Onboarding.class);
             startActivity(intent);

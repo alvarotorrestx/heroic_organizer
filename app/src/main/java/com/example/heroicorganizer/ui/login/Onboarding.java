@@ -1,24 +1,16 @@
 package com.example.heroicorganizer.ui.login;
 
-import android.app.Activity;
-import android.util.Log;
 import android.util.Patterns;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.content.Intent;
 import com.example.heroicorganizer.MainActivity;
 import com.example.heroicorganizer.R;
@@ -29,9 +21,9 @@ import android.app.DatePickerDialog;
 import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LoginPresenter;
 import com.example.heroicorganizer.presenter.RegisterPresenter;
-import android.content.SharedPreferences;
 import java.util.Calendar;
 import com.example.heroicorganizer.ui.ToastMsg;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class Onboarding extends AppCompatActivity {
@@ -41,6 +33,17 @@ public class Onboarding extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Test to see if user is logged in
+        boolean isSignedIn = FirebaseAuth.getInstance().getCurrentUser() != null;
+
+        // Redirect to MainActivity if user is signed in
+        if (isSignedIn) {
+            Intent intent = new Intent(this, com.example.heroicorganizer.MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            return;
+        }
 
         binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -133,12 +136,6 @@ public class Onboarding extends AppCompatActivity {
                         submitLoginBtn.setEnabled(true);
                         ToastMsg.show(Onboarding.this, email + " successfully logged in!");
 
-                        //storing a boolean state inside new preferences file
-                        SharedPreferences.Editor editor = getSharedPreferences("heroic_preferences", MODE_PRIVATE).edit();
-                        editor.putBoolean("isSignedIn", true);
-                        editor.apply();
-
-                        // Update to MainActivity to Dashboard once ready
                         Intent intent = new Intent(Onboarding.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
