@@ -111,6 +111,12 @@ public class LibraryComicPresenter {
 
     // Add Comic to Library - Folder
     public static void addComicToFolder(User user, LibraryFolder folder, LibraryComic comic, LibraryComicCallback callback) {
+        if (folder.getId() == null || folder.getId().length() == 0) {
+            Log.e(TAG, "Folder ID is missing or wrong. Cannot retrieve comics.");
+            callback.onFailure("Folder ID is missing or wrong.");
+            return;
+        }
+
         if (comic.getId() == null || comic.getId().length() == 0) {
             comic.setId(UUID.randomUUID().toString());
         }
@@ -136,6 +142,12 @@ public class LibraryComicPresenter {
 
     // Update Comic in Library - Folder
     public static void updateComicInFolder(User user, LibraryFolder folder, LibraryComic comic, LibraryComicCallback callback) {
+        if (folder.getId() == null || folder.getId().length() == 0) {
+            Log.e(TAG, "Folder ID is missing or wrong. Cannot retrieve comics.");
+            callback.onFailure("Folder ID is missing or wrong.");
+            return;
+        }
+
         if (comic.getId() == null || comic.getId().length() == 0) {
             Log.e(TAG, "Cannot update comic: Missing comic ID or is wrong.");
             callback.onFailure("Comic ID is missing or wrong.");
@@ -163,6 +175,12 @@ public class LibraryComicPresenter {
 
     // Remove Comic from Library - Folder
     public static void deleteComicFromFolder(User user, LibraryFolder folder, LibraryComic comic, LibraryComicCallback callback) {
+        if (folder.getId() == null || folder.getId().length() == 0) {
+            Log.e(TAG, "Folder ID is missing or wrong. Cannot retrieve comics.");
+            callback.onFailure("Folder ID is missing or wrong.");
+            return;
+        }
+
         if (comic.getId() == null || comic.getId().length() == 0) {
             Log.e(TAG, "Cannot delete comic: Missing comic ID or is wrong.");
             callback.onFailure("Comic ID is missing or wrong.");
