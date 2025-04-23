@@ -21,9 +21,10 @@ public class LibraryFolderPresenter {
 
     // Get all folders for user
     // TODO: Add callback to this method to return object for FE usage
-    public static void getFolders(User user) {
+    public static void getFolders(User user, LibraryFolderCallback callback) {
         if (user.getUid() == null || user.getUid().length() == 0) {
             Log.e(TAG, "Cannot get folders: User UID is null, empty, or wrong.");
+            callback.onFailure("User UID is null, empty, or wrong.");
             return;
         }
 
@@ -45,12 +46,16 @@ public class LibraryFolderPresenter {
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
                         String json = gson.toJson(folderList);
                         Log.d(TAG, "Folder List: " + json);
+
+                        callback.onSuccessFolders(folderList);
                     } else {
                         Log.e(TAG, "Error getting folders", task.getException());
+                        callback.onFailure("Error getting folders");
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error getting folders", e);
+                    callback.onFailure("Error getting folders");
                 });
     }
 
