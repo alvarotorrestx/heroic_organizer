@@ -55,7 +55,7 @@ public class ComicPresenter {
     }
 
     // Add Comic to Library - Folder
-    public static void addComic(User user, LibraryFolder folder, LibraryComic comic) {
+    public static void addComicToLibrary(User user, LibraryFolder folder, LibraryComic comic) {
         if (comic.getId() == null || comic.getId().isEmpty()) {
             comic.setId(UUID.randomUUID().toString());
         }
