@@ -6,6 +6,7 @@ import com.example.heroicorganizer.model.LibraryComic;
 import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -20,6 +21,11 @@ public class LibraryPresenter {
 
     // Get all folders for user
     public static void getFolders(User user) {
+        if (user.getUid() == null || user.getUid().isEmpty()) {
+            Log.e(TAG, "Cannot get folders: User UID is null, empty, or wrong.");
+            return;
+        }
+
         FirebaseDB
                 .getDb()
                 .collection("users")
@@ -69,8 +75,35 @@ public class LibraryPresenter {
                 });
     }
 
+    // Update folder for user
+    public static void updateFolder(User user, LibraryFolder folder) {
+        if (folder.getId() == null || folder.getId().isEmpty()) {
+            Log.e(TAG, "Cannot update folder: Missing folder ID or is wrong.");
+            return;
+        }
+
+        FirebaseDB
+                .getDb()
+                .collection("users")
+                .document(Objects.requireNonNull(FirebaseDB.getAuth().getUid()))
+                .collection("folders")
+                .document(folder.getId())
+                .set(folder.toMap(), SetOptions.merge())
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Folder updated successfully with ID: " + folder.getId());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error updating folder", e);
+                });
+    }
+
     // Delete Folder from user's library
     public static void deleteFolder(User user, LibraryFolder folder) {
+        if (folder.getId() == null || folder.getId().isEmpty()) {
+            Log.e(TAG, "Cannot delete folder: Missing folder ID or is wrong.");
+            return;
+        }
+
         FirebaseDB
                 .getDb()
                 .collection("users")
