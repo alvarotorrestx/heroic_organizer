@@ -1,25 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
+            xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/mobile_navigation"
-            app:startDestination="@+id/nav_home">
+            app:startDestination="@id/nav_home">
 
     <fragment
             android:id="@+id/nav_home"
             android:name="com.example.heroicorganizer.ui.home.HomeFragment"
-            android:label="@string/menu_home"
-            tools:layout="@layout/fragment_home"/>
+            android:label="Home"
+            tools:layout="@layout/fragment_home" />
 
     <fragment
-            android:id="@+id/nav_gallery"
-            android:name="com.example.heroicorganizer.ui.gallery.GalleryFragment"
-            android:label="@string/menu_gallery"
-            tools:layout="@layout/fragment_gallery"/>
+            android:id="@+id/nav_library"
+            android:name="com.example.heroicorganizer.ui.library.LibraryFragment"
+            android:label="Library"
+            tools:layout="@layout/fragment_library" />
 
     <fragment
-            android:id="@+id/nav_slideshow"
-            android:name="com.example.heroicorganizer.ui.slideshow.SlideshowFragment"
-            android:label="@string/menu_slideshow"
-            tools:layout="@layout/fragment_slideshow"/>
+            android:id="@+id/nav_wishlist"
+            android:name="com.example.heroicorganizer.ui.wishlist.WishlistFragment"
+            android:label="Wishlist"
+            tools:layout="@layout/fragment_wishlist" />
+
+    <fragment
+            android:id="@+id/nav_scan"
+            android:name="com.example.heroicorganizer.ui.scan.ScanFragment"
+            android:label="Scan Comic Cover"
+            tools:layout="@layout/fragment_scan" />
+
+    <fragment
+            android:id="@+id/nav_locator"
+            android:name="com.example.heroicorganizer.ui.locator.LocatorFragment"
+            android:label="Store Locator"
+            tools:layout="@layout/fragment_locator" />
+
+    <activity
+            android:id="@+id/nav_settings"
+            android:name="com.example.heroicorganizer.ui.SettingsActivity"
+            android:label="Settings"
+            tools:layout="@layout/activity_settings" />
+
 </navigation>
