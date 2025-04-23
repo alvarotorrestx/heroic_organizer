@@ -20,6 +20,7 @@ public class LibraryFolderPresenter {
     private static final String TAG = "LibraryPresenter";
 
     // Get all folders for user
+    // TODO: Add callback to this method to return object for FE usage
     public static void getFolders(User user) {
         if (user.getUid() == null || user.getUid().length() == 0) {
             Log.e(TAG, "Cannot get folders: User UID is null, empty, or wrong.");

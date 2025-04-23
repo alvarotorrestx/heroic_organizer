@@ -1,6 +1,7 @@
 package com.example.heroicorganizer.presenter;
 
 import android.util.Log;
+import com.example.heroicorganizer.callback.LibraryComicCallback;
 import com.example.heroicorganizer.config.FirebaseDB;
 import com.example.heroicorganizer.model.LibraryComic;
 import com.example.heroicorganizer.model.LibraryFolder;
@@ -20,9 +21,10 @@ public class LibraryComicPresenter {
     public static final String TAG = "LibraryComicPresenter";
 
     // Get all Comics in Library - Folder
-    public static void getComics(User user, LibraryFolder folder) {
+    public static void getComics(User user, LibraryFolder folder, LibraryComicCallback callback) {
         if (folder.getId() == null || folder.getId().length() == 0) {
             Log.e(TAG, "Folder ID is missing or wrong. Cannot retrieve comics.");
+            callback.onFailure("Folder ID is missing or wrong.");
             return;
         }
 
