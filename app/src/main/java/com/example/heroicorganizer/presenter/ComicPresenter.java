@@ -79,7 +79,7 @@ public class ComicPresenter {
     }
 
     // Update Comic in Library - Folder
-    public static void updateComic(User user, LibraryFolder folder, LibraryComic comic) {
+    public static void updateComicInLibrary(User user, LibraryFolder folder, LibraryComic comic) {
         if (comic.getId() == null || comic.getId().isEmpty()) {
             Log.e(TAG, "Cannot update comic: Missing comic ID or is wrong.");
             return;
