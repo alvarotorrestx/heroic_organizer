@@ -9,12 +9,13 @@ public class ApiKeyProvider {
 
     public static String getApiKey() {
         Properties properties = new Properties();
-        try (FileInputStream fis = new FileInputStream(LOCAL_PROPERTIES_FILE)) {
+        try (FileInputStream fis = new FileInputStream("local.properties")) {
             properties.load(fis);
             return properties.getProperty("comicvine.api_key");
         } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            return null; // If key retrieval fails, it could cause issues
         }
     }
+
 }
