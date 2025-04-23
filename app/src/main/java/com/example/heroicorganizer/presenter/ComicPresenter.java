@@ -103,4 +103,26 @@ public class ComicPresenter {
     }
 
     // Remove Comic from Library - Folder
+    public static void deleteComicFromLibrary(User user, LibraryFolder folder, LibraryComic comic) {
+        if (comic.getId() == null || comic.getId().isEmpty()) {
+            Log.e(TAG, "Cannot delete comic: Missing comic ID or is wrong.");
+            return;
+        }
+
+        FirebaseDB
+                .getDb()
+                .collection("users")
+                .document(Objects.requireNonNull(user.getUid()))
+                .collection("folders")
+                .document(folder.getId())
+                .collection("comics")
+                .document(comic.getId())
+                .delete()
+                .addOnCompleteListener(aVoid -> {
+                    Log.d(TAG, "Comic deleted successfully with ID: " + comic.getId() + " from Folder: " + folder.getName());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error deleting comic: " + comic .getId() + " from Folder: " + folder.getName(), e);
+                });
+    }
 }
