@@ -12,6 +12,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class ComicPresenter {
 
@@ -53,9 +54,30 @@ public class ComicPresenter {
                 });
     }
 
-    // Add Comic to Library
+    // Add Comic to Library - Folder
+    public static void addComic(User user, LibraryFolder folder, LibraryComic comic) {
+        if (comic.getId() == null || comic.getId().isEmpty()) {
+            comic.setId(UUID.randomUUID().toString());
+        }
 
-    // Update Comic in Library
+        FirebaseDB
+                .getDb()
+                .collection("users")
+                .document(Objects.requireNonNull(user.getUid()))
+                .collection("folders")
+                .document(folder.getId())
+                .collection("comics")
+                .document(comic.getId())
+                .set(comic)
+                .addOnCompleteListener(aVoid -> {
+                    Log.d(TAG, "Added comic: " + comic.getTitle() + " (ID: " + comic.getId() + ") to Folder: " + folder.getName());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error adding comic: " + comic + " to Folder: " + folder, e);
+                });
+    }
 
-    // Remove Comic from Library
+    // Update Comic in Library - Folder
+
+    // Remove Comic from Library - Folder
 }
