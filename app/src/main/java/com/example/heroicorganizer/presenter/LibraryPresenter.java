@@ -18,26 +18,7 @@ public class LibraryPresenter {
 
     private static final String TAG = "LibraryPresenter";
 
-    public static void createFolder(User user, LibraryFolder folder) {
-        if (folder.getId() == null || folder.getId().isEmpty()) {
-            folder.setId(UUID.randomUUID().toString());
-        }
-
-        FirebaseDB
-                .getDb()
-                .collection("users")
-                .document(Objects.requireNonNull(FirebaseDB.getAuth().getUid()))
-                .collection("folders")
-                .document(folder.getId())
-                .set(folder.toMap())
-                .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "Folder created successfully with ID: " + folder.getId());
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error creating folder", e);
-                });
-    }
-
+    // Get all folders for user
     public static void getFolders(User user) {
         FirebaseDB
                 .getDb()
@@ -65,5 +46,43 @@ public class LibraryPresenter {
                     Log.e(TAG, "Error getting folders", e);
                 });
 
+    }
+
+    // Create new folder for user
+    public static void createFolder(User user, LibraryFolder folder) {
+        if (folder.getId() == null || folder.getId().isEmpty()) {
+            folder.setId(UUID.randomUUID().toString());
+        }
+
+        FirebaseDB
+                .getDb()
+                .collection("users")
+                .document(Objects.requireNonNull(FirebaseDB.getAuth().getUid()))
+                .collection("folders")
+                .document(folder.getId())
+                .set(folder.toMap())
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Folder created successfully with ID: " + folder.getId());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error creating folder", e);
+                });
+    }
+
+    // Delete Folder from user's library
+    public static void deleteFolder(User user, LibraryFolder folder) {
+        FirebaseDB
+                .getDb()
+                .collection("users")
+                .document(Objects.requireNonNull(FirebaseDB.getAuth().getUid()))
+                .collection("folders")
+                .document(folder.getId())
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Folder deleted successfully with ID: " + folder.getId());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error deleting folder", e);
+                });
     }
 }
