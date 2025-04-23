@@ -21,7 +21,7 @@ public class LibraryComicPresenter {
     public static final String TAG = "LibraryComicPresenter";
 
     // Get all Comics in Library - Folder
-    public static void getComics(User user, LibraryFolder folder, LibraryComicCallback callback) {
+    public static void getComicsInFolder(User user, LibraryFolder folder, LibraryComicCallback callback) {
         if (folder.getId() == null || folder.getId().length() == 0) {
             Log.e(TAG, "Folder ID is missing or wrong. Cannot retrieve comics.");
             callback.onFailure("Folder ID is missing or wrong.");
@@ -48,12 +48,16 @@ public class LibraryComicPresenter {
                         Gson gson = new GsonBuilder().setPrettyPrinting().create();
                         String json = gson.toJson(comicList);
                         Log.d(TAG, "Comic List: " + json);
+
+                        callback.onSuccessComics(comicList);
                     } else {
                         Log.e(TAG, "Error getting comics: ", task.getException());
+                        callback.onFailure("Error getting comics: " + task.getException().getMessage());
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Error getting comics", e);
+                    callback.onFailure("Error getting comics: " + e.getMessage());
                 });
     }
 
