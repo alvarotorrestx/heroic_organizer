@@ -15,13 +15,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ComicPresenter {
+public class LibraryComicPresenter {
 
-    public static final String TAG = "ComicPresenter";
+    public static final String TAG = "LibraryComicPresenter";
 
     // Get all Comics in Library - Folder
     public static void getComics(User user, LibraryFolder folder) {
-        if (folder.getId() == null || folder.getId().isEmpty()) {
+        if (folder.getId() == null || folder.getId().length() == 0) {
             Log.e(TAG, "Folder ID is missing or wrong. Cannot retrieve comics.");
             return;
         }
@@ -55,9 +55,51 @@ public class ComicPresenter {
                 });
     }
 
+    // Get specific comic in folder
+    public static void searchComicInFolder(User user, LibraryFolder folder, String field, String value) {
+        if (folder.getId() == null || folder.getId().length() == 0) {
+            Log.e(TAG, "Folder ID is missing or wrong. Cannot search comics.");
+            return;
+        }
+
+        if (value == null || value.length() == 0 || field == null || field.length() == 0) {
+            Log.e(TAG, "Field name or value is missing.");
+            return;
+        }
+
+        FirebaseDB
+                .getDb()
+                .collection("users")
+                .document(Objects.requireNonNull(user.getUid()))
+                .collection("folders")
+                .document(folder.getId())
+                .collection("comics")
+                // Allows multiple type of search, e.g. "title": "Spider-Man" or "id": "31213ad123b"
+                .whereEqualTo(field, value)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        List<LibraryComic> foundComics = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            LibraryComic comic = document.toObject(LibraryComic.class);
+                            foundComics.add(comic);
+                        }
+
+                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                        String json = gson.toJson(foundComics);
+                        Log.d(TAG, "Search result: " + json);
+                    } else {
+                        Log.e(TAG, "Error searching comics: ", task.getException());
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error searching comics: ", e);
+                });
+    }
+
     // Add Comic to Library - Folder
     public static void addComicToLibrary(User user, LibraryFolder folder, LibraryComic comic) {
-        if (comic.getId() == null || comic.getId().isEmpty()) {
+        if (comic.getId() == null || comic.getId().length() == 0) {
             comic.setId(UUID.randomUUID().toString());
         }
 
@@ -80,7 +122,7 @@ public class ComicPresenter {
 
     // Update Comic in Library - Folder
     public static void updateComicInLibrary(User user, LibraryFolder folder, LibraryComic comic) {
-        if (comic.getId() == null || comic.getId().isEmpty()) {
+        if (comic.getId() == null || comic.getId().length() == 0) {
             Log.e(TAG, "Cannot update comic: Missing comic ID or is wrong.");
             return;
         }
@@ -104,7 +146,7 @@ public class ComicPresenter {
 
     // Remove Comic from Library - Folder
     public static void deleteComicFromLibrary(User user, LibraryFolder folder, LibraryComic comic) {
-        if (comic.getId() == null || comic.getId().isEmpty()) {
+        if (comic.getId() == null || comic.getId().length() == 0) {
             Log.e(TAG, "Cannot delete comic: Missing comic ID or is wrong.");
             return;
         }
