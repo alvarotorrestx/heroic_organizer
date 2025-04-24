@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public class LibraryComic {
-    // Existing fields remain unchanged
     private String id;
     private String upc;
     private String barcode;
@@ -26,10 +25,8 @@ public class LibraryComic {
     private String condition;
     private int quantity;
 
-    // Existing default constructor
     public LibraryComic() {}
 
-    // ✅ **NEW: Constructor for lightweight creation from search results**
     public LibraryComic(String title, String issue, String publisher) {
         this.title = title;
         this.issue = issue;
@@ -37,7 +34,6 @@ public class LibraryComic {
         this.publishers.add(publisher);
     }
 
-    // Existing full constructor remains unchanged
     public LibraryComic(String id, String upc, String barcode, String parentId, String variant, String title,
                         String publicationYear, String releaseDate, String issue, List<String> publishers,
                         List<String> authors, List<String> illustrators, List<String> tags, String folder,
