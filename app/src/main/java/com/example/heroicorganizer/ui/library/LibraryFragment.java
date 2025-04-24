@@ -16,6 +16,7 @@ import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
+import com.example.heroicorganizer.utils.ComicVineConfig;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,7 +29,8 @@ import java.util.List;
 
 public class LibraryFragment extends Fragment {
 
-    public LibraryFragment() {}
+    public LibraryFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -143,7 +145,11 @@ public class LibraryFragment extends Fragment {
                 }
 
                 String baseUrl = "https://comicvine.gamespot.com/api/search/";
-                String apiKey = ""; // Removed for security reasons - will work on hidden secret pull in
+                String apiKey = ComicVineConfig.getApiKey(requireContext());
+                if (apiKey == null || apiKey.isEmpty()) {
+                    ToastMsg.show(requireContext(), "API Key missing");
+                    return;
+                }
                 String finalUrl = baseUrl + "?api_key=" + apiKey + "&query=" + query + "&format=json";
 
                 OkHttpClient client = new OkHttpClient();
