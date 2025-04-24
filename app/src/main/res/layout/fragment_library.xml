@@ -3,7 +3,7 @@
              android:id="@+id/library_fragment_container"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="#fff"  android:padding="16dp">
+             android:background="#555555"  android:padding="16dp">
 
     <include
             layout="@layout/fragment_library_testing" />

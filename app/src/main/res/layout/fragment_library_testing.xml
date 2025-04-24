@@ -4,7 +4,7 @@
               android:layout_height="match_parent"
               android:padding="16dp"
               android:orientation="vertical"
-              android:background="#EEEEEE">
+              android:background="#555555">
 
     <EditText
             android:id="@+id/folderId"
@@ -69,6 +69,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Delete Folder"
+    />
+
+    <EditText
+            android:id="@+id/searchQuery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search Query"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/white"
+            android:minHeight="48dp"
+    />
+
+    <Button
+            android:id="@+id/searchComics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Search"
     />
 
 </LinearLayout>
