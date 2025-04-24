@@ -13,6 +13,10 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        findViewById(R.id.btn_close_settings).setOnClickListener(v -> {
+            finish();
+        });
+
         findViewById(R.id.pref_app).setOnClickListener(v ->
                 ToastMsg.show(this, "App Preferences"));
 
@@ -38,5 +42,6 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
     }
 }
