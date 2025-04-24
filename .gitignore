@@ -8,6 +8,9 @@ build/
 /app/google-services.json
 google-services.json
 
+# Ignore comic vine json
+/app/src/main/assets/comic-vine.json
+
 # Ignore local SDK path
 local.properties
 
