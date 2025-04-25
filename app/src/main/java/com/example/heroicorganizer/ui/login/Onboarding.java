@@ -1,5 +1,8 @@
 package com.example.heroicorganizer.ui.login;
 
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.DrawableContainer;
+import android.graphics.drawable.shapes.Shape;
 import android.util.Patterns;
 import android.os.Bundle;
 import androidx.annotation.StringRes;
@@ -113,11 +116,14 @@ public class Onboarding extends AppCompatActivity {
 
                 if (email.isEmpty() || password.isEmpty()) {
                     ToastMsg.show(Onboarding.this, "Please fill out all the fields.");
+                    usernameEditText.setBackgroundResource(R.drawable.field_bg_error);
+                    passwordEditText.setBackgroundResource(R.drawable.field_bg_error);
                     return;
                 }
 
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     ToastMsg.show(Onboarding.this, "Invalid email format");
+                    passwordEditText.setBackgroundResource(R.drawable.field_bg_error);
                     return;
                 }
 
@@ -172,11 +178,13 @@ public class Onboarding extends AppCompatActivity {
 
                 if (!firstName.matches("^[a-zA-Z][a-zA-Z\\- ]{1,49}$")) {
                     ToastMsg.show(Onboarding.this, "First Name must be 2–50 characters.\nLetters, spaces, and hyphens (-) allowed.");
+                    firstNameEditText.setBackgroundResource(R.drawable.field_bg_error);
                     return;
                 }
 
                 if (!lastName.matches("^[a-zA-Z][a-zA-Z\\- ]{1,49}$")) {
                     ToastMsg.show(Onboarding.this, "Last Name must be 2–50 characters.\nLetters, spaces, and hyphens (-) allowed.");
+                    lastNameEditText.setBackgroundResource(R.drawable.field_bg_error);
                     return;
                 }
 
@@ -184,6 +192,7 @@ public class Onboarding extends AppCompatActivity {
                 String[] parts = dob.split("-");
                 if (parts.length != 3) {
                     ToastMsg.show(Onboarding.this, "Date of Birth must be in format YYYY-MM-DD");
+                    dobEditText.setBackgroundResource(R.drawable.field_bg_error);
                     return;
                 }
                 int year = Integer.parseInt(parts[0]);
@@ -199,27 +208,34 @@ public class Onboarding extends AppCompatActivity {
                 // If birthDate is less than 13 years
                 if (birthDate.after(todayMinus13)) {
                     ToastMsg.show(Onboarding.this, "You must be at least 13 years old to register.");
+                    dobEditText.setBackgroundResource(R.drawable.field_bg_error);
                     return;
                 }
 
                 if (!username.matches("^[a-z0-9-]{5,30}$")) {
                     ToastMsg.show(Onboarding.this, "Username must be 5–30 lowercase characters.\nLetters, numbers, and hyphens (-) allowed.");
+                    registerUsernameEditText.setBackgroundResource(R.drawable.field_bg_error);
                     return;
                 }
 
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     ToastMsg.show(Onboarding.this, "Invalid email format");
+                    emailEditText.setBackgroundResource(R.drawable.field_bg_error);
                     return;
                 }
 
                 if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$")) {
                     ToastMsg.show(Onboarding.this,
                             "Password must be 8–24 characters. Uppercase letter. Lowercase letter. Number. Special character (!@#$%).");
+                    createPasswordEditText.setBackgroundResource(R.drawable.field_bg_error);
+                    confirmPasswordEditText.setBackgroundResource(R.drawable.field_bg_error);
                     return;
                 }
 
                 if (!password.equals(confirmPassword)) {
                     ToastMsg.show(Onboarding.this, "Passwords do not match");
+                    createPasswordEditText.setBackgroundResource(R.drawable.field_bg_error);
+                    confirmPasswordEditText.setBackgroundResource(R.drawable.field_bg_error);
                     return;
                 }
 

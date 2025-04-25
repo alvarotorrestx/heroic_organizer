@@ -44,8 +44,11 @@
                 android:layout_height="wrap_content"
                 android:hint="Email or Username"
                 android:inputType="textEmailAddress"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/white" android:minHeight="48dp" tools:ignore="Autofill"/>
+                android:background="@drawable/field_bg"
+                android:textColor="@color/white" android:minHeight="48dp" tools:ignore="Autofill"
+                android:textColorHighlight="#FB0000"
+                android:textAlignment="viewStart" android:includeFontPadding="true" android:padding="12dp"
+                android:textColorHint="@color/white" android:textStyle="bold"/>
 
         <EditText
                 android:id="@+id/password"
@@ -53,8 +56,11 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_password"
                 android:inputType="textPassword"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/white" android:minHeight="48dp" tools:ignore="Autofill"/>
+                android:background="@drawable/field_bg"
+                android:textColor="@color/white" android:minHeight="48dp" tools:ignore="Autofill"
+                android:textColorHighlight="#FB0000"
+                android:textAlignment="viewStart" android:includeFontPadding="true" android:padding="12dp"
+                android:textColorHint="@color/white" android:textStyle="bold"/>
     </LinearLayout>
 
     <LinearLayout
@@ -75,16 +81,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="First Name"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/white" android:minHeight="48dp"/>
+                android:background="@drawable/field_bg"
+                android:textColor="@color/white" android:minHeight="48dp"
+                android:textColorHighlight="#FB0000"
+                android:textAlignment="viewStart" android:includeFontPadding="true" android:padding="12dp"
+                android:textColorHint="@color/white" android:textStyle="bold"
+        />
 
         <EditText
                 android:id="@+id/createLastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Last Name"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/white" android:minHeight="48dp"/>
+                android:background="@drawable/field_bg"
+                android:textColor="@color/white" android:minHeight="48dp"
+                android:textColorHighlight="#FB0000"
+                android:textAlignment="viewStart" android:includeFontPadding="true" android:padding="12dp"
+                android:textColorHint="@color/white" android:textStyle="bold"
+        />
 
         <EditText
                 android:id="@+id/dateOfBirth"
@@ -94,16 +108,24 @@
                 android:focusable="false"
                 android:clickable="true"
                 android:inputType="none"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/white" android:minHeight="48dp"/>
+                android:background="@drawable/field_bg"
+                android:textColor="@color/white" android:minHeight="48dp"
+                android:textColorHighlight="#FB0000"
+                android:textAlignment="viewStart" android:includeFontPadding="true" android:padding="12dp"
+                android:textColorHint="@color/white" android:textStyle="bold"
+        />
 
         <EditText
                 android:id="@+id/createUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Create Username"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/white" android:minHeight="48dp" tools:ignore="Autofill"/>
+                android:background="@drawable/field_bg"
+                android:textColor="@color/white" android:minHeight="48dp" tools:ignore="Autofill"
+                android:textColorHighlight="#FB0000"
+                android:textAlignment="viewStart" android:includeFontPadding="true" android:padding="12dp"
+                android:textColorHint="@color/white" android:textStyle="bold"
+        />
 
         <EditText
                 android:id="@+id/email"
@@ -111,8 +133,12 @@
                 android:layout_height="wrap_content"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/white" android:minHeight="48dp" tools:ignore="Autofill"/>
+                android:background="@drawable/field_bg"
+                android:textColor="@color/white" android:minHeight="48dp" tools:ignore="Autofill"
+                android:textColorHighlight="#FB0000"
+                android:textAlignment="viewStart" android:includeFontPadding="true" android:padding="12dp"
+                android:textColorHint="@color/white" android:textStyle="bold"
+        />
 
         <EditText
                 android:id="@+id/createPassword"
@@ -120,8 +146,12 @@
                 android:layout_height="wrap_content"
                 android:hint="Password"
                 android:inputType="textPassword"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/white" android:minHeight="48dp" tools:ignore="Autofill"/>
+                android:background="@drawable/field_bg"
+                android:textColor="@color/white" android:minHeight="48dp" tools:ignore="Autofill"
+                android:textColorHighlight="#FB0000"
+                android:textAlignment="viewStart" android:includeFontPadding="true" android:padding="12dp"
+                android:textColorHint="@color/white" android:textStyle="bold"
+        />
 
         <EditText
                 android:id="@+id/confirmPassword"
@@ -129,8 +159,12 @@
                 android:layout_height="match_parent"
                 android:hint="Confirm Password"
                 android:inputType="textPassword"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/white" android:minHeight="48dp" tools:ignore="Autofill"/>
+                android:background="@drawable/field_bg"
+                android:textColor="@color/white" android:minHeight="48dp" tools:ignore="Autofill"
+                android:textColorHighlight="#FB0000"
+                android:textAlignment="viewStart" android:includeFontPadding="false" android:padding="12dp"
+                android:textColorHint="@color/white" android:textStyle="bold"
+        />
     </LinearLayout>
 
     <Button
@@ -148,7 +182,7 @@
             app:layout_constraintVertical_bias="0.851"
             android:backgroundTint="#4C0945" android:textColor="@color/white" app:strokeColor="@color/white"
             app:strokeWidth="2.5sp" app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" android:scaleX="1.25" android:scaleY="1.25"/>
 
     <Button
             android:id="@+id/submitLogin"
@@ -165,7 +199,8 @@
             app:layout_constraintVertical_bias="0.851"
             android:backgroundTint="#4C0945" android:textColor="@color/white" app:strokeColor="@color/white"
             app:strokeWidth="2.5sp" app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintTop_toTopOf="parent" android:visibility="gone"/>
+            app:layout_constraintTop_toTopOf="parent" android:visibility="gone" android:scaleX="1.25"
+            android:scaleY="1.25"/>
 
     <Button
             android:text="@string/action_register" tools:ignore="DuplicateClickableBoundsCheck"
@@ -179,7 +214,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:id="@+id/Register"
             android:backgroundTint="#4C0945" android:textColor="@color/white"
-            app:strokeWidth="2.5sp" app:strokeColor="@color/white"/>
+            app:strokeWidth="2.5sp" app:strokeColor="@color/white" android:scaleX="1.25" android:scaleY="1.25"/>
     <Button
             android:id="@+id/submitRegister" android:visibility="gone"
             android:enabled="true"
@@ -192,7 +227,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:backgroundTint="#4C0945" android:textColor="@color/white"
-            app:strokeWidth="2.5sp" app:strokeColor="@color/white"/>
+            app:strokeWidth="2.5sp" app:strokeColor="@color/white" android:scaleX="1.25" android:scaleY="1.25"/>
     <ProgressBar
             android:id="@+id/loading"
             android:visibility="gone"
