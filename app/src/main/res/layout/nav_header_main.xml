@@ -5,9 +5,8 @@
               android:layout_height="wrap_content"
               android:orientation="vertical"
               android:padding="24dp"
-              android:background="#222"
               android:gravity="center_horizontal"
-              >
+>
 
     <!-- Title -->
     <LinearLayout
