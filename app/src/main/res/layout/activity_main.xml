@@ -20,7 +20,7 @@
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
             android:orientation="vertical"
-            android:background="#222"
+            android:background="@drawable/menu_bg"
             android:padding="24dp"
             android:layout_marginEnd="-65dp"
             android:layout_marginRight="-65dp">

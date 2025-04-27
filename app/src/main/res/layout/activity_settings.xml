@@ -40,10 +40,10 @@
                     android:layout_height="wrap_content"
                     android:text="App Preferences"
                     android:textColor="#FFF"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
         </LinearLayout>
 
-        <View style="@style/SettingsDivider" />
+        <View style="@style/SettingsDivider"/>
 
         <LinearLayout
                 android:id="@+id/pref_notifications"
@@ -53,10 +53,10 @@
                     android:layout_height="wrap_content"
                     android:text="Notifications"
                     android:textColor="#FFF"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
         </LinearLayout>
 
-        <View style="@style/SettingsDivider" />
+        <View style="@style/SettingsDivider"/>
 
         <LinearLayout
                 android:id="@+id/pref_accessibility"
@@ -66,10 +66,10 @@
                     android:layout_height="wrap_content"
                     android:text="Accessibility"
                     android:textColor="#FFF"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
         </LinearLayout>
 
-        <View style="@style/SettingsDivider" />
+        <View style="@style/SettingsDivider"/>
 
         <LinearLayout
                 android:id="@+id/pref_help"
@@ -79,10 +79,10 @@
                     android:layout_height="wrap_content"
                     android:text="Help"
                     android:textColor="#FFF"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
         </LinearLayout>
 
-        <View style="@style/SettingsDivider" />
+        <View style="@style/SettingsDivider"/>
 
         <LinearLayout
                 android:id="@+id/pref_activity_log"
@@ -92,10 +92,10 @@
                     android:layout_height="wrap_content"
                     android:text="Activity Log"
                     android:textColor="#FFF"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
         </LinearLayout>
 
-        <View style="@style/SettingsDivider" />
+        <View style="@style/SettingsDivider"/>
 
         <LinearLayout
                 android:id="@+id/pref_account"
@@ -105,10 +105,10 @@
                     android:layout_height="wrap_content"
                     android:text="Account Settings"
                     android:textColor="#FFF"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
         </LinearLayout>
 
-        <View style="@style/SettingsDivider" />
+        <View style="@style/SettingsDivider"/>
 
         <LinearLayout
                 android:id="@+id/pref_logout"
@@ -118,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:text="Logout"
                     android:textColor="#FFF"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
