@@ -40,4 +40,10 @@
             android:label="Settings"
             tools:layout="@layout/activity_settings" />
 
+    <fragment
+            android:id="@+id/nav_search"
+            android:name="com.example.heroicorganizer.ui.search.SearchFragment"
+            android:label="Search"
+            tools:layout="@layout/fragment_search" />
+
 </navigation>
