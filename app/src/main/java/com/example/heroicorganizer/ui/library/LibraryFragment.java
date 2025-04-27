@@ -51,9 +51,6 @@ public class LibraryFragment extends Fragment {
         final Button updateFolder = view.findViewById(R.id.updateFolder);
         final Button deleteFolder = view.findViewById(R.id.deleteFolder);
 
-        final EditText searchQuery = view.findViewById(R.id.searchQuery);
-        final Button searchComics = view.findViewById(R.id.searchComics);
-
         User currentUser = new User();
         currentUser.setUid(FirebaseAuth.getInstance().getUid());
 
@@ -130,57 +127,6 @@ public class LibraryFragment extends Fragment {
 
                     public void onFailure(String message) {
                         ToastMsg.show(requireContext(), message);
-                    }
-                });
-            }
-        });
-
-        searchComics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String query = searchQuery.getText().toString().trim();
-                if (query.isEmpty()) {
-                    ToastMsg.show(requireContext(), "Please enter a search term");
-                    return;
-                }
-
-                String baseUrl = "https://comicvine.gamespot.com/api/search/";
-                String apiKey = ComicVineConfig.getApiKey(requireContext());
-                if (apiKey == null || apiKey.isEmpty()) {
-                    ToastMsg.show(requireContext(), "API Key missing");
-                    return;
-                }
-                String finalUrl = baseUrl + "?api_key=" + apiKey + "&query=" + query + "&format=json";
-
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url(finalUrl)
-                        .addHeader("User-Agent", "HeroicOrganizerApp/1.0")
-                        .build();
-
-                Log.d("SearchComics", query);
-                Log.d("SearchComics", request.toString());
-                Log.d("SearchComics", finalUrl);
-
-                client.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Log.e("SearchComics", "API Request Failed", e);
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        if (response.isSuccessful() && response.body() != null) {
-                            String jsonResponse = response.body().string();
-
-                            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                            JsonElement jsonElement = JsonParser.parseString(jsonResponse);
-                            String prettyJson = gson.toJson(jsonElement);
-
-                            Log.d("SearchComics", "Search Results: " + prettyJson);
-                        } else {
-                            Log.e("SearchComics", "API Response Failed: " + response.message());
-                        }
                     }
                 });
             }

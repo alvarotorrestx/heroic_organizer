@@ -10,32 +10,22 @@
             android:layout_height="wrap_content">
 
         <EditText
-                android:id="@+id/searchInput"
+                android:id="@+id/searchQuery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter comic title" android:minHeight="48dp"/>
-
-        <Spinner
-                android:id="@+id/publisherFilter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:minHeight="48dp"/>
-
-        <Spinner
-                android:id="@+id/yearFilter"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:minHeight="48dp"/>
+                android:hint="Search Query"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/white"
+                android:minHeight="48dp"
+        />
 
         <Button
-                android:id="@+id/searchButton"
+                android:id="@+id/searchComics"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Search" />
-
-        <Button
-                android:id="@+id/loadMoreButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Load More" />
+                android:text="Search"
+        />
 
     </LinearLayout>
+
 </ScrollView>

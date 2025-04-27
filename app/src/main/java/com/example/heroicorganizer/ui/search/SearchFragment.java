@@ -8,91 +8,95 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.heroicorganizer.*;
+import com.example.heroicorganizer.callback.LibraryFolderCallback;
 import com.example.heroicorganizer.model.LibraryComic;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.example.heroicorganizer.model.LibraryFolder;
+import com.example.heroicorganizer.model.User;
+import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
+import com.example.heroicorganizer.ui.ToastMsg;
+import com.example.heroicorganizer.utils.ComicVineConfig;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import okhttp3.*;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchFragment extends Fragment {
 
-    private EditText searchInput;
-    private Button searchButton;
-    private Button loadMoreButton;
-    private Spinner publisherFilter;
-    private Spinner yearFilter;
-    private List<Comic> comicCache = new ArrayList<>();
-    private List<LibraryComic> userLibrary = new ArrayList<>();
-    private int offset = 0;
-    private final int limit = 20;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_search, container, false);
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search, container, false);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        searchInput = view.findViewById(R.id.searchInput);
-        searchButton = view.findViewById(R.id.searchButton);
-        loadMoreButton = view.findViewById(R.id.loadMoreButton);
-        publisherFilter = view.findViewById(R.id.publisherFilter);
-        yearFilter = view.findViewById(R.id.yearFilter);
+        final EditText searchQuery = view.findViewById(R.id.searchQuery);
+        final Button searchComics = view.findViewById(R.id.searchComics);
 
-        searchButton.setOnClickListener(v -> {
-            String query = searchInput.getText().toString();
-            if (!query.isEmpty()) {
-                offset = 0;
-                searchComics(query, false);
-            }
-        });
+        User currentUser = new User();
+        currentUser.setUid(FirebaseAuth.getInstance().getUid());
 
-        loadMoreButton.setOnClickListener(v -> searchComics(searchInput.getText().toString(), true));
-
-        return view;
-    }
-
-    private void searchComics(String query, boolean isLoadMore) {
-        ComicVineApi api = RetrofitClient.getInstance().create(ComicVineApi.class);
-        String apiKey = ApiKeyProvider.getApiKey();
-        String selectedPublisher = publisherFilter.getSelectedItem().toString();
-        int selectedYear = Integer.parseInt(yearFilter.getSelectedItem().toString());
-
-        api.searchComics(apiKey, query, "json", limit, offset, selectedPublisher, selectedYear).enqueue(new Callback<ApiResponse>() {
+        searchComics.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Comic> comics = response.body().getResults();
-
-                    if (!isLoadMore) {
-                        comicCache.clear();
-                    }
-
-                    comicCache.addAll(comics);
-                    offset += limit;
-
-                    for (Comic comic : comics) {
-                        Log.d("SearchResults", "Title: " + comic.getTitle());
-                    }
-                } else {
-                    Log.e("APIError", "Failed to fetch comics: " + response.message());
+            public void onClick(View v) {
+                String query = searchQuery.getText().toString().trim();
+                if (query.isEmpty()) {
+                    ToastMsg.show(requireContext(), "Please enter a search term");
+                    return;
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Log.e("APIError", "API request failed", t);
+                String baseUrl = "https://comicvine.gamespot.com/api/search/";
+                String apiKey = ComicVineConfig.getApiKey(requireContext());
+                if (apiKey == null || apiKey.isEmpty()) {
+                    ToastMsg.show(requireContext(), "API Key missing");
+                    return;
+                }
+                String finalUrl = baseUrl + "?api_key=" + apiKey + "&query=" + query + "&format=json";
+
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(finalUrl)
+                        .addHeader("User-Agent", "HeroicOrganizerApp/1.0")
+                        .build();
+
+                Log.d("SearchComics", query);
+                Log.d("SearchComics", request.toString());
+                Log.d("SearchComics", finalUrl);
+
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(okhttp3.Call call, IOException e) {
+                        Log.e("SearchComics", "API Request Failed", e);
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if (response.isSuccessful() && response.body() != null) {
+                            String jsonResponse = response.body().string();
+
+                            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                            JsonElement jsonElement = JsonParser.parseString(jsonResponse);
+                            String prettyJson = gson.toJson(jsonElement);
+
+                            Log.d("SearchComics", "Search Results: " + prettyJson);
+                        } else {
+                            Log.e("SearchComics", "API Response Failed: " + response.message());
+                        }
+                    }
+                });
             }
         });
-    }
-
-    private void addComicToLibrary(Comic selectedComic) {
-        LibraryComic newComic = new LibraryComic(
-                selectedComic.getTitle(),
-                selectedComic.getIssueNumber(),
-                selectedComic.getPublisher()
-        );
-        userLibrary.add(newComic);
-        Log.d("Library", "Comic added: " + newComic.getTitle());
     }
 }

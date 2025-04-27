@@ -71,21 +71,4 @@
             android:text="Delete Folder"
     />
 
-    <EditText
-            android:id="@+id/searchQuery"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Search Query"
-            android:backgroundTint="@color/white"
-            android:textColor="@color/white"
-            android:minHeight="48dp"
-    />
-
-    <Button
-            android:id="@+id/searchComics"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Search"
-    />
-
 </LinearLayout>
