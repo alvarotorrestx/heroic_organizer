@@ -1,5 +1,5 @@
 package com.example.heroicorganizer;
-
+import android.view.MenuItem;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
@@ -90,6 +90,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_search) {
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+            navController.navigate(R.id.nav_search);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

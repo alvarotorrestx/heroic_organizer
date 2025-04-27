@@ -1,22 +1,23 @@
-package com.example.heroicorganizer;
+package com.example.heroicorganizer.ui.search;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import java.util.ArrayList;
-import java.util.List;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import com.example.heroicorganizer.*;
+import com.example.heroicorganizer.model.LibraryComic;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import com.example.heroicorganizer.model.LibraryComic;
-import com.example.heroicorganizer.ApiKeyProvider;
+import java.util.ArrayList;
+import java.util.List;
 
-
-
-public class LibraryActivity extends AppCompatActivity {
+public class SearchFragment extends Fragment {
 
     private EditText searchInput;
     private Button searchButton;
@@ -26,28 +27,29 @@ public class LibraryActivity extends AppCompatActivity {
     private List<Comic> comicCache = new ArrayList<>();
     private List<LibraryComic> userLibrary = new ArrayList<>();
     private int offset = 0;
-    private final int limit = 20; // Load 20 results per page
+    private final int limit = 20;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_library); // Ensure this layout exists
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        searchInput = findViewById(R.id.searchInput);
-        searchButton = findViewById(R.id.searchButton);
-        loadMoreButton = findViewById(R.id.loadMoreButton);
-        publisherFilter = findViewById(R.id.publisherFilter);
-        yearFilter = findViewById(R.id.yearFilter);
+        searchInput = view.findViewById(R.id.searchInput);
+        searchButton = view.findViewById(R.id.searchButton);
+        loadMoreButton = view.findViewById(R.id.loadMoreButton);
+        publisherFilter = view.findViewById(R.id.publisherFilter);
+        yearFilter = view.findViewById(R.id.yearFilter);
 
         searchButton.setOnClickListener(v -> {
             String query = searchInput.getText().toString();
             if (!query.isEmpty()) {
-                offset = 0; // Reset pagination
+                offset = 0;
                 searchComics(query, false);
             }
         });
 
         loadMoreButton.setOnClickListener(v -> searchComics(searchInput.getText().toString(), true));
+
+        return view;
     }
 
     private void searchComics(String query, boolean isLoadMore) {
@@ -63,13 +65,12 @@ public class LibraryActivity extends AppCompatActivity {
                     List<Comic> comics = response.body().getResults();
 
                     if (!isLoadMore) {
-                        comicCache.clear(); // Overwrite previous search results
+                        comicCache.clear();
                     }
 
                     comicCache.addAll(comics);
-                    offset += limit; // Move to next batch for pagination
+                    offset += limit;
 
-                    // Log retrieved comics for debugging
                     for (Comic comic : comics) {
                         Log.d("SearchResults", "Title: " + comic.getTitle());
                     }
