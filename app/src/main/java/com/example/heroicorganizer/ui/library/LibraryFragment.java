@@ -110,14 +110,8 @@ public class LibraryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String id = folderId.getText().toString();
-                String name = folderName.getText().toString();
-                String description = folderDescription.getText().toString();
-                String coverImg = folderCoverImg.getText().toString();
-                String colorTag = folderColorTag.getText().toString();
 
-                LibraryFolder folder = new LibraryFolder(id, name, description, coverImg, colorTag);
-
-                LibraryFolderPresenter.deleteFolder(currentUser, folder, new LibraryFolderCallback() {
+                LibraryFolderPresenter.deleteFolder(currentUser, id, new LibraryFolderCallback() {
                     public void onSuccess(String message) {
                         ToastMsg.show(requireContext(), message);
                     }

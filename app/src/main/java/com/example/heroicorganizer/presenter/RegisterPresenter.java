@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class RegisterPresenter {
 
-    private static final Pattern USERNAME_REGEX = Pattern.compile("^[a-z0-9-]{5,30}$");
+    private static final Pattern USERNAME_REGEX = Pattern.compile("^[A-Za-z0-9_-]{5,30}$");
 
     public static void registerUser(User user, RegisterCallback callback) {
         // Validate username format before registering
