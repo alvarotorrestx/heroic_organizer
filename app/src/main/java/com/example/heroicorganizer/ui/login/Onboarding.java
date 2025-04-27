@@ -212,8 +212,8 @@ public class Onboarding extends AppCompatActivity {
                     return;
                 }
 
-                if (!username.matches("^[a-z0-9-]{5,30}$")) {
-                    ToastMsg.show(Onboarding.this, "Username must be 5–30 lowercase characters.\nLetters, numbers, and hyphens (-) allowed.");
+                if (!username.matches("^[A-Za-z0-9_-]{5,30}$")) {
+                    ToastMsg.show(Onboarding.this, "Username must be 5–30 characters.\nLetters, numbers, _, and - allowed.");
                     registerUsernameEditText.setBackgroundResource(R.drawable.field_bg_error);
                     return;
                 }
