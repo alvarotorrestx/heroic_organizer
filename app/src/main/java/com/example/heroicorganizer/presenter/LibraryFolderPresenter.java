@@ -77,12 +77,12 @@ public class LibraryFolderPresenter {
             return;
         }
 
-//        if (folder.getCoverImage() != null || !folder.getCoverImage().isEmpty()) {
-//            if (!Patterns.WEB_URL.matcher(folder.getCoverImage()).matches()) {
-//                callback.onFailure("Cover image must be a valid URL.");
-//                return;
-//            }
-//        }
+        if (!folder.getCoverImage().isEmpty()) {
+            if (!Patterns.WEB_URL.matcher(folder.getCoverImage()).matches()) {
+                callback.onFailure("Cover image must be a valid URL.");
+                return;
+            }
+        }
 
         if ((folder.getCoverImage() == null || folder.getCoverImage().isEmpty()) &&
                 (folder.getColorTag() == null || folder.getColorTag().isEmpty())) {
