@@ -24,7 +24,9 @@ import android.app.DatePickerDialog;
 import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LoginPresenter;
 import com.example.heroicorganizer.presenter.RegisterPresenter;
+
 import java.util.Calendar;
+
 import com.example.heroicorganizer.ui.ToastMsg;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -68,6 +70,20 @@ public class Onboarding extends AppCompatActivity {
         final EditText createPasswordEditText = findViewById(R.id.createPassword);
         final EditText confirmPasswordEditText = findViewById(R.id.confirmPassword);
         final Button backBtn = findViewById(R.id.back);
+
+        // Helper to undo red invalidations when user starts typing again
+        // Login Fields
+        addResetOnType(usernameEditText);
+        addResetOnType(passwordEditText);
+
+        // Register Fields
+        addResetOnType(firstNameEditText);
+        addResetOnType(lastNameEditText);
+        addResetOnType(dobEditText);
+        addResetOnType(registerUsernameEditText);
+        addResetOnType(emailEditText);
+        addResetOnType(createPasswordEditText);
+        addResetOnType(confirmPasswordEditText);
 
 
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +139,7 @@ public class Onboarding extends AppCompatActivity {
 
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     ToastMsg.show(Onboarding.this, "Invalid email format");
+                    usernameEditText.setBackgroundResource(R.drawable.field_bg_error);
                     passwordEditText.setBackgroundResource(R.drawable.field_bg_error);
                     return;
                 }
@@ -173,6 +190,13 @@ public class Onboarding extends AppCompatActivity {
                 if (firstName.isEmpty() || lastName.isEmpty() || dob.isEmpty() ||
                         username.isEmpty() || email.isEmpty() || password.isEmpty()) {
                     ToastMsg.show(Onboarding.this, "Please fill out all the fields.");
+                    firstNameEditText.setBackgroundResource(R.drawable.field_bg_error);
+                    lastNameEditText.setBackgroundResource(R.drawable.field_bg_error);
+                    dobEditText.setBackgroundResource(R.drawable.field_bg_error);
+                    registerUsernameEditText.setBackgroundResource(R.drawable.field_bg_error);
+                    emailEditText.setBackgroundResource(R.drawable.field_bg_error);
+                    createPasswordEditText.setBackgroundResource(R.drawable.field_bg_error);
+                    confirmPasswordEditText.setBackgroundResource(R.drawable.field_bg_error);
                     return;
                 }
 
@@ -337,4 +361,20 @@ public class Onboarding extends AppCompatActivity {
     private void showLoginFailed(@StringRes Integer errorString) {
 
     }
+
+    private void addResetOnType(EditText editText) {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                editText.setBackgroundResource(R.drawable.field_bg);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
 }
