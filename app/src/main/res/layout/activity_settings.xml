@@ -4,9 +4,9 @@
               android:id="@+id/settings_container"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#222"
+              android:background="#2A2A2A"
               android:orientation="vertical"
-              android:padding="24dp">
+              >
     <Button
 
             android:id="@+id/btn_close_settings"
@@ -16,8 +16,11 @@
             android:backgroundTint="#4C0945" android:textColor="@color/white" app:strokeColor="@color/white"
             app:strokeWidth="2.5sp"
             android:contentDescription="Close Menu"
-    />
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="24dp"/>
+
     <TextView
+            android:layout_marginTop="2dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Settings"
@@ -35,12 +38,18 @@
         <LinearLayout
                 android:id="@+id/pref_app"
                 style="@style/SettingsItem">
+
+            <ImageView
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:src="@drawable/preferences_icon"/>
+
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="App Preferences"
                     android:textColor="#FFF"
-                    android:textSize="16sp"/>
+                    android:textSize="24sp"/>
         </LinearLayout>
 
         <View style="@style/SettingsDivider"/>
@@ -48,12 +57,18 @@
         <LinearLayout
                 android:id="@+id/pref_notifications"
                 style="@style/SettingsItem">
+
+            <ImageView
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:src="@drawable/notifications_icon"/>
+
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Notifications"
                     android:textColor="#FFF"
-                    android:textSize="16sp"/>
+                    android:textSize="24sp"/>
         </LinearLayout>
 
         <View style="@style/SettingsDivider"/>
@@ -61,12 +76,18 @@
         <LinearLayout
                 android:id="@+id/pref_accessibility"
                 style="@style/SettingsItem">
+
+            <ImageView
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:src="@drawable/accessibility_icon"/>
+
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Accessibility"
                     android:textColor="#FFF"
-                    android:textSize="16sp"/>
+                    android:textSize="24sp"/>
         </LinearLayout>
 
         <View style="@style/SettingsDivider"/>
@@ -74,12 +95,18 @@
         <LinearLayout
                 android:id="@+id/pref_help"
                 style="@style/SettingsItem">
+
+            <ImageView
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:src="@drawable/help_icon"/>
+
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Help"
                     android:textColor="#FFF"
-                    android:textSize="16sp"/>
+                    android:textSize="24sp"/>
         </LinearLayout>
 
         <View style="@style/SettingsDivider"/>
@@ -87,12 +114,18 @@
         <LinearLayout
                 android:id="@+id/pref_activity_log"
                 style="@style/SettingsItem">
+
+            <ImageView
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:src="@drawable/activitylog_icon"/>
+
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Activity Log"
                     android:textColor="#FFF"
-                    android:textSize="16sp"/>
+                    android:textSize="24sp"/>
         </LinearLayout>
 
         <View style="@style/SettingsDivider"/>
@@ -100,12 +133,18 @@
         <LinearLayout
                 android:id="@+id/pref_account"
                 style="@style/SettingsItem">
+
+            <ImageView
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:src="@drawable/account_icon"/>
+
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Account Settings"
                     android:textColor="#FFF"
-                    android:textSize="16sp"/>
+                    android:textSize="24sp"/>
         </LinearLayout>
 
         <View style="@style/SettingsDivider"/>
@@ -113,12 +152,18 @@
         <LinearLayout
                 android:id="@+id/pref_logout"
                 style="@style/SettingsItem">
+
+            <ImageView
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:src="@drawable/logout_icon"/>
+
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Logout"
                     android:textColor="#FFF"
-                    android:textSize="16sp"/>
+                    android:textSize="24sp"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

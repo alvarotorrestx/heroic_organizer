@@ -6,11 +6,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context=".MainActivity">
+        tools:context=".MainActivity" >
 
     <include
             android:id="@+id/app_bar_main"
-            layout="@layout/app_bar_main" />
+            layout="@layout/app_bar_main"/>
 
     <!-- nav drawer -->
     <LinearLayout
@@ -21,9 +21,8 @@
             android:fitsSystemWindows="true"
             android:orientation="vertical"
             android:background="@drawable/menu_bg"
-            android:padding="24dp"
             android:layout_marginEnd="-65dp"
-            android:layout_marginRight="-65dp">
+            android:layout_marginRight="-65dp" android:paddingLeft="0dp">
 
         <include layout="@layout/nav_header_main"/>
 
@@ -39,12 +38,112 @@
                 android:orientation="vertical"
                 android:gravity="center_vertical">
 
-            <TextView android:id="@+id/menu_home" style="@style/MenuItemStyle" android:text="Home"/>
-            <TextView android:id="@+id/menu_library" style="@style/MenuItemStyle" android:text="Library"/>
-            <TextView android:id="@+id/menu_wishlist" style="@style/MenuItemStyle" android:text="Wish-list"/>
-            <TextView android:id="@+id/menu_scan" style="@style/MenuItemStyle" android:text="Scan Comic Cover"/>
-            <TextView android:id="@+id/menu_locator" style="@style/MenuItemStyle" android:text="Store Locator"/>
-            <TextView android:id="@+id/menu_settings" style="@style/MenuItemStyle" android:text="Settings"/>
+            <LinearLayout
+                    android:id="@+id/menu_home"
+                    style="@style/MenuItemStyle">
+
+                <ImageView
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
+                        android:src="@drawable/home_icon"/>
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Home"
+                        android:textColor="#FFF"
+                        android:textSize="24sp"/>
+            </LinearLayout>
+
+            <View style="@style/MenuDivider"/>
+
+            <LinearLayout
+                    android:id="@+id/menu_library"
+                    style="@style/MenuItemStyle">
+
+                <ImageView
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
+                        android:src="@drawable/library_icon"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Library"
+                          android:textColor="#FFF"
+                          android:textSize="24sp"/>
+            </LinearLayout>
+
+            <View style="@style/MenuDivider"/>
+
+            <LinearLayout
+                    android:id="@+id/menu_wishlist"
+                    style="@style/MenuItemStyle">
+
+                <ImageView
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
+                        android:src="@drawable/wishlist_icon"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Wish-list"
+                          android:textColor="#FFF"
+                          android:textSize="24sp"/>
+            </LinearLayout>
+
+            <View style="@style/MenuDivider"/>
+
+            <LinearLayout
+                    android:id="@+id/menu_scan"
+                    style="@style/MenuItemStyle">
+
+                <ImageView
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
+                        android:src="@drawable/scan_icon"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Scan Comic Cover"
+                          android:textColor="#FFF"
+                          android:textSize="24sp"/>
+            </LinearLayout>
+
+            <View style="@style/MenuDivider"/>
+
+            <LinearLayout
+                    android:id="@+id/menu_locator"
+                    style="@style/MenuItemStyle">
+
+                <ImageView
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
+                        android:src="@drawable/locator_icon"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Store Locator"
+                          android:textColor="#FFF"
+                          android:textSize="24sp"/>
+            </LinearLayout>
+
+            <View style="@style/MenuDivider"/>
+
+            <LinearLayout
+                    android:id="@+id/menu_settings"
+                    style="@style/MenuItemStyle">
+
+                <ImageView
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
+                        android:src="@drawable/settings_icon"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Settings"
+                          android:textColor="#FFF"
+                          android:textSize="24sp"/>
+            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
