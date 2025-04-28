@@ -54,8 +54,9 @@ public class LibraryCreateFolderFragment extends Fragment {
                 String description = folderDescription.getText().toString();
                 String coverImg = folderCoverImg.getText().toString();
                 String colorTag = folderColorTag.getText().toString();
+                int totalComics = 0;
 
-                LibraryFolder folder = new LibraryFolder(id, name, description, coverImg, colorTag);
+                LibraryFolder folder = new LibraryFolder(id, name, description, coverImg, colorTag, totalComics);
 
                 LibraryFolderPresenter.createFolder(currentUser, folder, new LibraryFolderCallback() {
                     public void onSuccess(String message) {
@@ -80,8 +81,14 @@ public class LibraryCreateFolderFragment extends Fragment {
                 String description = folderDescription.getText().toString();
                 String coverImg = folderCoverImg.getText().toString();
                 String colorTag = folderColorTag.getText().toString();
+                int totalComics = 0; // TODO: Update this to pull in current total of comics in updating folder.
 
-                LibraryFolder folder = new LibraryFolder(id, name, description, coverImg, colorTag);
+                LibraryFolder folder = new LibraryFolder(id, name, description, coverImg, colorTag, totalComics);
+
+                if (totalComics == 0) { // TODO: reminder for the above todo
+                    ToastMsg.show(requireContext(), "Al. Please update method.");
+                    return;
+                }
 
                 LibraryFolderPresenter.updateFolder(currentUser, folder, new LibraryFolderCallback() {
                     public void onSuccess(String message) {

@@ -75,8 +75,7 @@ public class LibraryFragment extends Fragment {
 
                         folderName.setText(folder.getName());
 
-                        // TODO: Add field to count total comics in Folder
-                        comicCount.setText("0 Comics");
+                        comicCount.setText(folder.getTotalComics() + " Comics");
 
                         if (folder.getCoverImage() != null && !folder.getCoverImage().isEmpty()) {
                             // Image package - rendering images with built-in caching
