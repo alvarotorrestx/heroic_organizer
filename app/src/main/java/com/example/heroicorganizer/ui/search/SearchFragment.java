@@ -1,16 +1,16 @@
 package com.example.heroicorganizer.ui.search;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.bumptech.glide.Glide;
 import com.example.heroicorganizer.*;
 import com.example.heroicorganizer.callback.LibraryFolderCallback;
 import com.example.heroicorganizer.model.LibraryComic;
@@ -57,9 +57,23 @@ public class SearchFragment extends Fragment {
                     return;
                 }
 
+                final GridLayout comicResultsContainer = view.findViewById(R.id.comicResultsContainer);
+
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+
+                TextView loadingText = new TextView(requireContext());
+                loadingText.setText("Loading...");
+                loadingText.setTextColor(getResources().getColor(android.R.color.white));
+                loadingText.setTextSize(18);
+                loadingText.setGravity(View.TEXT_ALIGNMENT_CENTER);
+
+                comicResultsContainer.addView(loadingText);
+
                 String baseUrl = "https://comicvine.gamespot.com/api/search/";
                 String apiKey = ComicVineConfig.getApiKey(requireContext());
                 if (apiKey == null || apiKey.isEmpty()) {
+                    // Removes Loading...
+                    comicResultsContainer.removeAllViews();
                     ToastMsg.show(requireContext(), "API Key missing");
                     return;
                 }
@@ -78,25 +92,65 @@ public class SearchFragment extends Fragment {
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(okhttp3.Call call, IOException e) {
-                        Log.e("SearchComics", "API Request Failed", e);
+                        requireActivity().runOnUiThread(() -> {
+                            // Removes Loading...
+                            comicResultsContainer.removeAllViews();
+                            Log.e("SearchComics", "API Request Failed", e);
+                            ToastMsg.show(requireContext(), "API Request Failed");
+                        });
                     }
+
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
+                        String jsonResponse = response.body().string();
+
                         if (response.isSuccessful() && response.body() != null) {
-                            String jsonResponse = response.body().string();
+                            Gson gson = new Gson();
+                            ApiResponse apiResponse = gson.fromJson(jsonResponse, ApiResponse.class);
 
-                            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                            JsonElement jsonElement = JsonParser.parseString(jsonResponse);
-                            String prettyJson = gson.toJson(jsonElement);
+                            requireActivity().runOnUiThread(() -> {
+                                // Removes Loading...
+                                comicResultsContainer.removeAllViews();
 
-                            Log.d("SearchComics", "Search Results: " + prettyJson);
+                                // TODO: Temporary limit on search result until we have a better design or pagination
+                                int limit = Math.min(apiResponse.results.size(), 10);
+                                for (int i = 0; i < limit; i++) {
+                                    View comicCard = inflater.inflate(R.layout.comic_card, comicResultsContainer, false);
+
+                                    ImageView coverImage = comicCard.findViewById(R.id.comicResultCoverImage);
+                                    TextView comicName = comicCard.findViewById(R.id.comicResultName);
+
+                                    comicName.setText(apiResponse.results.get(i).name);
+
+                                    Glide.with(requireContext())
+                                            .load(apiResponse.results.get(i).image.screen_url)
+                                            .into(coverImage);
+
+                                    comicResultsContainer.addView(comicCard);
+                                }
+                            });
                         } else {
                             Log.e("SearchComics", "API Response Failed: " + response.message());
+                            ToastMsg.show(requireContext(), "API Response Failed");
                         }
                     }
                 });
             }
         });
+    }
+
+    // TODO: Temporary spot for testing purposes
+    private static class ApiResponse {
+        List<Result> results;
+    }
+
+    private static class Result {
+        String name;
+        Image image;
+    }
+
+    private static class Image {
+        String screen_url;
     }
 }

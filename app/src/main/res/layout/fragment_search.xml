@@ -26,6 +26,28 @@
                 android:text="Search"
         />
 
+        <ScrollView
+                android:id="@+id/searchResultsContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp">
+
+            <!-- Comic Results container wrapper -->
+            <GridLayout
+                    android:id="@+id/comicResultsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:alignmentMode="alignMargins"
+                    android:rowOrderPreserved="false">
+
+            </GridLayout> <!-- Comic Results container wrapper end -->
+
+        </ScrollView>
+
+
     </LinearLayout>
 
 </ScrollView>
