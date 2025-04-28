@@ -7,6 +7,15 @@
               android:background="#555555">
 
     <EditText
+            android:id="@+id/folderId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Folder Id"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/white"
+            android:minHeight="48dp"
+    />
+    <EditText
             android:id="@+id/folderName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,7 +46,7 @@
             android:id="@+id/folderColorTag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Folder Color Tag"
+            android:hint="Folder Color"
             android:backgroundTint="@color/white"
             android:textColor="@color/white"
             android:minHeight="48dp"
@@ -48,6 +57,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Create Folder"
+    />
+    <Button
+            android:id="@+id/updateFolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Update Folder"
+    />
+    <Button
+            android:id="@+id/deleteFolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete Folder"
     />
 
 </LinearLayout>
