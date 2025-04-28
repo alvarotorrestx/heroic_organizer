@@ -1,74 +1,22 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/library_testing_content"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:padding="16dp"
-              android:orientation="vertical"
-              android:background="#555555">
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/library_testing_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#555555"
+        android:padding="16dp">
 
-    <EditText
-            android:id="@+id/folderId"
+    <!-- Folder container wrapper -->
+    <GridLayout
+            android:id="@+id/folderContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Folder Id"
-            android:backgroundTint="@color/white"
-            android:textColor="@color/white"
-            android:minHeight="48dp"
-    />
-    <EditText
-            android:id="@+id/folderName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Folder Name"
-            android:backgroundTint="@color/white"
-            android:textColor="@color/white"
-            android:minHeight="48dp"
-    />
-    <EditText
-            android:id="@+id/folderDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Folder Description"
-            android:backgroundTint="@color/white"
-            android:textColor="@color/white"
-            android:minHeight="48dp"
-    />
-    <EditText
-            android:id="@+id/folderCoverImg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Folder Cover Image URL"
-            android:backgroundTint="@color/white"
-            android:textColor="@color/white"
-            android:minHeight="48dp"
-    />
-    <EditText
-            android:id="@+id/folderColorTag"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Folder Color"
-            android:backgroundTint="@color/white"
-            android:textColor="@color/white"
-            android:minHeight="48dp"
-    />
+            android:columnCount="2"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:alignmentMode="alignMargins"
+            android:rowOrderPreserved="false">
 
-    <Button
-            android:id="@+id/newFolder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Create Folder"
-    />
-    <Button
-            android:id="@+id/updateFolder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Update Folder"
-    />
-    <Button
-            android:id="@+id/deleteFolder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Delete Folder"
-    />
+    </GridLayout> <!-- Folder container wrapper end -->
 
-</LinearLayout>
+</ScrollView>

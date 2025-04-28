@@ -1,12 +1,14 @@
 package com.example.heroicorganizer.ui.library;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,15 +18,9 @@ import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
-import com.example.heroicorganizer.utils.ComicVineConfig;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import okhttp3.*;
+import com.bumptech.glide.Glide;
 
-import java.io.IOException;
 import java.util.List;
 
 public class LibraryFragment extends Fragment {
@@ -42,89 +38,83 @@ public class LibraryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final EditText folderId = view.findViewById(R.id.folderId);
-        final EditText folderName = view.findViewById(R.id.folderName);
-        final EditText folderDescription = view.findViewById(R.id.folderDescription);
-        final EditText folderCoverImg = view.findViewById(R.id.folderCoverImg);
-        final EditText folderColorTag = view.findViewById(R.id.folderColorTag);
-        final Button newFolder = view.findViewById(R.id.newFolder);
-        final Button updateFolder = view.findViewById(R.id.updateFolder);
-        final Button deleteFolder = view.findViewById(R.id.deleteFolder);
-
         User currentUser = new User();
         currentUser.setUid(FirebaseAuth.getInstance().getUid());
 
-        newFolder.setOnClickListener(new View.OnClickListener() {
+        final GridLayout folderContainer = view.findViewById(R.id.folderContainer);
+
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+
+        TextView loadingText = new TextView(requireContext());
+        loadingText.setText("Loading...");
+        loadingText.setTextColor(getResources().getColor(android.R.color.white));
+        loadingText.setTextSize(18);
+        loadingText.setGravity(View.TEXT_ALIGNMENT_CENTER);
+
+        folderContainer.addView(loadingText);
+
+        // Pull in all of user's folders
+        LibraryFolderPresenter.getFolders(currentUser, new LibraryFolderCallback() {
+
             @Override
-            public void onClick(View v) {
-                String id = folderId.getText().toString();
-                String name = folderName.getText().toString();
-                String description = folderDescription.getText().toString();
-                String coverImg = folderCoverImg.getText().toString();
-                String colorTag = folderColorTag.getText().toString();
+            public void onSuccess(String message) {
+            }
 
-                LibraryFolder folder = new LibraryFolder(id, name, description, coverImg, colorTag);
+            @Override
+            public void onSuccessFolders(List<LibraryFolder> folders) {
+                // Removes Loading...
+                folderContainer.removeAllViews();
 
-                LibraryFolderPresenter.createFolder(currentUser, folder, new LibraryFolderCallback() {
-                    public void onSuccess(String message) {
-                        ToastMsg.show(requireContext(), message);
+                if (!folders.isEmpty()) {
+                    for (LibraryFolder folder : folders) {
+                        View folderCard = inflater.inflate(R.layout.folder_card, folderContainer, false);
+
+                        ImageView coverImage = folderCard.findViewById(R.id.folderCoverImage);
+                        TextView folderName = folderCard.findViewById(R.id.folderName);
+                        TextView comicCount = folderCard.findViewById(R.id.folderComicCount);
+
+                        folderName.setText(folder.getName());
+
+                        comicCount.setText(folder.getTotalComics() + " Comics");
+
+                        if (folder.getCoverImage() != null && !folder.getCoverImage().isEmpty()) {
+                            // Image package - rendering images with built-in caching
+                            Glide.with(requireContext())
+                                    .load(folder.getCoverImage())
+                                    .into(coverImage);
+                        } else if (folder.getColorTag() != null && !folder.getColorTag().isEmpty()) {
+                            try {
+                                int color = android.graphics.Color.parseColor(folder.getColorTag());
+                                coverImage.setBackgroundColor(color);
+                            } catch (IllegalArgumentException e) {
+                                Log.e("LibraryFragment", "Invalid color format: " + folder.getColorTag());
+                                coverImage.setBackgroundColor(Color.parseColor("#FFBB86FC"));
+                            }
+                        } else {
+                            coverImage.setBackgroundColor(Color.parseColor("#FFBB86FC"));
+                        }
+
+                        folderContainer.addView(folderCard);
                     }
+                } else { // If no folders are created by user or found
+                    TextView noFolders = new TextView(requireContext());
+                    noFolders.setText("No folders found.");
+                    noFolders.setTextColor(getResources().getColor(android.R.color.white));
+                    noFolders.setTextSize(18);
+                    noFolders.setGravity(View.TEXT_ALIGNMENT_CENTER);
 
-                    public void onSuccessFolders(List<LibraryFolder> folders) {
-                    }
+                    folderContainer.addView(noFolders);
+                    return;
+                }
+            }
 
-                    public void onFailure(String message) {
-                        ToastMsg.show(requireContext(), message);
-                    }
-                });
+            @Override
+            public void onFailure(String errorMessage) {
+                // Removes Loading...
+                folderContainer.removeAllViews();
+
+                ToastMsg.show(requireContext(), errorMessage);
             }
         });
-
-        updateFolder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String id = folderId.getText().toString();
-                String name = folderName.getText().toString();
-                String description = folderDescription.getText().toString();
-                String coverImg = folderCoverImg.getText().toString();
-                String colorTag = folderColorTag.getText().toString();
-
-                LibraryFolder folder = new LibraryFolder(id, name, description, coverImg, colorTag);
-
-                LibraryFolderPresenter.updateFolder(currentUser, folder, new LibraryFolderCallback() {
-                    public void onSuccess(String message) {
-                        ToastMsg.show(requireContext(), message);
-                    }
-
-                    public void onSuccessFolders(List<LibraryFolder> folders) {
-                    }
-
-                    public void onFailure(String message) {
-                        ToastMsg.show(requireContext(), message);
-                    }
-                });
-            }
-        });
-
-        deleteFolder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String id = folderId.getText().toString();
-
-                LibraryFolderPresenter.deleteFolder(currentUser, id, new LibraryFolderCallback() {
-                    public void onSuccess(String message) {
-                        ToastMsg.show(requireContext(), message);
-                    }
-
-                    public void onSuccessFolders(List<LibraryFolder> folders) {
-                    }
-
-                    public void onFailure(String message) {
-                        ToastMsg.show(requireContext(), message);
-                    }
-                });
-            }
-        });
-
     }
 }

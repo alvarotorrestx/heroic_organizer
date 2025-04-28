@@ -10,12 +10,14 @@ public class LibraryFolder {
     private String description;
     private String coverImage;
     private String colorTag;
+    private int totalComics = 0;
 
     private static final String DEFAULT_COLOR_TAG = "#FFBB86FC";
 
-    public LibraryFolder() {}
+    public LibraryFolder() {
+    }
 
-    public LibraryFolder(String id, String name, String description, String coverImage, String colorTag) {
+    public LibraryFolder(String id, String name, String description, String coverImage, String colorTag, int totalComics) {
 
         if (id == null || name == null) {
             throw new IllegalArgumentException("id and name are required.");
@@ -31,6 +33,7 @@ public class LibraryFolder {
         this.description = description;
         this.coverImage = coverImage;
         this.colorTag = colorTag != null ? colorTag : DEFAULT_COLOR_TAG;
+        this.totalComics = totalComics;
     }
 
     // Convert folder object for Firestore presenter
@@ -41,6 +44,7 @@ public class LibraryFolder {
         map.put("description", description);
         map.put("coverImage", coverImage);
         map.put("colorTag", colorTag);
+        map.put("totalComics", totalComics);
         return map;
     }
 
@@ -65,6 +69,10 @@ public class LibraryFolder {
         return colorTag;
     }
 
+    public int getTotalComics() {
+        return totalComics;
+    }
+
     // Setters
     public void setId(String id) {
         this.id = id;
@@ -84,5 +92,9 @@ public class LibraryFolder {
 
     public void setColorTag(String colorTag) {
         this.colorTag = colorTag;
+    }
+
+    public void setTotalComics(int totalComics) {
+        this.totalComics = totalComics;
     }
 }
