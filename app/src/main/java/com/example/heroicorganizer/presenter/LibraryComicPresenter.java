@@ -74,6 +74,7 @@ public class LibraryComicPresenter {
     }
 
     // Get specific comic in folder
+    // TODO: Determine use case of this
     public static void searchComicInFolder(User user, LibraryFolder folder, String field, String value, LibraryComicCallback callback) {
         if (folder.getId() == null || folder.getId().isEmpty()) {
             Log.e(TAG, "Folder ID is missing or wrong. Cannot search comics.");
@@ -122,9 +123,9 @@ public class LibraryComicPresenter {
     }
 
     // Add Comic to Library - Folder
-    public static void addComicToFolder(User user, LibraryFolder folder, LibraryComic comic, LibraryComicCallback callback) {
-        if (folder.getId() == null || folder.getId().isEmpty()) {
-            Log.e(TAG, "Folder ID is missing or wrong. Cannot retrieve comics.");
+    public static void addComicToFolder(User user, String folderId, LibraryComic comic, LibraryComicCallback callback) {
+        if (folderId == null || folderId.isEmpty()) {
+            Log.e(TAG, "Folder ID is missing or wrong. Cannot add comic.");
             callback.onFailure("Folder ID is missing or wrong.");
             return;
         }
@@ -133,22 +134,37 @@ public class LibraryComicPresenter {
             comic.setId(UUID.randomUUID().toString());
         }
 
-        FirebaseDB
+        DocumentReference folderRef = FirebaseDB
                 .getDb()
                 .collection("users")
                 .document(Objects.requireNonNull(user.getUid()))
                 .collection("folders")
-                .document(folder.getId())
-                .collection("comics")
-                .document(comic.getId())
-                .set(comic)
-                .addOnCompleteListener(aVoid -> {
-                    Log.d(TAG, "Added comic: " + comic.getTitle() + " (ID: " + comic.getId() + ") to Folder: " + folder.getName());
-                    callback.onSuccess("Added comic: " + comic.getTitle() + " to Folder: " + folder.getName());
+                .document(folderId);
+
+        folderRef
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult().exists()) {
+                        folderRef
+                                .collection("comics")
+                                .document(comic.getId())
+                                .set(comic, SetOptions.merge())
+                                .addOnCompleteListener(aVoid -> {
+                                    Log.d(TAG, "Added comic: " + comic.getTitle() + " (ID: " + comic.getId() + ") to Folder.");
+                                    callback.onSuccess("Added comic: " + comic.getTitle() + " to Folder.");
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e(TAG, "Error adding comic: " + comic.getId() + " to Folder.", e);
+                                    callback.onFailure("Error adding comic: " + comic.getId() + " to Folder.");
+                                });
+                    } else {
+                        Log.e(TAG, "Folder does not exist. Cannot add comic.", task.getException());
+                        callback.onFailure("Folder not found. Please try again.");
+                    }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error adding comic: " + comic.getId() + " to Folder: " + folder.getName(), e);
-                    callback.onFailure("Error adding comic: " + comic.getId() + " to Folder: " + folder.getName());
+                    Log.e(TAG, "Error adding comic: ", e);
+                    callback.onFailure("Error adding comic: " + e.getMessage());
                 });
     }
 
