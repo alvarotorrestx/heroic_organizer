@@ -41,6 +41,22 @@ public class LibraryFragment extends Fragment {
         User currentUser = new User();
         currentUser.setUid(FirebaseAuth.getInstance().getUid());
 
+        // Add Folder button
+        final ImageView addFolder = view.findViewById(R.id.addFolder);
+
+        addFolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LibraryCreateFolderFragment createFolderFragment = new LibraryCreateFolderFragment();
+
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.library_fragment_container, createFolderFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
         final GridLayout folderContainer = view.findViewById(R.id.folderContainer);
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
