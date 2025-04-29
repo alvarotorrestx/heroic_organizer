@@ -169,9 +169,9 @@ public class LibraryComicPresenter {
     }
 
     // Update Comic in Library - Folder
-    public static void updateComicInFolder(User user, LibraryFolder folder, LibraryComic comic, LibraryComicCallback callback) {
-        if (folder.getId() == null || folder.getId().isEmpty()) {
-            Log.e(TAG, "Folder ID is missing or wrong. Cannot retrieve comics.");
+    public static void updateComicInFolder(User user, String folderId, LibraryComic comic, LibraryComicCallback callback) {
+        if (folderId == null || folderId.isEmpty()) {
+            Log.e(TAG, "Folder ID is missing or wrong. Cannot update comic.");
             callback.onFailure("Folder ID is missing or wrong.");
             return;
         }
@@ -187,17 +187,17 @@ public class LibraryComicPresenter {
                 .collection("users")
                 .document(Objects.requireNonNull(user.getUid()))
                 .collection("folders")
-                .document(folder.getId())
+                .document(folderId)
                 .collection("comics")
                 .document(comic.getId())
                 .set(comic, SetOptions.merge())
                 .addOnCompleteListener(aVoid -> {
-                    Log.d(TAG, "Updated comic: " + comic.getTitle() + " (ID: " + comic.getId() + ") in Folder: " + folder.getName());
-                    callback.onSuccess("Updated comic: " + comic.getTitle() + " in Folder: " + folder.getName());
+                    Log.d(TAG, "Updated comic: " + comic.getTitle() + " (ID: " + comic.getId() + ") in Folder.");
+                    callback.onSuccess("Updated comic: " + comic.getTitle() + " in Folder.");
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error updating comic: " + comic.getId() + " in Folder: " + folder.getName(), e);
-                    callback.onFailure("Error updating comic: " + comic.getId() + " in Folder: " + folder.getName());
+                    Log.e(TAG, "Error updating comic: " + comic.getId() + " in Folder.", e);
+                    callback.onFailure("Error updating comic: " + comic.getId() + " in Folder.");
                 });
     }
 
