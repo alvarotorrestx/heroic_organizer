@@ -5,6 +5,14 @@
               android:padding="16dp"
               android:orientation="vertical"
               android:background="#555555">
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/library_testing_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#2A2A2A"
+        android:padding="16dp">
+
 
     <ImageButton
             android:id="@+id/addFolder"
