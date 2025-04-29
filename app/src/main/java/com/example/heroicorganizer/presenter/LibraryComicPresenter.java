@@ -6,6 +6,7 @@ import com.example.heroicorganizer.config.FirebaseDB;
 import com.example.heroicorganizer.model.LibraryComic;
 import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
@@ -21,43 +22,54 @@ public class LibraryComicPresenter {
     public static final String TAG = "LibraryComicPresenter";
 
     // Get all Comics in Library - Folder
-    public static void getComicsInFolder(User user, LibraryFolder folder, LibraryComicCallback callback) {
-        if (folder.getId() == null || folder.getId().isEmpty()) {
+    public static void getComicsInFolder(User user, String folderId, LibraryComicCallback callback) {
+        if (folderId == null || folderId.isEmpty()) {
             Log.e(TAG, "Folder ID is missing or wrong. Cannot retrieve comics.");
             callback.onFailure("Folder ID is missing or wrong.");
             return;
         }
 
-        FirebaseDB
+        DocumentReference folderRef = FirebaseDB
                 .getDb()
                 .collection("users")
                 .document(Objects.requireNonNull(user.getUid()))
                 .collection("folders")
-                .document(folder.getId())
-                .collection("comics")
+                .document(folderId);
+
+        folderRef
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        List<LibraryComic> comicList = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            LibraryComic comic = document.toObject(LibraryComic.class);
-                            comicList.add(comic);
-                        }
+                    if (task.isSuccessful() && task.getResult().exists()) {
+                        folderRef
+                                .collection("comics")
+                                .get()
+                                .addOnCompleteListener(comicTask -> {
+                                    if (comicTask.isSuccessful()) {
+                                        List<LibraryComic> comicList = new ArrayList<>();
+                                        for (QueryDocumentSnapshot document : comicTask.getResult()) {
+                                            LibraryComic comic = document.toObject(LibraryComic.class);
+                                            comicList.add(comic);
+                                        }
 
-                        // Temporary while testing / developing
-                        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                        String json = gson.toJson(comicList);
-                        Log.d(TAG, "Comic List: " + json);
-
-                        callback.onSuccessComics(comicList);
+                                        // Send comic list to FE
+                                        callback.onSuccessComics(comicList);
+                                    } else {
+                                        Log.e(TAG, "Error retrieving comics.", comicTask.getException());
+                                        callback.onFailure("Error retrieving comics.");
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e(TAG, "Error retrieving comics.", e);
+                                    callback.onFailure("Error retrieving comics.");
+                                });
                     } else {
-                        Log.e(TAG, "Error getting comics: ", task.getException());
-                        callback.onFailure("Error getting comics: " + task.getException().getMessage());
+                        Log.e(TAG, "Folder not found.", task.getException());
+                        callback.onFailure("Folder not found.");
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error getting comics", e);
-                    callback.onFailure("Error getting comics: " + e.getMessage());
+                    Log.e(TAG, "Failed to get folder.", e);
+                    callback.onFailure("Failed to get folder.");
                 });
     }
 

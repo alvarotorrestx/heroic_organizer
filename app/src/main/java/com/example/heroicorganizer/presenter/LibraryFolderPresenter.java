@@ -169,13 +169,19 @@ public class LibraryFolderPresenter {
     }
 
     // Delete Folder from user's library
-    public static void deleteFolder(User user, String id, LibraryFolderCallback callback) {
+    public static void deleteFolder(User user, String folderId, LibraryFolderCallback callback) {
+        if (folderId == null || folderId.isEmpty()) {
+            Log.e(TAG, "Folder ID is missing or wrong. Cannot retrieve comics.");
+            callback.onFailure("Folder ID is missing or wrong.");
+            return;
+        }
+
         FirebaseDB
                 .getDb()
                 .collection("users")
                 .document(Objects.requireNonNull(user.getUid()))
                 .collection("folders")
-                .whereEqualTo("id", id)
+                .whereEqualTo("id", folderId)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
@@ -184,19 +190,19 @@ public class LibraryFolderPresenter {
                                 .collection("users")
                                 .document(Objects.requireNonNull(user.getUid()))
                                 .collection("folders")
-                                .document(id)
+                                .document(folderId)
                                 .delete()
                                 .addOnSuccessListener(aVoid -> {
-                                    Log.d(TAG, "Folder \"" + id + "\" deleted successfully.");
-                                    callback.onSuccess("Folder \"" + id + "\" deleted successfully.");
+                                    Log.d(TAG, "Folder \"" + folderId + "\" deleted successfully.");
+                                    callback.onSuccess("Folder \"" + folderId + "\" deleted successfully.");
                                 })
                                 .addOnFailureListener(e -> {
                                     Log.e(TAG, "Error deleting folder", e);
                                     callback.onFailure("Failed to delete folder: " + e.getMessage());
                                 });
                     } else {
-                        Log.e(TAG, "Folder with ID: " + id + " does not exist.");
-                        callback.onFailure("Folder with ID " + id + " does not exist.");
+                        Log.e(TAG, "Folder with ID: " + folderId + " does not exist.");
+                        callback.onFailure("Folder with ID " + folderId + " does not exist.");
                     }
                 })
                 .addOnFailureListener(e -> {
