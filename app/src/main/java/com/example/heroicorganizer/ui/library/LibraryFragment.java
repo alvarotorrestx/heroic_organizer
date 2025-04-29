@@ -13,20 +13,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.heroicorganizer.R;
-import com.example.heroicorganizer.callback.LibraryFolderCallback;
-import com.example.heroicorganizer.model.LibraryFolder;
-import com.example.heroicorganizer.model.User;
-import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
-import com.example.heroicorganizer.ui.ToastMsg;
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.heroicorganizer.model.Comic;
+import com.example.heroicorganizer.model.ApiResponse;
+import com.example.heroicorganizer.utils.ComicVineConfig;
+import com.example.heroicorganizer.api.ComicVineApi;
 import com.bumptech.glide.Glide;
-
 import java.util.List;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import com.example.heroicorganizer.api.RetrofitClient;
+
 
 public class LibraryFragment extends Fragment {
 
-    public LibraryFragment() {
-    }
+    private GridLayout folderContainer;
+    private int offset = 0;
+    private final int limit = 20;
+
+    public LibraryFragment() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,83 +43,97 @@ public class LibraryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        User currentUser = new User();
-        currentUser.setUid(FirebaseAuth.getInstance().getUid());
+        folderContainer = view.findViewById(R.id.folderContainer);
 
-        final GridLayout folderContainer = view.findViewById(R.id.folderContainer);
-
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-
+        // ✅ Display "Loading..." while API call is in progress
         TextView loadingText = new TextView(requireContext());
         loadingText.setText("Loading...");
         loadingText.setTextColor(getResources().getColor(android.R.color.white));
         loadingText.setTextSize(18);
         loadingText.setGravity(View.TEXT_ALIGNMENT_CENTER);
-
         folderContainer.addView(loadingText);
 
-        // Pull in all of user's folders
-        LibraryFolderPresenter.getFolders(currentUser, new LibraryFolderCallback() {
+        // ✅ Fetch Comics using Retrofit
+        searchComics("batman");
+    }
 
+    private void searchComics(String query) {
+        String apiKey = ComicVineConfig.getApiKey(requireContext());
+        if (apiKey == null || apiKey.isEmpty()) {
+            Log.e("API_ERROR", "API Key is missing!");
+            return;
+        }
+
+        ComicVineApi api = RetrofitClient.getInstance().create(ComicVineApi.class);
+        api.searchComics(apiKey, query, "json", limit, offset).enqueue(new Callback<ApiResponse>() {
             @Override
-            public void onSuccess(String message) {
-            }
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                Log.d("API_DEBUG", "Response Code: " + response.code());
+                folderContainer.removeAllViews(); // Remove "Loading..."
 
-            @Override
-            public void onSuccessFolders(List<LibraryFolder> folders) {
-                // Removes Loading...
-                folderContainer.removeAllViews();
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Comic> comics = response.body().getResults();
+                    Log.d("API_DEBUG", "Comics Found: " + comics.size());
 
-                if (!folders.isEmpty()) {
-                    for (LibraryFolder folder : folders) {
-                        View folderCard = inflater.inflate(R.layout.folder_card, folderContainer, false);
-
-                        ImageView coverImage = folderCard.findViewById(R.id.folderCoverImage);
-                        TextView folderName = folderCard.findViewById(R.id.folderName);
-                        TextView comicCount = folderCard.findViewById(R.id.folderComicCount);
-
-                        folderName.setText(folder.getName());
-
-                        comicCount.setText(folder.getTotalComics() + " Comics");
-
-                        if (folder.getCoverImage() != null && !folder.getCoverImage().isEmpty()) {
-                            // Image package - rendering images with built-in caching
-                            Glide.with(requireContext())
-                                    .load(folder.getCoverImage())
-                                    .into(coverImage);
-                        } else if (folder.getColorTag() != null && !folder.getColorTag().isEmpty()) {
-                            try {
-                                int color = android.graphics.Color.parseColor(folder.getColorTag());
-                                coverImage.setBackgroundColor(color);
-                            } catch (IllegalArgumentException e) {
-                                Log.e("LibraryFragment", "Invalid color format: " + folder.getColorTag());
-                                coverImage.setBackgroundColor(Color.parseColor("#FFBB86FC"));
-                            }
-                        } else {
-                            coverImage.setBackgroundColor(Color.parseColor("#FFBB86FC"));
-                        }
-
-                        folderContainer.addView(folderCard);
+                    if (!comics.isEmpty()) {
+                        populateComics(comics);
+                        offset += limit; // ✅ Handle pagination automatically
+                    } else {
+                        displayNoResults();
                     }
-                } else { // If no folders are created by user or found
-                    TextView noFolders = new TextView(requireContext());
-                    noFolders.setText("No folders found.");
-                    noFolders.setTextColor(getResources().getColor(android.R.color.white));
-                    noFolders.setTextSize(18);
-                    noFolders.setGravity(View.TEXT_ALIGNMENT_CENTER);
-
-                    folderContainer.addView(noFolders);
-                    return;
+                } else {
+                    Log.e("API_ERROR", "Failed to fetch comics: " + response.message());
+                    displayError(response);
                 }
             }
 
             @Override
-            public void onFailure(String errorMessage) {
-                // Removes Loading...
-                folderContainer.removeAllViews();
-
-                ToastMsg.show(requireContext(), errorMessage);
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Log.e("API_ERROR", "API Call Failed: " + t.getMessage());
+                displayNoResults();
             }
         });
+    }
+
+    private void populateComics(List<Comic> comics) {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+
+        for (Comic comic : comics) {
+            View comicCard = inflater.inflate(R.layout.comic_card, folderContainer, false);
+            ImageView coverImage = comicCard.findViewById(R.id.comicCoverImage);
+            TextView comicTitle = comicCard.findViewById(R.id.comicTitle);
+            TextView issueNumber = comicCard.findViewById(R.id.issueNumber);
+
+            comicTitle.setText(comic.getTitle());
+            issueNumber.setText("Issue #" + comic.getIssueNumber());
+
+            if (comic.getCoverImage() != null && !comic.getCoverImage().isEmpty()) {
+                Glide.with(requireContext()).load(comic.getCoverImage()).into(coverImage);
+            } else {
+                coverImage.setBackgroundColor(Color.parseColor("#FFBB86FC"));
+            }
+
+            folderContainer.addView(comicCard);
+        }
+    }
+
+    private void displayNoResults() {
+        TextView noResults = new TextView(requireContext());
+        noResults.setText("No results found.");
+        noResults.setTextColor(getResources().getColor(android.R.color.white));
+        noResults.setTextSize(18);
+        noResults.setGravity(View.TEXT_ALIGNMENT_CENTER);
+        folderContainer.addView(noResults);
+    }
+
+    private void displayError(Response<ApiResponse> response) {
+        try {
+            String errorBody = response.errorBody() != null ? response.errorBody().string() : "Unknown error";
+            Log.e("API_ERROR", "Error Body: " + errorBody);
+        } catch (Exception e) {
+            Log.e("API_ERROR", "Error reading response body", e);
+        }
+
+        displayNoResults();
     }
 }
