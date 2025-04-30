@@ -202,35 +202,50 @@ public class LibraryComicPresenter {
     }
 
     // Remove Comic from Library - Folder
-    public static void deleteComicFromFolder(User user, LibraryFolder folder, LibraryComic comic, LibraryComicCallback callback) {
-        if (folder.getId() == null || folder.getId().isEmpty()) {
-            Log.e(TAG, "Folder ID is missing or wrong. Cannot retrieve comics.");
+    public static void deleteComicFromFolder(User user, String folderId, String comicId, LibraryComicCallback callback) {
+        if (folderId == null || folderId.isEmpty()) {
+            Log.e(TAG, "Folder ID is missing or wrong. Cannot delete comic.");
             callback.onFailure("Folder ID is missing or wrong.");
             return;
         }
 
-        if (comic.getId() == null || comic.getId().isEmpty()) {
+        if (comicId == null || comicId.isEmpty()) {
             Log.e(TAG, "Cannot delete comic: Missing comic ID or is wrong.");
             callback.onFailure("Comic ID is missing or wrong.");
             return;
         }
 
-        FirebaseDB
+        DocumentReference comicRef = FirebaseDB
                 .getDb()
                 .collection("users")
-                .document(Objects.requireNonNull(user.getUid()))
+                .document(user.getUid())
                 .collection("folders")
-                .document(folder.getId())
+                .document(folderId)
                 .collection("comics")
-                .document(comic.getId())
-                .delete()
-                .addOnCompleteListener(aVoid -> {
-                    Log.d(TAG, "Comic deleted successfully with ID: " + comic.getId() + " from Folder: " + folder.getName());
-                    callback.onSuccess("Comic deleted successfully with ID: " + comic.getId() + " from Folder: " + folder.getName());
+                .document(comicId);
+
+        comicRef
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult().exists()) {
+                        comicRef
+                                .delete()
+                                .addOnCompleteListener(aVoid -> {
+                                    Log.d(TAG, "Comic deleted successfully with ID: " + comicId + " from Folder.");
+                                    callback.onSuccess("Comic deleted successfully with ID: " + comicId + " from Folder.");
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e(TAG, "Error deleting comic with ID: " + comicId + " from Folder.", e);
+                                    callback.onFailure("Error deleting comic with ID: " + comicId + " from Folder.");
+                                });
+                    } else {
+                        Log.e(TAG, "Comic not found. Cannot delete comic.", task.getException());
+                        callback.onFailure("Comic not found. Cannot delete comic.");
+                    }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error deleting comic: " + comic.getId() + " from Folder: " + folder.getName(), e);
-                    callback.onFailure("Error deleting comic: " + comic.getId() + " from Folder: " + folder.getName());
+                    Log.e(TAG, "Error deleting comic with ID: " + comicId + " from Folder.", e);
+                    callback.onFailure("Error deleting comic with ID: " + comicId + " from Folder.");
                 });
     }
 }
