@@ -17,6 +17,8 @@ import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity {
 
+
+
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
 
