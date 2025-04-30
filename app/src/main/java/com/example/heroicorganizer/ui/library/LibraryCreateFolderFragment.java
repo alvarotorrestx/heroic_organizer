@@ -85,7 +85,7 @@ public class LibraryCreateFolderFragment extends Fragment {
 
 
 
-    public void returnToFolders() {
+    private void returnToFolders() {
         // Sends user back to the Library Folder(s) page
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()

@@ -1,0 +1,115 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/fragment_comic_details_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#2A2A2A"
+            android:padding="16dp">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+        <Button
+                android:id="@+id/backToSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Back"
+                android:textColor="@color/white"
+                android:backgroundTint="#4C0945"
+                android:layout_gravity="start"
+                app:strokeColor="@color/white"
+                app:strokeWidth="2.5sp"
+                android:layout_marginBottom="16dp" />
+
+        <!-- Comic Cover Avatar -->
+        <ImageView
+                android:id="@+id/comicCoverImage"
+                android:layout_width="200dp"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:background="@drawable/field_bg"
+                android:contentDescription="Comic Cover"
+                android:layout_marginBottom="16dp" />
+
+
+        <!-- Comic Name -->
+        <EditText
+                android:id="@+id/comicName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Comic Name"
+                android:background="@drawable/field_bg"
+                android:textColor="@color/white"
+                android:padding="12dp"
+                android:layout_marginBottom="12dp" />
+
+        <!-- Comic Deck -->
+        <EditText
+                android:id="@+id/comicDeck"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Comic Deck"
+                android:background="@drawable/field_bg"
+                android:textColor="@color/white"
+                android:padding="12dp"
+                android:layout_marginBottom="12dp" />
+
+        <!-- Comic Description -->
+        <EditText
+                android:id="@+id/comicDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Comic Description"
+                android:background="@drawable/field_bg"
+                android:textColor="@color/white"
+                android:padding="12dp"
+                android:layout_marginBottom="12dp" />
+
+        <!-- Comic Publisher -->
+        <EditText
+                android:id="@+id/comicPublishers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Publisher"
+                android:background="@drawable/field_bg"
+                android:textColor="@color/white"
+                android:padding="12dp"
+                android:layout_marginBottom="12dp" />
+
+        <!-- Issue Number -->
+        <EditText
+                android:id="@+id/comicIssueNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Issue #"
+                android:background="@drawable/field_bg"
+                android:textColor="@color/white"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp" />
+
+        <!-- Folder Selection Spinner -->
+        <Spinner
+                android:id="@+id/folderSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/field_bg"
+                android:layout_marginBottom="24dp"
+                android:padding="12dp"
+                android:popupBackground="@color/white" />
+
+        <!-- Add Button -->
+        <Button
+                android:id="@+id/addToLibrary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add to Library"
+                android:backgroundTint="#32D583"
+                android:textColor="@color/white"
+                android:layout_marginBottom="12dp" />
+
+    </LinearLayout>
+</ScrollView>
