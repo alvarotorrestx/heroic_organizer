@@ -1,17 +1,27 @@
 package com.example.heroicorganizer.ui.comic;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.bumptech.glide.Glide;
 import com.example.heroicorganizer.R;
+import com.example.heroicorganizer.callback.LibraryFolderCallback;
+import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
+import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
+import com.example.heroicorganizer.ui.ToastMsg;
 import com.example.heroicorganizer.ui.library.LibraryFragment;
+import com.example.heroicorganizer.ui.search.SearchFragment;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ComicDetailFragment extends Fragment {
     @Override
@@ -28,21 +38,72 @@ public class ComicDetailFragment extends Fragment {
         currentUser.setUid(FirebaseAuth.getInstance().getUid());
 
         final Button backToSearch = view.findViewById(R.id.backToSearch);
+        final ImageView comicCoverImage = view.findViewById(R.id.comicCoverImage);
+        final EditText comicName = view.findViewById(R.id.comicName);
+        final EditText comicDeck = view.findViewById(R.id.comicDeck);
+        final EditText comicDescription = view.findViewById(R.id.comicDescription);
+        final EditText comicPublishers = view.findViewById(R.id.comicPublishers);
+        final EditText comicIssueNumber = view.findViewById(R.id.comicIssueNumber);
+        final Spinner folderSpinner = view.findViewById(R.id.folderSpinner);
 
         // Sends user back to the Search Result(s) page
+        // TODO: See if we can figure out how to return the same results (maybe cache)
         backToSearch.setOnClickListener(new View.OnClickListener() {
-           @Override
+            @Override
             public void onClick(View v) {
-               returnToSearch();
-           }
+                returnToSearch();
+            }
         });
+
+        // Read from passed bundled responses from SearchFragment
+        Bundle passedBundle = getArguments();
+        if (passedBundle != null) {
+            comicName.setText(passedBundle.getString("name"));
+            comicDeck.setText(passedBundle.getString("deck"));
+            comicDescription.setText(passedBundle.getString("description"));
+            comicPublishers.setText(passedBundle.getString("publishers"));
+            comicIssueNumber.setText(passedBundle.getString("issueNumber"));
+
+            Glide.with(requireContext())
+                    .load(passedBundle.getString("image"))
+                    .into(comicCoverImage);
+
+            LibraryFolderPresenter.getFolders(currentUser, new LibraryFolderCallback() {
+                @Override
+                public void onSuccess(String message) {
+
+                }
+
+                @Override
+                public void onSuccessFolders(List<LibraryFolder> folders) {
+                    List<String> folderNames = new ArrayList<>();
+                    for (LibraryFolder folder : folders) {
+                        folderNames.add(folder.getName());
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                            requireContext(),
+                            android.R.layout.simple_spinner_dropdown_item,
+                            folderNames
+                    );
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    folderSpinner.setAdapter(adapter);
+                }
+
+                @Override
+                public void onFailure(String errorMessage) {
+                    ToastMsg.show(requireContext(), "Failed to load folders");
+                    Log.e("FolderSpinner", "Error: " + errorMessage);
+                }
+            });
+        }
     }
 
     private void returnToSearch() {
         // Sends user back to the Search Result(s) page
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.search_fragment_container, new LibraryFragment())
+                .replace(R.id.search_fragment_container, new SearchFragment())
                 .commit();
     }
 }
