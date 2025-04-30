@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#2A2A2A"
-            android:padding="16dp">
+            >
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -42,6 +42,7 @@
                     android:scaleType="centerCrop"
                     android:background="@drawable/field_bg"
                     android:contentDescription="Comic Cover"
+                    android:layout_marginTop="12dp"
                     android:layout_marginBottom="16dp"/>
 
 
@@ -61,22 +62,30 @@
                     android:id="@+id/comicDeck"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxHeight="150dp"
                     android:hint="Comic Deck"
                     android:background="@drawable/field_bg"
                     android:textColor="@color/white"
                     android:padding="12dp"
-                    android:layout_marginBottom="12dp"/>
+                    android:layout_marginBottom="12dp"
+                    android:overScrollMode="always"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="vertical"/>
 
             <!-- Comic Description -->
             <EditText
                     android:id="@+id/comicDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxHeight="150dp"
                     android:hint="Comic Description"
                     android:background="@drawable/field_bg"
                     android:textColor="@color/white"
                     android:padding="12dp"
-                    android:layout_marginBottom="12dp"/>
+                    android:layout_marginBottom="12dp"
+                    android:overScrollMode="always"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="vertical"/>
 
             <!-- Comic Publisher -->
             <EditText
@@ -118,7 +127,7 @@
                     android:text="Add to Library"
                     android:backgroundTint="#32D583"
                     android:textColor="@color/white"
-                    android:layout_marginBottom="24dp"/>
+                    android:layout_marginBottom="12dp"/>
 
         </LinearLayout>
     </ScrollView>

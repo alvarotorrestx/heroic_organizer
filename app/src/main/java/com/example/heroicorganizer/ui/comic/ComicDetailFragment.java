@@ -1,6 +1,8 @@
 package com.example.heroicorganizer.ui.comic;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +62,12 @@ public class ComicDetailFragment extends Fragment {
         if (passedBundle != null) {
             comicName.setText(passedBundle.getString("name"));
             comicDeck.setText(passedBundle.getString("deck"));
-            comicDescription.setText(passedBundle.getString("description"));
+            // Cleans up HTML passed in from JSON response
+            String rawHtml = passedBundle.getString("description");
+            String cleanedDescription = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                    ? Html.fromHtml(rawHtml, Html.FROM_HTML_MODE_LEGACY).toString()
+                    : Html.fromHtml(rawHtml).toString();
+            comicDescription.setText(cleanedDescription);
             comicPublishers.setText(passedBundle.getString("publishers"));
             comicIssueNumber.setText(passedBundle.getString("issueNumber"));
 
