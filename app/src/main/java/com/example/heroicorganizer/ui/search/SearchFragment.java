@@ -120,8 +120,10 @@ public class SearchFragment extends Fragment {
 
                                     ImageView coverImage = comicCard.findViewById(R.id.comicResultCoverImage);
                                     TextView comicName = comicCard.findViewById(R.id.comicResultName);
+                                    TextView comicDeck = comicCard.findViewById(R.id.comicResultDeck);
 
                                     comicName.setText(apiResponse.results.get(i).name);
+                                    comicDeck.setText(apiResponse.results.get(i).deck);
 
                                     Glide.with(requireContext())
                                             .load(apiResponse.results.get(i).image.screen_url)
@@ -148,6 +150,10 @@ public class SearchFragment extends Fragment {
     private static class Result {
         String name;
         Image image;
+        String deck;
+        String description;
+        List<String> publishers;
+        String issueNumber;
     }
 
     private static class Image {
