@@ -124,6 +124,7 @@ public class ComicDetailFragment extends Fragment {
                 }
 
                 // Folder id to pass into method
+                String folderName = folderList.get(selectedFolder).getName();
                 String folderId = folderList.get(selectedFolder).getId();
 
                 // Variables to create a comic
@@ -148,7 +149,15 @@ public class ComicDetailFragment extends Fragment {
                 LibraryComicPresenter.addComicToFolder(currentUser, folderId, comic, new LibraryComicCallback() {
                     @Override
                     public void onSuccess(String message) {
-                        ToastMsg.show(requireContext(), "Comic successfully added to the folder!");
+                        ToastMsg.show(requireContext(), "Comic successfully added to the " + folderName + " folder!");
+
+                        // Redirect user to Library Folders page
+                        LibraryFragment libraryFragment = new LibraryFragment();
+                        requireActivity()
+                                .getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.search_fragment_container, libraryFragment)
+                                .commit();
                     }
 
                     @Override
