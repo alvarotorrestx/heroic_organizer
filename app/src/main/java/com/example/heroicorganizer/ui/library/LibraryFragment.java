@@ -3,15 +3,15 @@ package com.example.heroicorganizer.ui.library;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import com.example.heroicorganizer.R;
 import com.example.heroicorganizer.callback.LibraryFolderCallback;
 import com.example.heroicorganizer.model.LibraryFolder;
@@ -29,6 +29,54 @@ public class LibraryFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // allows fragment to handle menu changes
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        // clears the toolbar main.xml 'menu'
+        menu.clear();
+        inflater.inflate(R.menu.menu_library, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull android.view.Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        MenuItem addFolderItem = menu.findItem(R.id.addFolder);
+        if (addFolderItem != null) {
+            // only shows addFolder when in LibraryFragment
+            addFolderItem.setVisible(true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.addFolder) {
+
+            // navigate to sub-level fragment logic
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+            navController.navigate(R.id.nav_library_create);
+
+            return true;
+        }
+
+        //
+        // Al Uncomment this when you are ready to wire the navigation to the button found in menu_library.xml
+        //
+//        else if (item.getItemId() == R.id.modifyFolder) {
+//            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+//            // this ID should match your navigation graph
+//            navController.navigate(R.id.nav_library_modify);
+//        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_library, container, false);
@@ -41,33 +89,18 @@ public class LibraryFragment extends Fragment {
         User currentUser = new User();
         currentUser.setUid(FirebaseAuth.getInstance().getUid());
 
-        // Add Folder button
-        final ImageView addFolder = view.findViewById(R.id.addFolder);
-
-        addFolder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LibraryCreateFolderFragment createFolderFragment = new LibraryCreateFolderFragment();
-
-                requireActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.library_fragment_container, createFolderFragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
-
         final GridLayout folderContainer = view.findViewById(R.id.folderContainer);
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
-        TextView loadingText = new TextView(requireContext());
-        loadingText.setText("Loading...");
-        loadingText.setTextColor(getResources().getColor(android.R.color.white));
-        loadingText.setTextSize(18);
-        loadingText.setGravity(View.TEXT_ALIGNMENT_CENTER);
-
-        folderContainer.addView(loadingText);
+        // Duplicate of Search Fragment here??????
+//        TextView loadingText = new TextView(requireContext());
+//        loadingText.setText("Loading...");
+//        loadingText.setTextColor(getResources().getColor(android.R.color.white));
+//        loadingText.setTextSize(18);
+//        loadingText.setGravity(View.TEXT_ALIGNMENT_CENTER);
+//
+//        folderContainer.addView(loadingText);
 
         // Pull in all of user's folders
         LibraryFolderPresenter.getFolders(currentUser, new LibraryFolderCallback() {

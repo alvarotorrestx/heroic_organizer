@@ -4,7 +4,7 @@
               android:layout_height="match_parent"
               android:padding="16dp"
               android:orientation="vertical"
-              android:background="#555555">
+              android:background="#2A2A2A">
 
     <EditText
             android:id="@+id/folderId"
@@ -14,7 +14,7 @@
             android:backgroundTint="@color/white"
             android:textColor="@color/white"
             android:minHeight="48dp"
-    />
+            android:background="@drawable/field_bg" android:layout_marginTop="12dp" android:layout_marginBottom="12dp"/>
     <EditText
             android:id="@+id/folderName"
             android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             android:backgroundTint="@color/white"
             android:textColor="@color/white"
             android:minHeight="48dp"
-    />
+            android:background="@drawable/field_bg" android:layout_marginTop="12dp" android:layout_marginBottom="12dp"/>
     <EditText
             android:id="@+id/folderDescription"
             android:layout_width="match_parent"
@@ -32,7 +32,7 @@
             android:backgroundTint="@color/white"
             android:textColor="@color/white"
             android:minHeight="48dp"
-    />
+            android:background="@drawable/field_bg" android:layout_marginTop="12dp" android:layout_marginBottom="12dp"/>
     <EditText
             android:id="@+id/folderCoverImg"
             android:layout_width="match_parent"
@@ -41,7 +41,7 @@
             android:backgroundTint="@color/white"
             android:textColor="@color/white"
             android:minHeight="48dp"
-    />
+            android:background="@drawable/field_bg" android:layout_marginTop="12dp" android:layout_marginBottom="12dp"/>
     <EditText
             android:id="@+id/folderColorTag"
             android:layout_width="match_parent"
@@ -50,25 +50,25 @@
             android:backgroundTint="@color/white"
             android:textColor="@color/white"
             android:minHeight="48dp"
-    />
+            android:background="@drawable/field_bg" android:layout_marginTop="12dp" android:layout_marginBottom="12dp"/>
 
     <Button
             android:id="@+id/newFolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Create Folder"
-    />
+            android:layout_marginTop="12dp" android:layout_marginBottom="12dp" android:textColor="@color/white"/>
     <Button
             android:id="@+id/updateFolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Update Folder"
-    />
+            android:layout_marginTop="12dp" android:layout_marginBottom="12dp" android:textColor="@color/white"/>
     <Button
             android:id="@+id/deleteFolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Delete Folder"
-    />
+            android:layout_marginTop="12dp" android:layout_marginBottom="12dp" android:textColor="@color/white"/>
 
 </LinearLayout>
