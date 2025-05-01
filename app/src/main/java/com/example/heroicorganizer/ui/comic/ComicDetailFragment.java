@@ -24,6 +24,8 @@ import com.example.heroicorganizer.ui.ToastMsg;
 import com.example.heroicorganizer.ui.library.LibraryFragment;
 import com.example.heroicorganizer.ui.search.SearchFragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,6 +144,10 @@ public class ComicDetailFragment extends Fragment {
                         issueNumber,
                         coverImage
                 );
+
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                String json = gson.toJson(comic);
+                Log.d("ComicDetails", json);
 
                 LibraryComicPresenter.addComicToFolder(currentUser, folderId, comic, new LibraryComicCallback() {
                     @Override

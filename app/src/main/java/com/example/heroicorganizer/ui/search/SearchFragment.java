@@ -138,13 +138,13 @@ public class SearchFragment extends Fragment {
 
                                     comicCard.setOnClickListener(v -> {
                                         Bundle bundle = new Bundle();
-                                        bundle.putString("id", comic.id);
-                                        bundle.putString("title", comic.name);
-                                        bundle.putString("deck", comic.deck);
-                                        bundle.putString("description", comic.description);
-                                        bundle.putString("image", comic.image.screen_url);
+                                        bundle.putString("id", comic.id != null ? comic.id : "");
+                                        bundle.putString("title", comic.name != null ? comic.name : "");
+                                        bundle.putString("deck", comic.deck != null ? comic.deck : "");
+                                        bundle.putString("description", comic.description != null ? comic.description : "");
+                                        bundle.putString("image", comic.image != null ? comic.image.screen_url : "");
                                         bundle.putString("publishers", comic.publisher != null ? comic.publisher.name : "Unknown");
-                                        bundle.putString("issueNumber", comic.first_appeared_in_issue != null ? comic.first_appeared_in_issue.issue_number : "N/A");
+                                        bundle.putString("issueNumber", comic.first_appeared_in_issue != null ? comic.first_appeared_in_issue.issue_number : "Unknown");
 
                                         // Navigate to ComicDetailFragment with the Bundle
                                         ComicDetailFragment comicDetailFragment = new ComicDetailFragment();
