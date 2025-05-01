@@ -127,7 +127,7 @@ public class ComicDetailFragment extends Fragment {
                 String folderId = folderList.get(selectedFolder).getId();
 
                 // Variables to create a comic
-                String comicId = passedBundle.getString("comicId");
+                String comicId = passedBundle.getString("id");
                 String title = comicTitle.getText().toString();
                 String description = comicDescription.getText().toString();
                 String deck = comicDeck.getText().toString();
