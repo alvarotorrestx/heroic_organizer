@@ -71,6 +71,8 @@ public class Onboarding extends AppCompatActivity {
         final EditText confirmPasswordEditText = findViewById(R.id.confirmPassword);
         final Button backBtn = findViewById(R.id.back);
 
+        final Button forgotBtn = findViewById(R.id.ForgotPassword);
+
         // Helper to undo red invalidations when user starts typing again
         // Login Fields
         addResetOnType(usernameEditText);
@@ -85,7 +87,6 @@ public class Onboarding extends AppCompatActivity {
         addResetOnType(createPasswordEditText);
         addResetOnType(confirmPasswordEditText);
 
-
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,6 +99,7 @@ public class Onboarding extends AppCompatActivity {
                     loginBtn.setVisibility(View.VISIBLE);
                     registerBtn.setVisibility(View.VISIBLE);
                     backBtn.setVisibility(View.GONE);
+                    forgotBtn.setVisibility(View.GONE);
                 }
             }
         });
@@ -300,6 +302,7 @@ public class Onboarding extends AppCompatActivity {
                 appTitle.setVisibility(View.GONE);
                 registerBtn.setVisibility(View.GONE);
                 backBtn.setVisibility(View.VISIBLE);
+                forgotBtn.setVisibility(View.VISIBLE);
             }
         });
 
@@ -313,6 +316,13 @@ public class Onboarding extends AppCompatActivity {
                 loginBtn.setVisibility(View.GONE);
                 registerBtn.setVisibility(View.GONE);
                 backBtn.setVisibility(View.VISIBLE);
+            }
+        });
+
+        forgotBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastMsg.show(Onboarding.this, "TODO: Add forgot password form LOL");
             }
         });
 

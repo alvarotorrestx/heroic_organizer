@@ -1,15 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="#2A2A2A">
+             android:background="#2A2A2A"
+             tools:context=".MainActivity">
 
-    <TextView
+    <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Scan Comic Cover"
             android:layout_gravity="center"
             android:textSize="18sp"
-            android:textColor="#fff"/>
-
+            android:textColor="#fff" android:id="@+id/btnOpenCam" app:strokeColor="@color/white"
+            app:strokeWidth="1.5dp"/>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <ImageView
+                android:id="@+id/capturedImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:contentDescription="Captured Image"
+                android:layout_gravity="top"
+        />
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="316dp"
+            android:layout_gravity="bottom"
+            android:visibility="gone" android:id="@+id/exampleFields">
+        <EditText
+                android:id="@+id/coverComicName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="The Comic Name ###"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/white"
+                android:minHeight="48dp"
+                android:background="@drawable/field_bg" android:padding="12dp" android:layout_marginBottom="12dp"/>
+        <EditText
+                android:id="@+id/coverArtistVariant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Artist / Variant"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/white"
+                android:minHeight="48dp"
+                android:background="@drawable/field_bg" android:padding="12dp" android:layout_marginBottom="12dp"/>
+        <EditText
+                android:id="@+id/coverDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Date Published"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/white"
+                android:minHeight="48dp"
+                android:background="@drawable/field_bg" android:padding="12dp" android:layout_marginBottom="12dp"/>
+        <EditText
+                android:id="@+id/coverComicAuthor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Author"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/white"
+                android:minHeight="48dp"
+                android:background="@drawable/field_bg" android:padding="12dp" android:layout_marginBottom="12dp"/>
+        <EditText
+                android:id="@+id/coverFinish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Total Owened"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/white"
+                android:minHeight="48dp"
+                android:background="@drawable/field_bg" android:padding="12dp" android:layout_marginBottom="12dp"/>
+    </LinearLayout>
 </FrameLayout>
