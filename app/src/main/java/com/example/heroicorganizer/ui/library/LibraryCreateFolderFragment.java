@@ -9,6 +9,8 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import com.example.heroicorganizer.R;
 import com.example.heroicorganizer.callback.LibraryFolderCallback;
 import com.example.heroicorganizer.model.LibraryFolder;
@@ -40,7 +42,7 @@ public class LibraryCreateFolderFragment extends Fragment {
         final EditText folderCoverImg = view.findViewById(R.id.folderCoverImg);
         final EditText folderColorTag = view.findViewById(R.id.folderColorTag);
         final Button newFolder = view.findViewById(R.id.newFolder);
-        final Button backToFolders = view.findViewById(R.id.backToFolders);
+//        final Button backToFolders = view.findViewById(R.id.backToFolders);
 
         User currentUser = new User();
         currentUser.setUid(FirebaseAuth.getInstance().getUid());
@@ -75,21 +77,26 @@ public class LibraryCreateFolderFragment extends Fragment {
             }
         });
 
-        backToFolders.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                returnToFolders();
-            }
-        });
+//        backToFolders.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                returnToFolders();
+//            }
+//        });
     }
 
 
 
     private void returnToFolders() {
         // Sends user back to the Library Folder(s) page
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.library_fragment_container, new LibraryFragment())
-                .commit();
+
+        // navigate to sub-level fragment logic
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+        // this ID should match your navigation graph
+        navController.navigate(R.id.nav_library);
+//        requireActivity().getSupportFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.library_fragment_container, new LibraryFragment())
+//                .commit();
     }
 }
