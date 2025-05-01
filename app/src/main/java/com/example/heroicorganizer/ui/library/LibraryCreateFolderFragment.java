@@ -8,9 +8,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 import com.example.heroicorganizer.R;
 import com.example.heroicorganizer.callback.LibraryFolderCallback;
 import com.example.heroicorganizer.model.LibraryFolder;
@@ -85,18 +88,10 @@ public class LibraryCreateFolderFragment extends Fragment {
 //        });
     }
 
-
-
     private void returnToFolders() {
-        // Sends user back to the Library Folder(s) page
-
-        // navigate to sub-level fragment logic
+        // navigate to TOP-level fragment logic
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-        // this ID should match your navigation graph
-        navController.navigate(R.id.nav_library);
-//        requireActivity().getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.library_fragment_container, new LibraryFragment())
-//                .commit();
+        navController.popBackStack(R.id.nav_library, false);
     }
+
 }
