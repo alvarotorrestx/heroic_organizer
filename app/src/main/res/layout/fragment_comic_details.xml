@@ -48,10 +48,10 @@
 
             <!-- Comic Name -->
             <EditText
-                    android:id="@+id/comicName"
+                    android:id="@+id/comicTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Comic Name"
+                    android:hint="Comic Title"
                     android:background="@drawable/field_bg"
                     android:textColor="@color/white"
                     android:padding="12dp"
