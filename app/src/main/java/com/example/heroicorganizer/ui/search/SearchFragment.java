@@ -18,6 +18,7 @@ import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
+import com.example.heroicorganizer.ui.comic.ComicDetailFragment;
 import com.example.heroicorganizer.utils.ComicVineConfig;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
@@ -118,16 +119,43 @@ public class SearchFragment extends Fragment {
                                 for (int i = 0; i < limit; i++) {
                                     View comicCard = inflater.inflate(R.layout.comic_card, comicResultsContainer, false);
 
+                                    // Display details on initial search response comic
                                     ImageView coverImage = comicCard.findViewById(R.id.comicResultCoverImage);
-                                    TextView comicName = comicCard.findViewById(R.id.comicResultName);
+                                    TextView comicTitle = comicCard.findViewById(R.id.comicResultName);
+                                    TextView comicDeck = comicCard.findViewById(R.id.comicResultDeck);
 
-                                    comicName.setText(apiResponse.results.get(i).name);
+                                    comicTitle.setText(apiResponse.results.get(i).name);
+                                    comicDeck.setText(apiResponse.results.get(i).deck);
 
                                     Glide.with(requireContext())
                                             .load(apiResponse.results.get(i).image.screen_url)
                                             .into(coverImage);
 
                                     comicResultsContainer.addView(comicCard);
+
+                                    // Bundle responses to push to the ComicDetailFragment
+                                    Result comic = apiResponse.results.get(i);
+
+                                    comicCard.setOnClickListener(v -> {
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("id", comic.id != null ? comic.id : "");
+                                        bundle.putString("title", comic.name != null ? comic.name : "");
+                                        bundle.putString("deck", comic.deck != null ? comic.deck : "");
+                                        bundle.putString("description", comic.description != null ? comic.description : "");
+                                        bundle.putString("image", comic.image != null ? comic.image.screen_url : "");
+                                        bundle.putString("publishers", comic.publisher != null ? comic.publisher.name : "Unknown");
+                                        bundle.putString("issueNumber", comic.first_appeared_in_issue != null ? comic.first_appeared_in_issue.issue_number : "Unknown");
+
+                                        // Navigate to ComicDetailFragment with the Bundle
+                                        ComicDetailFragment comicDetailFragment = new ComicDetailFragment();
+                                        comicDetailFragment.setArguments(bundle);
+
+                                        requireActivity().getSupportFragmentManager()
+                                                .beginTransaction()
+                                                .replace(R.id.search_fragment_container, comicDetailFragment)
+                                                .addToBackStack(null)
+                                                .commit();
+                                    });
                                 }
                             });
                         } else {
@@ -146,11 +174,23 @@ public class SearchFragment extends Fragment {
     }
 
     private static class Result {
+        String id;
         String name;
         Image image;
+        String deck;
+        String description;
+        Publisher publisher;
+        FirstAppeared first_appeared_in_issue;
     }
 
     private static class Image {
         String screen_url;
+    }
+    private static class Publisher {
+        String name;
+    }
+
+    private static class FirstAppeared {
+        String issue_number;
     }
 }

@@ -33,13 +33,15 @@
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
-<!--        <TextView-->
-<!--                android:id="@+id/comicResultTBD"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="0 Comics"-->
-<!--                android:textColor="@android:color/white"-->
-<!--                android:textSize="14sp"/>-->
+        <TextView
+                android:id="@+id/comicResultDeck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 Comics"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:ellipsize="end"
+                android:maxLines="1"/>
 
     </LinearLayout> <!-- Text overlay end -->
 

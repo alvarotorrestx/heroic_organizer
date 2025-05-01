@@ -40,6 +40,7 @@ public class LibraryCreateFolderFragment extends Fragment {
         final EditText folderCoverImg = view.findViewById(R.id.folderCoverImg);
         final EditText folderColorTag = view.findViewById(R.id.folderColorTag);
         final Button newFolder = view.findViewById(R.id.newFolder);
+        final Button backToFolders = view.findViewById(R.id.backToFolders);
 
         User currentUser = new User();
         currentUser.setUid(FirebaseAuth.getInstance().getUid());
@@ -61,10 +62,7 @@ public class LibraryCreateFolderFragment extends Fragment {
                         ToastMsg.show(requireContext(), message);
 
                         // Sends user back to the Library Folder(s) page
-                        requireActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.library_fragment_container, new LibraryFragment())
-                                .commit();
+                        returnToFolders();
                     }
 
                     public void onSuccessFolders(List<LibraryFolder> folders) {
@@ -77,5 +75,21 @@ public class LibraryCreateFolderFragment extends Fragment {
             }
         });
 
+        backToFolders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnToFolders();
+            }
+        });
+    }
+
+
+
+    private void returnToFolders() {
+        // Sends user back to the Library Folder(s) page
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.library_fragment_container, new LibraryFragment())
+                .commit();
     }
 }
