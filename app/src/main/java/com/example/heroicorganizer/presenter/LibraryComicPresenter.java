@@ -7,6 +7,7 @@ import com.example.heroicorganizer.model.LibraryComic;
 import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
@@ -152,6 +153,10 @@ public class LibraryComicPresenter {
                                 .addOnCompleteListener(aVoid -> {
                                     Log.d(TAG, "Added comic: " + comic.getTitle() + " (ID: " + comic.getId() + ") to Folder.");
                                     callback.onSuccess("Added comic: " + comic.getTitle() + " to Folder.");
+
+                                    // Add 1 to total comics on each comic addition
+                                    folderRef
+                                            .update("totalComics", FieldValue.increment(1));
                                 })
                                 .addOnFailureListener(e -> {
                                     Log.e(TAG, "Error adding comic: " + comic.getId() + " to Folder.", e);
@@ -233,6 +238,15 @@ public class LibraryComicPresenter {
                                 .addOnCompleteListener(aVoid -> {
                                     Log.d(TAG, "Comic deleted successfully with ID: " + comicId + " from Folder.");
                                     callback.onSuccess("Comic deleted successfully with ID: " + comicId + " from Folder.");
+
+                                    // Remove 1 from total comics on each comic removal
+                                    FirebaseDB
+                                            .getDb()
+                                            .collection("users")
+                                            .document(user.getUid())
+                                            .collection("folders")
+                                            .document(folderId)
+                                            .update("totalComics", FieldValue.increment(-1));
                                 })
                                 .addOnFailureListener(e -> {
                                     Log.e(TAG, "Error deleting comic with ID: " + comicId + " from Folder.", e);

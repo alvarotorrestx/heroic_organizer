@@ -145,10 +145,6 @@ public class ComicDetailFragment extends Fragment {
                         coverImage
                 );
 
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                String json = gson.toJson(comic);
-                Log.d("ComicDetails", json);
-
                 LibraryComicPresenter.addComicToFolder(currentUser, folderId, comic, new LibraryComicCallback() {
                     @Override
                     public void onSuccess(String message) {
