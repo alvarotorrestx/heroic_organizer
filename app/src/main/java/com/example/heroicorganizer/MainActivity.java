@@ -50,6 +50,11 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
 
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            // refreshes the menu when the destination changes
+            invalidateOptionsMenu();
+        });
+
         // drawer item click handling
         findViewById(R.id.menu_home).setOnClickListener(v -> {
             navController.navigate(R.id.nav_home);

@@ -11,6 +11,8 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.example.heroicorganizer.R;
 import com.example.heroicorganizer.callback.LibraryComicCallback;
@@ -152,12 +154,15 @@ public class ComicDetailFragment extends Fragment {
                         ToastMsg.show(requireContext(), "Comic successfully added to the " + folderName + " folder!");
 
                         // Redirect user to Library Folders page
-                        LibraryFragment libraryFragment = new LibraryFragment();
-                        requireActivity()
-                                .getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.search_fragment_container, libraryFragment)
-                                .commit();
+                        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+                        navController.popBackStack(R.id.nav_library, false);
+
+//                        LibraryFragment libraryFragment = new LibraryFragment();
+//                        requireActivity()
+//                                .getSupportFragmentManager()
+//                                .beginTransaction()
+//                                .replace(R.id.search_fragment_container, libraryFragment)
+//                                .commit();
                     }
 
                     @Override
