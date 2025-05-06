@@ -93,14 +93,14 @@ public class LibraryFragment extends Fragment {
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
-        // Duplicate of Search Fragment here??????
-//        TextView loadingText = new TextView(requireContext());
-//        loadingText.setText("Loading...");
-//        loadingText.setTextColor(getResources().getColor(android.R.color.white));
-//        loadingText.setTextSize(18);
-//        loadingText.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//
-//        folderContainer.addView(loadingText);
+        // Shows loading message to user (ux)
+        TextView loadingText = new TextView(requireContext());
+        loadingText.setText("Loading...");
+        loadingText.setTextColor(getResources().getColor(android.R.color.white));
+        loadingText.setTextSize(18);
+        loadingText.setGravity(View.TEXT_ALIGNMENT_CENTER);
+
+        folderContainer.addView(loadingText);
 
         // Pull in all of user's folders
         LibraryFolderPresenter.getFolders(currentUser, new LibraryFolderCallback() {
@@ -153,7 +153,6 @@ public class LibraryFragment extends Fragment {
                     noFolders.setGravity(View.TEXT_ALIGNMENT_CENTER);
 
                     folderContainer.addView(noFolders);
-                    return;
                 }
             }
 

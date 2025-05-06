@@ -156,13 +156,6 @@ public class ComicDetailFragment extends Fragment {
                         // Redirect user to Library Folders page
                         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
                         navController.popBackStack(R.id.nav_library, false);
-
-//                        LibraryFragment libraryFragment = new LibraryFragment();
-//                        requireActivity()
-//                                .getSupportFragmentManager()
-//                                .beginTransaction()
-//                                .replace(R.id.search_fragment_container, libraryFragment)
-//                                .commit();
                     }
 
                     @Override
