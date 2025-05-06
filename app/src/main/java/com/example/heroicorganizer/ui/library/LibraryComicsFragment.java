@@ -23,6 +23,7 @@ import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LibraryComicPresenter;
 import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
+import com.example.heroicorganizer.utils.ViewStatus;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
@@ -65,13 +66,7 @@ public class LibraryComicsFragment extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
         // Shows loading message to user (ux)
-        TextView loadingText = new TextView(requireContext());
-        loadingText.setText("Loading Comics...");
-        loadingText.setTextColor(getResources().getColor(android.R.color.white));
-        loadingText.setTextSize(18);
-        loadingText.setGravity(View.TEXT_ALIGNMENT_CENTER);
-
-        comicsContainer.addView(loadingText);
+        comicsContainer.addView(ViewStatus.SetStatus(requireContext(), "Loading Comics..."));
 
         String folderId = passedBundle.getString("folderId");
 
@@ -108,14 +103,8 @@ public class LibraryComicsFragment extends Fragment {
 
                         comicsContainer.addView(comicCard);
                     }
-                } else { // If no folders are created by user or found
-                    TextView noComics = new TextView(requireContext());
-                    noComics.setText("No comics found.");
-                    noComics.setTextColor(getResources().getColor(android.R.color.white));
-                    noComics.setTextSize(18);
-                    noComics.setGravity(View.TEXT_ALIGNMENT_CENTER);
-
-                    comicsContainer.addView(noComics);
+                } else { // If no comics are in the folder
+                    comicsContainer.addView(ViewStatus.SetStatus(requireContext(), "No comics found."));
                 }
             }
 

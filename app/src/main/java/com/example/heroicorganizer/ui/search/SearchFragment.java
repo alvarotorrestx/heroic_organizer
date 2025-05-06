@@ -20,6 +20,7 @@ import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
 import com.example.heroicorganizer.ui.comic.ComicDetailFragment;
 import com.example.heroicorganizer.utils.ComicVineConfig;
+import com.example.heroicorganizer.utils.ViewStatus;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -62,13 +63,8 @@ public class SearchFragment extends Fragment {
 
                 LayoutInflater inflater = LayoutInflater.from(getContext());
 
-                TextView loadingText = new TextView(requireContext());
-                loadingText.setText("Loading...");
-                loadingText.setTextColor(getResources().getColor(android.R.color.white));
-                loadingText.setTextSize(18);
-                loadingText.setGravity(View.TEXT_ALIGNMENT_CENTER);
-
-                comicResultsContainer.addView(loadingText);
+                // Shows "Loading... message to user (UX)
+                comicResultsContainer.addView(ViewStatus.SetStatus(requireContext(), "Loading..."));
 
                 String baseUrl = "https://comicvine.gamespot.com/api/search/";
                 String apiKey = ComicVineConfig.getApiKey(requireContext());
@@ -85,10 +81,6 @@ public class SearchFragment extends Fragment {
                         .url(finalUrl)
                         .addHeader("User-Agent", "HeroicOrganizerApp/1.0")
                         .build();
-
-                Log.d("SearchComics", query);
-                Log.d("SearchComics", request.toString());
-                Log.d("SearchComics", finalUrl);
 
                 client.newCall(request).enqueue(new Callback() {
                     @Override

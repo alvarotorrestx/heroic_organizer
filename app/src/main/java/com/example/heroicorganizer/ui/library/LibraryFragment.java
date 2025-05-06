@@ -18,6 +18,7 @@ import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
+import com.example.heroicorganizer.utils.ViewStatus;
 import com.google.firebase.auth.FirebaseAuth;
 import com.bumptech.glide.Glide;
 
@@ -94,13 +95,7 @@ public class LibraryFragment extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
         // Shows loading message to user (ux)
-        TextView loadingText = new TextView(requireContext());
-        loadingText.setText("Loading Folders...");
-        loadingText.setTextColor(getResources().getColor(android.R.color.white));
-        loadingText.setTextSize(18);
-        loadingText.setGravity(View.TEXT_ALIGNMENT_CENTER);
-
-        folderContainer.addView(loadingText);
+        folderContainer.addView(ViewStatus.SetStatus(requireContext(), "Loading Folders..."));
 
         // Pull in all of user's folders
         LibraryFolderPresenter.getFolders(currentUser, new LibraryFolderCallback() {
@@ -157,13 +152,7 @@ public class LibraryFragment extends Fragment {
                         });
                     }
                 } else { // If no folders are created by user or found
-                    TextView noFolders = new TextView(requireContext());
-                    noFolders.setText("No folders found.");
-                    noFolders.setTextColor(getResources().getColor(android.R.color.white));
-                    noFolders.setTextSize(18);
-                    noFolders.setGravity(View.TEXT_ALIGNMENT_CENTER);
-
-                    folderContainer.addView(noFolders);
+                    folderContainer.addView(ViewStatus.SetStatus(requireContext(), "No folders found."));
                 }
             }
 
