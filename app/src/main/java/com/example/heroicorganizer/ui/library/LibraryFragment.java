@@ -151,17 +151,9 @@ public class LibraryFragment extends Fragment {
                             bundle.putString("folderName", folder.getName());
                             bundle.putString("folderId", folder.getId());
 
-                            LibraryComicsFragment libraryComicsFragment = new LibraryComicsFragment();
-                            libraryComicsFragment.setArguments(bundle);
-
-                            requireActivity().getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.library_fragment_container, libraryComicsFragment)
-                                    .addToBackStack(null)
-                                    .commit();
-
                             // navigate to sub-level fragment logic
-//                            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-//                            navController.navigate(R.id.nav_library_comics);
+                            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+                            navController.navigate(R.id.nav_library_comics, bundle);
                         });
                     }
                 } else { // If no folders are created by user or found

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -49,6 +50,13 @@ public class LibraryComicsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Passed in Bundle from LibraryFragment - Comic Details
+        Bundle passedBundle = getArguments() != null ? getArguments() : null;
+
+        // Dynamically updates the page title to {Folder Name} - Comics on navbar
+        String folderName = passedBundle.getString("folderName", "");
+        if (!folderName.isEmpty()) ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle(folderName + " - Comics");
+
         User currentUser = new User();
         currentUser.setUid(FirebaseAuth.getInstance().getUid());
 
@@ -65,63 +73,60 @@ public class LibraryComicsFragment extends Fragment {
 
         comicsContainer.addView(loadingText);
 
-        Bundle passedBundle = getArguments();
-        if (passedBundle != null) {
-            String folderName = passedBundle.getString("folderName");
-            String folderId = passedBundle.getString("folderId");
+        String folderId = passedBundle.getString("folderId");
 
-            LibraryComicPresenter.getComicsInFolder(currentUser, folderId, new LibraryComicCallback() {
+        LibraryComicPresenter.getComicsInFolder(currentUser, folderId, new LibraryComicCallback() {
 
-                @Override
-                public void onSuccess(String message) {
+            @Override
+            public void onSuccess(String message) {
 
-                }
+            }
 
-                @Override
-                public void onSuccessComics(List<LibraryComic> comics) {
-                    // Removes Loading...
-                    comicsContainer.removeAllViews();
+            @Override
+            public void onSuccessComics(List<LibraryComic> comics) {
+                // Removes Loading...
+                comicsContainer.removeAllViews();
 
-                    if (!comics.isEmpty()) {
-                        for (LibraryComic comic : comics) {
-                            View comicCard = inflater.inflate(R.layout.folder_card, comicsContainer, false);
+                if (!comics.isEmpty()) {
+                    for (LibraryComic comic : comics) {
+                        View comicCard = inflater.inflate(R.layout.folder_card, comicsContainer, false);
 
-                            ImageView coverImage = comicCard.findViewById(R.id.folderCoverImage);
-                            TextView folderName = comicCard.findViewById(R.id.folderName);
-                            TextView comicCount = comicCard.findViewById(R.id.folderComicCount);
+                        ImageView coverImage = comicCard.findViewById(R.id.folderCoverImage);
+                        TextView folderName = comicCard.findViewById(R.id.folderName);
+                        TextView comicCount = comicCard.findViewById(R.id.folderComicCount);
 
-                            folderName.setText(comic.getTitle());
-                            comicCount.setText(comic.getDeck());
+                        folderName.setText(comic.getTitle());
+                        comicCount.setText(comic.getDeck());
 
-                            if(comic.getCoverImage() != null && !comic.getCoverImage().isEmpty()) {
-                                Glide.with(requireContext())
-                                        .load(comic.getCoverImage())
-                                        .into(coverImage);
-                            } else {
-                                coverImage.setVisibility(View.GONE);
-                            }
-
-                            comicsContainer.addView(comicCard);
+                        if (comic.getCoverImage() != null && !comic.getCoverImage().isEmpty()) {
+                            Glide.with(requireContext())
+                                    .load(comic.getCoverImage())
+                                    .into(coverImage);
+                        } else {
+                            coverImage.setVisibility(View.GONE);
                         }
-                    } else { // If no folders are created by user or found
-                        TextView noComics = new TextView(requireContext());
-                        noComics.setText("No comics found.");
-                        noComics.setTextColor(getResources().getColor(android.R.color.white));
-                        noComics.setTextSize(18);
-                        noComics.setGravity(View.TEXT_ALIGNMENT_CENTER);
 
-                        comicsContainer.addView(noComics);
+                        comicsContainer.addView(comicCard);
                     }
-                }
+                } else { // If no folders are created by user or found
+                    TextView noComics = new TextView(requireContext());
+                    noComics.setText("No comics found.");
+                    noComics.setTextColor(getResources().getColor(android.R.color.white));
+                    noComics.setTextSize(18);
+                    noComics.setGravity(View.TEXT_ALIGNMENT_CENTER);
 
-                @Override
-                public void onFailure(String errorMessage) {
-                    // Removes Loading...
-                    comicsContainer.removeAllViews();
-
-                    ToastMsg.show(requireContext(), errorMessage);
+                    comicsContainer.addView(noComics);
                 }
-            });
-        }
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                // Removes Loading...
+                comicsContainer.removeAllViews();
+
+                ToastMsg.show(requireContext(), errorMessage);
+            }
+        });
+
     }
 }
