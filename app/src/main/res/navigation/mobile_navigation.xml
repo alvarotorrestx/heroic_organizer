@@ -54,6 +54,11 @@
     <fragment
             android:id="@+id/nav_library_modify"
             android:name="com.example.heroicorganizer.ui.library.LibraryModifyFolderFragment"
-            android:label="Add Folder" />
+            android:label="Update Folder" />
+
+    <fragment
+            android:id="@+id/nav_library_comics"
+            android:name="com.example.heroicorganizer.ui.library.LibraryComicsFragment"
+            android:label="Comics" />
 
 </navigation>

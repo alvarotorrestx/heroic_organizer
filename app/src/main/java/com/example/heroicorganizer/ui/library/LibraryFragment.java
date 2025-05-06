@@ -95,7 +95,7 @@ public class LibraryFragment extends Fragment {
 
         // Shows loading message to user (ux)
         TextView loadingText = new TextView(requireContext());
-        loadingText.setText("Loading...");
+        loadingText.setText("Loading Folders...");
         loadingText.setTextColor(getResources().getColor(android.R.color.white));
         loadingText.setTextSize(18);
         loadingText.setGravity(View.TEXT_ALIGNMENT_CENTER);
@@ -144,6 +144,25 @@ public class LibraryFragment extends Fragment {
                         }
 
                         folderContainer.addView(folderCard);
+
+                        // Pass folderId for getAllComicsInFolder method
+                        folderCard.setOnClickListener(v -> {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("folderName", folder.getName());
+                            bundle.putString("folderId", folder.getId());
+
+                            LibraryComicsFragment libraryComicsFragment = new LibraryComicsFragment();
+                            libraryComicsFragment.setArguments(bundle);
+
+                            requireActivity().getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.library_fragment_container, libraryComicsFragment)
+                                    .addToBackStack(null)
+                                    .commit();
+
+                            // navigate to sub-level fragment logic
+//                            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+//                            navController.navigate(R.id.nav_library_comics);
+                        });
                     }
                 } else { // If no folders are created by user or found
                     TextView noFolders = new TextView(requireContext());
