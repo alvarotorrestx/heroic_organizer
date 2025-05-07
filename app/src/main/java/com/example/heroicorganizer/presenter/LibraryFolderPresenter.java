@@ -6,6 +6,7 @@ import com.example.heroicorganizer.callback.LibraryFolderCallback;
 import com.example.heroicorganizer.config.FirebaseDB;
 import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.gson.Gson;
@@ -185,6 +186,11 @@ public class LibraryFolderPresenter {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        // Get folder name for better UX
+                        DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                        LibraryFolder folder = document.toObject(LibraryFolder.class);
+                        String folderName = folder != null ? folder.getName() : "Folder";
+
                         FirebaseDB
                                 .getDb()
                                 .collection("users")
@@ -194,7 +200,7 @@ public class LibraryFolderPresenter {
                                 .delete()
                                 .addOnSuccessListener(aVoid -> {
                                     Log.d(TAG, "Folder \"" + folderId + "\" deleted successfully.");
-                                    callback.onSuccess("Folder \"" + folderId + "\" deleted successfully.");
+                                    callback.onSuccess("Folder \"" + folderName + "\" deleted successfully.");
                                 })
                                 .addOnFailureListener(e -> {
                                     Log.e(TAG, "Error deleting folder", e);

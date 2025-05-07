@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="@drawable/toast_bg"
+              android:padding="12dp"
+              android:orientation="vertical"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+
+    <TextView
+            android:id="@+id/modalMessage"
+            android:textColor="#1FFF1B"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="6dp"/>
+
+    <Button
+            android:id="@+id/confirmDelete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Yes, Delete"
+            android:backgroundTint="#32D583"
+            android:textColor="#2A2A2A"
+            android:textStyle="bold"
+            android:layout_marginBottom="3dp"/>
+
+    <Button
+            android:id="@+id/cancelDelete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Oops, Cancel"
+            android:backgroundTint="#F97066"
+            android:textColor="#2A2A2A"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp"/>
+</LinearLayout>
