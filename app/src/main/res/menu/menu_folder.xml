@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/findComic"
+          android:title="Search"
+          app:showAsAction="always"
+          android:icon="@android:drawable/ic_menu_search"/>
+
+    <item android:id="@+id/updateFolder"
+          android:title="Update Folder"
+          app:showAsAction="never"/>
+
+    <item android:id="@+id/deleteFolder"
+          android:title="Delete Folder"
+          app:showAsAction="never"/>
+</menu>

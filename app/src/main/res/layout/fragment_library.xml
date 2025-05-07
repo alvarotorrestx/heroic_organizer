@@ -5,7 +5,7 @@
              android:layout_height="match_parent"
              android:background="#2A2A2A" android:paddingTop="16dp">
     <include
-            layout="@layout/fragment_library_testing"/>
+            layout="@layout/fragment_library_main"/>
 <!--    <FrameLayout-->
 <!--            android:id="@+id/library_sub_container"-->
 <!--            android:layout_width="match_parent"-->

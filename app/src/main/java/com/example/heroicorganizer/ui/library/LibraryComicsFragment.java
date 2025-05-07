@@ -38,7 +38,31 @@ public class LibraryComicsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         // allows fragment to handle menu changes
-//        setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        // clears the toolbar main.xml 'menu'
+        menu.clear();
+        inflater.inflate(R.menu.menu_folder, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.updateFolder) {
+            // navigate to sub-level fragment logic
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+            navController.navigate(R.id.nav_library_modify);
+
+            return true;
+        } else if (item.getItemId() == R.id.deleteFolder) {
+            ToastMsg.show(getActivity(), "Delete Folder");
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

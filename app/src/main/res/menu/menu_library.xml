@@ -4,14 +4,10 @@
     <item android:id="@+id/action_search"
           android:title="Search"
           app:showAsAction="always"
-          android:icon="@android:drawable/ic_menu_search" />
+          android:icon="@android:drawable/ic_menu_search"/>
 
     <item android:id="@+id/addFolder"
           android:title="Add Folder"
           app:showAsAction="always"
-          android:icon="@drawable/folder_icon" />
-
-<!--        <item android:id="@+id/modifyFolder"-->
-<!--              android:title="Modify Folder"-->
-<!--              app:showAsAction="never"/>-->
+          android:icon="@drawable/folder_icon"/>
 </menu>

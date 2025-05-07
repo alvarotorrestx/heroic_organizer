@@ -58,7 +58,6 @@ public class LibraryFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.addFolder) {
-
             // navigate to sub-level fragment logic
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
             navController.navigate(R.id.nav_library_create);
@@ -66,14 +65,6 @@ public class LibraryFragment extends Fragment {
             return true;
         }
 
-        //
-        // Al Uncomment this when you are ready to wire the navigation to the button found in menu_library.xml
-        //
-//        else if (item.getItemId() == R.id.modifyFolder) {
-//            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-//            // this ID should match your navigation graph
-//            navController.navigate(R.id.nav_library_modify);
-//        }
         return super.onOptionsItemSelected(item);
     }
 
