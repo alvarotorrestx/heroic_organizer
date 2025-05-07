@@ -51,9 +51,27 @@ public class LibraryComicsFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.updateFolder) {
+            // Local scoped passedBundle - Collects passed data from LibraryFragment of current folder
+            Bundle passedBundle = getArguments() != null ? getArguments() : null;
+            String folderId = passedBundle.getString("folderId");
+            String folderName = passedBundle.getString("folderName");
+            String folderDescription = passedBundle.getString("folderDescription");
+            String folderImage = passedBundle.getString("folderImage");
+            String folderColor = passedBundle.getString("folderColor");
+            int totalComics = passedBundle.getInt("totalComics");
+
+            // Pass the bundle to the LibraryModifyFolderFragment for updating
+            Bundle modifyBundle = new Bundle();
+            modifyBundle.putString("folderId", folderId);
+            modifyBundle.putString("folderName", folderName);
+            modifyBundle.putString("folderDescription", folderDescription);
+            modifyBundle.putString("folderCoverImg", folderImage);
+            modifyBundle.putString("folderColorTag", folderColor);
+            modifyBundle.putInt("totalComics", totalComics);
+
             // navigate to sub-level fragment logic
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-            navController.navigate(R.id.nav_library_modify);
+            navController.navigate(R.id.nav_library_modify, modifyBundle);
 
             return true;
         } else if (item.getItemId() == R.id.deleteFolder) {
@@ -75,7 +93,7 @@ public class LibraryComicsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Passed in Bundle from LibraryFragment - Comic Details
+        // Local scoped passedBundle - Collects passed data from LibraryFragment of current folder
         Bundle passedBundle = getArguments() != null ? getArguments() : null;
 
         // Dynamically updates the page title to {Folder Name} - Comics on navbar

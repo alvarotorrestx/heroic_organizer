@@ -131,11 +131,15 @@ public class LibraryFragment extends Fragment {
 
                         folderContainer.addView(folderCard);
 
-                        // Pass folderId for getAllComicsInFolder method
+                        // Pass folder data to LibraryComicsFragment & LibraryModifyFolderFragment
                         folderCard.setOnClickListener(v -> {
                             Bundle bundle = new Bundle();
-                            bundle.putString("folderName", folder.getName());
                             bundle.putString("folderId", folder.getId());
+                            bundle.putString("folderName", folder.getName());
+                            bundle.putString("folderDescription", folder.getDescription());
+                            bundle.putString("folderImage", folder.getCoverImage());
+                            bundle.putString("folderColor", folder.getColorTag());
+                            bundle.putInt("totalComics", folder.getTotalComics());
 
                             // navigate to sub-level fragment logic
                             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);

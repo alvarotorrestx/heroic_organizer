@@ -9,6 +9,9 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
 import com.example.heroicorganizer.R;
 import com.example.heroicorganizer.callback.LibraryFolderCallback;
 import com.example.heroicorganizer.model.LibraryFolder;
@@ -38,43 +41,60 @@ public class LibraryModifyFolderFragment extends Fragment {
         final EditText folderDescription = view.findViewById(R.id.folderDescription);
         final EditText folderCoverImg = view.findViewById(R.id.folderCoverImg);
         final EditText folderColorTag = view.findViewById(R.id.folderColorTag);
-        final Button newFolder = view.findViewById(R.id.newFolder);
         final Button updateFolder = view.findViewById(R.id.updateFolder);
-        final Button deleteFolder = view.findViewById(R.id.deleteFolder);
+
+        // Set fields to the passed in data from LibraryComicsFragment
+        Bundle passedBundle = getArguments() != null ? getArguments() : null;
+        String folderId = passedBundle.getString("folderId");
+        folderName.setText(passedBundle.getString("folderName"));
+        folderDescription.setText(passedBundle.getString("folderDescription"));
+        folderCoverImg.setText(passedBundle.getString("folderCoverImg"));
+        folderColorTag.setText(passedBundle.getString("folderColorTag"));
+        int totalComics = passedBundle.getInt("totalComics");
 
         User currentUser = new User();
         currentUser.setUid(FirebaseAuth.getInstance().getUid());
 
-        updateFolder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String id = "";
-                String name = folderName.getText().toString();
-                String description = folderDescription.getText().toString();
-                String coverImg = folderCoverImg.getText().toString();
-                String colorTag = folderColorTag.getText().toString();
-                int totalComics = 0; // TODO: Update this to pull in current total of comics in updating folder.
+        updateFolder.setOnClickListener(v -> {
+            LibraryFolder updatedFolder = new LibraryFolder();
+            updatedFolder.setId(folderId);
+            updatedFolder.setName(folderName.getText().toString());
+            updatedFolder.setDescription(folderDescription.getText().toString());
+            updatedFolder.setCoverImage(folderCoverImg.getText().toString());
+            updatedFolder.setColorTag(folderColorTag.getText().toString());
+            updatedFolder.setTotalComics(totalComics);
 
-                LibraryFolder folder = new LibraryFolder(id, name, description, coverImg, colorTag, totalComics);
+            LibraryFolderPresenter.updateFolder(currentUser, updatedFolder, new LibraryFolderCallback() {
 
-                if (totalComics == 0) { // TODO: reminder for the above todo
-                    ToastMsg.show(requireContext(), "Al. Please update method.");
-                    return;
+                @Override
+                public void onSuccess(String message) {
+                    ToastMsg.show(getActivity(), message);
+
+                    Bundle updatedFolderBundle = new Bundle();
+                    updatedFolderBundle.putString("folderId", updatedFolder.getId());
+                    updatedFolderBundle.putString("folderName", updatedFolder.getName());
+
+                    // Navigate to previous folder - the now updated folder
+                    NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+
+                    // Prevents a back stack to the update folder page with previous data
+                    NavOptions navOptions = new NavOptions.Builder()
+                            .setPopUpTo(R.id.nav_library_comics, true)
+                            .build();
+
+                    navController.navigate(R.id.nav_library_comics, updatedFolderBundle, navOptions);
                 }
 
-                LibraryFolderPresenter.updateFolder(currentUser, folder, new LibraryFolderCallback() {
-                    public void onSuccess(String message) {
-                        ToastMsg.show(requireContext(), message);
-                    }
+                @Override
+                public void onSuccessFolders(List<LibraryFolder> folders) {
 
-                    public void onSuccessFolders(List<LibraryFolder> folders) {
-                    }
+                }
 
-                    public void onFailure(String message) {
-                        ToastMsg.show(requireContext(), message);
-                    }
-                });
-            }
+                @Override
+                public void onFailure(String errorMessage) {
+                    ToastMsg.show(getActivity(), errorMessage);
+                }
+            });
         });
     }
 }
