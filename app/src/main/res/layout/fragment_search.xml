@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/search_fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="12dp" android:background="#2A2A2A">
+             android:id="@+id/search_fragment_container"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:padding="16dp"
+             android:background="#2A2A2A">
 
     <LinearLayout
             android:orientation="vertical"
@@ -34,7 +35,8 @@
                 android:id="@+id/searchResultsContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="4dp" android:layout_marginBottom="4dp">
+                android:padding="16dp"
+                android:layout_marginBottom="12dp">
 
             <!-- Comic Results container wrapper -->
             <GridLayout
@@ -43,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:columnCount="2"
                     android:orientation="horizontal"
-                    android:padding="4dp"
+
                     android:alignmentMode="alignMargins"
                     android:rowOrderPreserved="false">
 

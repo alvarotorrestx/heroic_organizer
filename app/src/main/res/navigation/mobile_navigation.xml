@@ -47,6 +47,11 @@
             tools:layout="@layout/fragment_search" />
 
     <fragment
+            android:id="@+id/nav_add_to_library"
+            android:name="com.example.heroicorganizer.ui.comic.ComicDetailFragment"
+            android:label="Add Comic to Library" />
+
+    <fragment
             android:id="@+id/nav_library_create"
             android:name="com.example.heroicorganizer.ui.library.LibraryCreateFolderFragment"
             android:label="Add Folder" />
@@ -54,6 +59,11 @@
     <fragment
             android:id="@+id/nav_library_modify"
             android:name="com.example.heroicorganizer.ui.library.LibraryModifyFolderFragment"
-            android:label="Add Folder" />
+            android:label="Update Folder" />
+
+    <fragment
+            android:id="@+id/nav_library_comics"
+            android:name="com.example.heroicorganizer.ui.library.LibraryComicsFragment"
+            android:label="Comics" />
 
 </navigation>

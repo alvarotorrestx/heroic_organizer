@@ -1,4 +1,4 @@
-<!-- Actual folder card -->
+<!-- Actual item card -->
 <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="0dp"
@@ -9,7 +9,7 @@
         android:elevation="4dp">
 
     <ImageView
-            android:id="@+id/folderCoverImage"
+            android:id="@+id/itemCoverImage"
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:scaleType="centerCrop"
@@ -25,22 +25,22 @@
             android:padding="8dp">
 
         <TextView
-                android:id="@+id/folderName"
+                android:id="@+id/itemTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Folder Name"
+                android:text="Title"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
         <TextView
-                android:id="@+id/folderComicCount"
+                android:id="@+id/itemSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0 Comics"
+                android:text="Subtitle"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"/>
 
     </LinearLayout> <!-- Text overlay end -->
 
-</FrameLayout> <!-- Folder card end -->
+</FrameLayout> <!-- Item card end -->

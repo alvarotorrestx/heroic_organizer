@@ -45,7 +45,6 @@ public class LibraryCreateFolderFragment extends Fragment {
         final EditText folderCoverImg = view.findViewById(R.id.folderCoverImg);
         final EditText folderColorTag = view.findViewById(R.id.folderColorTag);
         final Button newFolder = view.findViewById(R.id.newFolder);
-//        final Button backToFolders = view.findViewById(R.id.backToFolders);
 
         User currentUser = new User();
         currentUser.setUid(FirebaseAuth.getInstance().getUid());
@@ -79,13 +78,6 @@ public class LibraryCreateFolderFragment extends Fragment {
                 });
             }
         });
-
-//        backToFolders.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                returnToFolders();
-//            }
-//        });
     }
 
     private void returnToFolders() {

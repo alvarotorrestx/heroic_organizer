@@ -1,5 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/library_page_content"
+              android:id="@+id/comics_page_content"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:padding="16dp"
@@ -8,7 +8,7 @@
 
     <ScrollView
             xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/library_testing_content"
+            android:id="@+id/comics_view_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#2A2A2A"
@@ -16,7 +16,7 @@
 
         <!-- Folder container wrapper -->
         <GridLayout
-                android:id="@+id/folderContainer"
+                android:id="@+id/comicsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnCount="2"

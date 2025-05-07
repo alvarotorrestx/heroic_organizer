@@ -10,6 +10,8 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.example.heroicorganizer.*;
 import com.example.heroicorganizer.callback.LibraryFolderCallback;
@@ -20,6 +22,7 @@ import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
 import com.example.heroicorganizer.ui.comic.ComicDetailFragment;
 import com.example.heroicorganizer.utils.ComicVineConfig;
+import com.example.heroicorganizer.utils.ViewStatus;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -62,13 +65,8 @@ public class SearchFragment extends Fragment {
 
                 LayoutInflater inflater = LayoutInflater.from(getContext());
 
-                TextView loadingText = new TextView(requireContext());
-                loadingText.setText("Loading...");
-                loadingText.setTextColor(getResources().getColor(android.R.color.white));
-                loadingText.setTextSize(18);
-                loadingText.setGravity(View.TEXT_ALIGNMENT_CENTER);
-
-                comicResultsContainer.addView(loadingText);
+                // Shows "Loading... message to user (UX)
+                comicResultsContainer.addView(ViewStatus.SetStatus(requireContext(), "Loading..."));
 
                 String baseUrl = "https://comicvine.gamespot.com/api/search/";
                 String apiKey = ComicVineConfig.getApiKey(requireContext());
@@ -85,10 +83,6 @@ public class SearchFragment extends Fragment {
                         .url(finalUrl)
                         .addHeader("User-Agent", "HeroicOrganizerApp/1.0")
                         .build();
-
-                Log.d("SearchComics", query);
-                Log.d("SearchComics", request.toString());
-                Log.d("SearchComics", finalUrl);
 
                 client.newCall(request).enqueue(new Callback() {
                     @Override
@@ -117,12 +111,12 @@ public class SearchFragment extends Fragment {
                                 // TODO: Temporary limit on search result until we have a better design or pagination
                                 int limit = Math.min(apiResponse.results.size(), 10);
                                 for (int i = 0; i < limit; i++) {
-                                    View comicCard = inflater.inflate(R.layout.comic_card, comicResultsContainer, false);
+                                    View comicCard = inflater.inflate(R.layout.item_card, comicResultsContainer, false);
 
                                     // Display details on initial search response comic
-                                    ImageView coverImage = comicCard.findViewById(R.id.comicResultCoverImage);
-                                    TextView comicTitle = comicCard.findViewById(R.id.comicResultName);
-                                    TextView comicDeck = comicCard.findViewById(R.id.comicResultDeck);
+                                    ImageView coverImage = comicCard.findViewById(R.id.itemCoverImage);
+                                    TextView comicTitle = comicCard.findViewById(R.id.itemTitle);
+                                    TextView comicDeck = comicCard.findViewById(R.id.itemSubtitle);
 
                                     comicTitle.setText(apiResponse.results.get(i).name);
                                     comicDeck.setText(apiResponse.results.get(i).deck);
@@ -146,15 +140,9 @@ public class SearchFragment extends Fragment {
                                         bundle.putString("publishers", comic.publisher != null ? comic.publisher.name : "Unknown");
                                         bundle.putString("issueNumber", comic.first_appeared_in_issue != null ? comic.first_appeared_in_issue.issue_number : "Unknown");
 
-                                        // Navigate to ComicDetailFragment with the Bundle
-                                        ComicDetailFragment comicDetailFragment = new ComicDetailFragment();
-                                        comicDetailFragment.setArguments(bundle);
-
-                                        requireActivity().getSupportFragmentManager()
-                                                .beginTransaction()
-                                                .replace(R.id.search_fragment_container, comicDetailFragment)
-                                                .addToBackStack(null)
-                                                .commit();
+                                        // navigate to sub-level fragment logic
+                                        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+                                        navController.navigate(R.id.nav_add_to_library, bundle);
                                     });
                                 }
                             });

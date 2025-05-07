@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:id="@+id/library_fragment_container"
+             android:id="@+id/library_comics_container"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:background="#2A2A2A" android:paddingTop="16dp">
     <include
-            layout="@layout/fragment_library_main"/>
-<!--    <FrameLayout-->
-<!--            android:id="@+id/library_sub_container"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent" />-->
+            layout="@layout/fragment_library_comics"/>
 
 </FrameLayout>

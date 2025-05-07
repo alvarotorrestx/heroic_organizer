@@ -18,6 +18,7 @@ import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
+import com.example.heroicorganizer.utils.ViewStatus;
 import com.google.firebase.auth.FirebaseAuth;
 import com.bumptech.glide.Glide;
 
@@ -57,7 +58,6 @@ public class LibraryFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.addFolder) {
-
             // navigate to sub-level fragment logic
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
             navController.navigate(R.id.nav_library_create);
@@ -65,14 +65,6 @@ public class LibraryFragment extends Fragment {
             return true;
         }
 
-        //
-        // Al Uncomment this when you are ready to wire the navigation to the button found in menu_library.xml
-        //
-//        else if (item.getItemId() == R.id.modifyFolder) {
-//            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-//            // this ID should match your navigation graph
-//            navController.navigate(R.id.nav_library_modify);
-//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -93,14 +85,8 @@ public class LibraryFragment extends Fragment {
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
-        // Duplicate of Search Fragment here??????
-//        TextView loadingText = new TextView(requireContext());
-//        loadingText.setText("Loading...");
-//        loadingText.setTextColor(getResources().getColor(android.R.color.white));
-//        loadingText.setTextSize(18);
-//        loadingText.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//
-//        folderContainer.addView(loadingText);
+        // Shows loading message to user (ux)
+        folderContainer.addView(ViewStatus.SetStatus(requireContext(), "Loading Folders..."));
 
         // Pull in all of user's folders
         LibraryFolderPresenter.getFolders(currentUser, new LibraryFolderCallback() {
@@ -116,11 +102,11 @@ public class LibraryFragment extends Fragment {
 
                 if (!folders.isEmpty()) {
                     for (LibraryFolder folder : folders) {
-                        View folderCard = inflater.inflate(R.layout.folder_card, folderContainer, false);
+                        View folderCard = inflater.inflate(R.layout.item_card, folderContainer, false);
 
-                        ImageView coverImage = folderCard.findViewById(R.id.folderCoverImage);
-                        TextView folderName = folderCard.findViewById(R.id.folderName);
-                        TextView comicCount = folderCard.findViewById(R.id.folderComicCount);
+                        ImageView coverImage = folderCard.findViewById(R.id.itemCoverImage);
+                        TextView folderName = folderCard.findViewById(R.id.itemTitle);
+                        TextView comicCount = folderCard.findViewById(R.id.itemSubtitle);
 
                         folderName.setText(folder.getName());
 
@@ -144,16 +130,24 @@ public class LibraryFragment extends Fragment {
                         }
 
                         folderContainer.addView(folderCard);
+
+                        // Pass folder data to LibraryComicsFragment & LibraryModifyFolderFragment
+                        folderCard.setOnClickListener(v -> {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("folderId", folder.getId());
+                            bundle.putString("folderName", folder.getName());
+                            bundle.putString("folderDescription", folder.getDescription());
+                            bundle.putString("folderImage", folder.getCoverImage());
+                            bundle.putString("folderColor", folder.getColorTag());
+                            bundle.putInt("totalComics", folder.getTotalComics());
+
+                            // navigate to sub-level fragment logic
+                            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+                            navController.navigate(R.id.nav_library_comics, bundle);
+                        });
                     }
                 } else { // If no folders are created by user or found
-                    TextView noFolders = new TextView(requireContext());
-                    noFolders.setText("No folders found.");
-                    noFolders.setTextColor(getResources().getColor(android.R.color.white));
-                    noFolders.setTextSize(18);
-                    noFolders.setGravity(View.TEXT_ALIGNMENT_CENTER);
-
-                    folderContainer.addView(noFolders);
-                    return;
+                    folderContainer.addView(ViewStatus.SetStatus(requireContext(), "No folders found."));
                 }
             }
 
