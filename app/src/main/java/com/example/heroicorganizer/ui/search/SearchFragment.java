@@ -109,12 +109,12 @@ public class SearchFragment extends Fragment {
                                 // TODO: Temporary limit on search result until we have a better design or pagination
                                 int limit = Math.min(apiResponse.results.size(), 10);
                                 for (int i = 0; i < limit; i++) {
-                                    View comicCard = inflater.inflate(R.layout.comic_card, comicResultsContainer, false);
+                                    View comicCard = inflater.inflate(R.layout.item_card, comicResultsContainer, false);
 
                                     // Display details on initial search response comic
-                                    ImageView coverImage = comicCard.findViewById(R.id.comicResultCoverImage);
-                                    TextView comicTitle = comicCard.findViewById(R.id.comicResultName);
-                                    TextView comicDeck = comicCard.findViewById(R.id.comicResultDeck);
+                                    ImageView coverImage = comicCard.findViewById(R.id.itemCoverImage);
+                                    TextView comicTitle = comicCard.findViewById(R.id.itemTitle);
+                                    TextView comicDeck = comicCard.findViewById(R.id.itemSubtitle);
 
                                     comicTitle.setText(apiResponse.results.get(i).name);
                                     comicDeck.setText(apiResponse.results.get(i).deck);

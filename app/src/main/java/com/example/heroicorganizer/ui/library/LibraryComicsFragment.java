@@ -68,6 +68,7 @@ public class LibraryComicsFragment extends Fragment {
         // Shows loading message to user (ux)
         comicsContainer.addView(ViewStatus.SetStatus(requireContext(), "Loading Comics..."));
 
+        // To pass into the getComicsInFolder method
         String folderId = passedBundle.getString("folderId");
 
         LibraryComicPresenter.getComicsInFolder(currentUser, folderId, new LibraryComicCallback() {
@@ -84,14 +85,14 @@ public class LibraryComicsFragment extends Fragment {
 
                 if (!comics.isEmpty()) {
                     for (LibraryComic comic : comics) {
-                        View comicCard = inflater.inflate(R.layout.folder_card, comicsContainer, false);
+                        View comicCard = inflater.inflate(R.layout.item_card, comicsContainer, false);
 
-                        ImageView coverImage = comicCard.findViewById(R.id.folderCoverImage);
-                        TextView folderName = comicCard.findViewById(R.id.folderName);
-                        TextView comicCount = comicCard.findViewById(R.id.folderComicCount);
+                        ImageView coverImage = comicCard.findViewById(R.id.itemCoverImage);
+                        TextView comicTitle = comicCard.findViewById(R.id.itemTitle);
+                        TextView comicSubtitle = comicCard.findViewById(R.id.itemSubtitle);
 
-                        folderName.setText(comic.getTitle());
-                        comicCount.setText(comic.getDeck());
+                        comicTitle.setText(comic.getTitle());
+                        comicSubtitle.setText(comic.getDeck());
 
                         if (comic.getCoverImage() != null && !comic.getCoverImage().isEmpty()) {
                             Glide.with(requireContext())

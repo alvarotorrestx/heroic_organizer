@@ -111,11 +111,11 @@ public class LibraryFragment extends Fragment {
 
                 if (!folders.isEmpty()) {
                     for (LibraryFolder folder : folders) {
-                        View folderCard = inflater.inflate(R.layout.folder_card, folderContainer, false);
+                        View folderCard = inflater.inflate(R.layout.item_card, folderContainer, false);
 
-                        ImageView coverImage = folderCard.findViewById(R.id.folderCoverImage);
-                        TextView folderName = folderCard.findViewById(R.id.folderName);
-                        TextView comicCount = folderCard.findViewById(R.id.folderComicCount);
+                        ImageView coverImage = folderCard.findViewById(R.id.itemCoverImage);
+                        TextView folderName = folderCard.findViewById(R.id.itemTitle);
+                        TextView comicCount = folderCard.findViewById(R.id.itemSubtitle);
 
                         folderName.setText(folder.getName());
 
