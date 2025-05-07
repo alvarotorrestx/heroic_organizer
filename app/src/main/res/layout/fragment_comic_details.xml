@@ -7,19 +7,6 @@
         android:orientation="vertical"
         android:background="#2A2A2A">
 
-    <android.widget.Button
-            android:id="@+id/backToSearch"
-            android:enabled="true"
-            android:layout_width="90dp"
-            android:layout_height="50dp"
-            android:layout_gravity="left|center"
-            android:text="Back"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_margin="8dp"
-            android:background="@drawable/btn_bg"
-            android:textColor="@color/white" android:scaleX="1.25" android:scaleY="1.25"/>
-
-
     <ScrollView
             android:id="@+id/fragment_comic_details_content"
             android:layout_width="match_parent"

@@ -10,6 +10,8 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.example.heroicorganizer.*;
 import com.example.heroicorganizer.callback.LibraryFolderCallback;
@@ -138,15 +140,9 @@ public class SearchFragment extends Fragment {
                                         bundle.putString("publishers", comic.publisher != null ? comic.publisher.name : "Unknown");
                                         bundle.putString("issueNumber", comic.first_appeared_in_issue != null ? comic.first_appeared_in_issue.issue_number : "Unknown");
 
-                                        // Navigate to ComicDetailFragment with the Bundle
-                                        ComicDetailFragment comicDetailFragment = new ComicDetailFragment();
-                                        comicDetailFragment.setArguments(bundle);
-
-                                        requireActivity().getSupportFragmentManager()
-                                                .beginTransaction()
-                                                .replace(R.id.search_fragment_container, comicDetailFragment)
-                                                .addToBackStack(null)
-                                                .commit();
+                                        // navigate to sub-level fragment logic
+                                        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+                                        navController.navigate(R.id.nav_add_to_library, bundle);
                                     });
                                 }
                             });

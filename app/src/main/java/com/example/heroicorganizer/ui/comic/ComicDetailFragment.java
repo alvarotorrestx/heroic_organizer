@@ -46,7 +46,6 @@ public class ComicDetailFragment extends Fragment {
         User currentUser = new User();
         currentUser.setUid(FirebaseAuth.getInstance().getUid());
 
-        final Button backToSearch = view.findViewById(R.id.backToSearch);
         final ImageView comicCoverImage = view.findViewById(R.id.comicCoverImage);
         final EditText comicTitle = view.findViewById(R.id.comicTitle);
         final EditText comicDeck = view.findViewById(R.id.comicDeck);
@@ -55,15 +54,6 @@ public class ComicDetailFragment extends Fragment {
         final EditText comicIssueNumber = view.findViewById(R.id.comicIssueNumber);
         final Spinner folderSpinner = view.findViewById(R.id.folderSpinner);
         final Button addToLibrary = view.findViewById(R.id.addToLibrary);
-
-        // Sends user back to the Search Result(s) page
-        // TODO: See if we can figure out how to return the same results (maybe cache)
-        backToSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                returnToSearch();
-            }
-        });
 
         // Read from passed bundled responses from SearchFragment
         Bundle passedBundle = getArguments();
