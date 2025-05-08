@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.example.heroicorganizer.R;
@@ -76,6 +77,19 @@ public class ComicDetailFragment extends Fragment {
             // For addToFolder method
             List<LibraryFolder> folderList = new ArrayList<>();
 
+            // Show Loading Folders but pulling in data - better UX
+            List<String> loadingList = new ArrayList<>();
+            loadingList.add("Loading Folders...");
+            ArrayAdapter<String> loadingAdapter = new ArrayAdapter<>(
+                    requireContext(),
+                    android.R.layout.simple_spinner_dropdown_item,
+                    loadingList
+            );
+
+            // Sets the folder field to show loading and disabled
+            folderSpinner.setAdapter(loadingAdapter);
+            folderSpinner.setEnabled(false);
+
             // Shows available folders to add comic to library
             LibraryFolderPresenter.getFolders(currentUser, new LibraryFolderCallback() {
                 @Override
@@ -84,8 +98,11 @@ public class ComicDetailFragment extends Fragment {
                 }
 
                 @Override
-                public void onSuccessFolders(List<LibraryFolder> folders) { // STOPPED HERE. Converting folderid to pass into method
+                public void onSuccessFolders(List<LibraryFolder> folders) {
                     List<String> folderNames = new ArrayList<>();
+                    // Clears out existing folders to avoid duplicates
+                    folderList.clear();
+
                     for (LibraryFolder folder : folders) {
                         folderList.add(folder);
                         folderNames.add(folder.getName());
@@ -98,11 +115,22 @@ public class ComicDetailFragment extends Fragment {
                     );
                     adapter.setDropDownViewResource(R.layout.spinner_dropdown);
                     folderSpinner.setAdapter(adapter);
+                    folderSpinner.setEnabled(true);
                 }
 
                 @Override
                 public void onFailure(String errorMessage) {
-                    ToastMsg.show(requireContext(), "Failed to load folders");
+                    List<String> errorList = new ArrayList<>();
+                    errorList.add("Failed to load folders.");
+                    ArrayAdapter<String> errorAdapter = new ArrayAdapter<>(
+                            requireContext(),
+                            android.R.layout.simple_spinner_dropdown_item,
+                            errorList
+                    );
+                    folderSpinner.setAdapter(errorAdapter);
+                    folderSpinner.setEnabled(false);
+
+                    ToastMsg.show(requireContext(), "Failed to load folders.");
                     Log.e("FolderSpinner", "Error: " + errorMessage);
                 }
             });
@@ -145,7 +173,9 @@ public class ComicDetailFragment extends Fragment {
 
                         // Redirect user to Library Folders page
                         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-                        navController.popBackStack(R.id.nav_library, false);
+                        // Prevents a back stack to the same comic editing/add to folder
+                        navController.popBackStack(navController.getGraph().getStartDestinationId(), false);
+                        navController.navigate(R.id.nav_library);
                     }
 
                     @Override
@@ -160,13 +190,5 @@ public class ComicDetailFragment extends Fragment {
                 });
             });
         }
-    }
-
-    private void returnToSearch() {
-        // Sends user back to the Search Result(s) page
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.search_fragment_container, new SearchFragment())
-                .commit();
     }
 }

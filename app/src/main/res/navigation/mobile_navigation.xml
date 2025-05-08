@@ -66,4 +66,9 @@
             android:name="com.example.heroicorganizer.ui.library.LibraryComicsFragment"
             android:label="Comics" />
 
+    <fragment
+            android:id="@+id/nav_library_comic_view"
+            android:name="com.example.heroicorganizer.ui.comic.ViewComicFragment"
+            android:label="Comic Details" />
+
 </navigation>
