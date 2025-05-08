@@ -23,9 +23,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
+                android:adjustViewBounds="false"
                 android:contentDescription="Captured Image"
-                android:layout_gravity="top"
+                android:layout_gravity="top|center"
         />
     </LinearLayout>
     <LinearLayout
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="316dp"
             android:layout_gravity="bottom"
-            android:visibility="gone" android:id="@+id/exampleFields">
+            android:visibility="gone" android:id="@+id/exampleFields" tools:visibility="visible">
         <EditText
                 android:id="@+id/coverComicName"
                 android:layout_width="match_parent"
@@ -71,10 +71,10 @@
                 android:minHeight="48dp"
                 android:background="@drawable/field_bg" android:padding="12dp" android:layout_marginBottom="12dp"/>
         <EditText
-                android:id="@+id/coverFinish"
+                android:id="@+id/coverUPC"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Total Owened"
+                android:hint="UPC"
                 android:backgroundTint="@color/white"
                 android:textColor="@color/white"
                 android:minHeight="48dp"

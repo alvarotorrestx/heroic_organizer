@@ -7,10 +7,7 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.*;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
@@ -23,6 +20,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import com.google.mlkit.vision.barcode.common.Barcode;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
+import com.google.mlkit.vision.common.InputImage;
 
 public class ScanFragment extends Fragment {
 
@@ -60,11 +62,45 @@ public class ScanFragment extends Fragment {
                     if (success && photoURI != null) {
                         ImageView imageView = requireView().findViewById(R.id.capturedImageView);
                         imageView.setImageURI(photoURI);
-                        ToastMsg.show(requireContext(), "Cover recognized successfully");
+                        //ToastMsg.show(requireContext(), "Cover recognized successfully");
 
-                        //toggle visibility ON on example fields
+                        //toggle visibility ON for example fields
                         View exampleFields = requireView().findViewById(R.id.exampleFields);
                         exampleFields.setVisibility(View.VISIBLE);
+
+                        // if barcode was found
+                        try {
+                            InputImage image = InputImage.fromFilePath(requireContext(), photoURI);
+
+                            BarcodeScannerOptions options = new BarcodeScannerOptions.Builder()
+                                    .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS)
+                                    .build();
+
+                            BarcodeScanner scanner = BarcodeScanning.getClient(options);
+
+                            scanner.process(image)
+                                    .addOnSuccessListener(barcodes -> {
+                                        if (!barcodes.isEmpty()) {
+                                            String barcodeValue = barcodes.get(0).getRawValue();
+                                            TextView comicUPCField = requireView().findViewById(R.id.coverUPC);
+                                            comicUPCField.setText(barcodeValue);
+
+                                            ToastMsg.show(requireContext(), "Barcode: " + barcodeValue);
+
+                                        } else {
+                                            ToastMsg.show(requireContext(), "No barcode found");
+                                        }
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        ToastMsg.show(requireContext(), "Barcode scan failed");
+                                        e.printStackTrace();
+                                    });
+
+                        } catch (IOException e) {
+                            ToastMsg.show(requireContext(), "Failed to read image for barcode");
+                            e.printStackTrace();
+                        }
+                        //
 
                     } else {
                         ToastMsg.show(requireContext(), "Failed to recognize cover");
@@ -90,6 +126,11 @@ public class ScanFragment extends Fragment {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
                     == PackageManager.PERMISSION_GRANTED) {
                 launchCamera();
+
+                // 2B DELETED LATER: setting the edittext view to empty upon opening the camera
+                TextView comicUPCField = requireView().findViewById(R.id.coverUPC);
+                comicUPCField.setText("");
+
             } else {
                 requestPermissionLauncher.launch(Manifest.permission.CAMERA);
             }
@@ -135,4 +176,4 @@ public class ScanFragment extends Fragment {
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
-}
+    }
