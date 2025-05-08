@@ -6,6 +6,7 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 public class ComicVineConfig {
 
@@ -19,7 +20,7 @@ public class ComicVineConfig {
             is.read(buffer);
             is.close();
 
-            String jsonStr = new String(buffer, "UTF-8");
+            String jsonStr = new String(buffer, StandardCharsets.UTF_8);
             JSONObject jsonObject = new JSONObject(jsonStr);
             return jsonObject.getString("api_key");
 
