@@ -186,6 +186,22 @@ public class LibraryComicsFragment extends Fragment {
                             coverImage.setVisibility(View.GONE);
                         }
 
+                        // Bundle responses to push to the ViewComicFragment
+                        comicCard.setOnClickListener(v -> {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("id", comic.getId() != null && !comic.getId().isEmpty() ? comic.getId() : "");
+                            bundle.putString("title", comic.getTitle() != null && !comic.getTitle().isEmpty() ? comic.getTitle() : "");
+                            bundle.putString("deck", comic.getDeck() != null && !comic.getDeck().isEmpty() ? comic.getDeck() : "");
+                            bundle.putString("description", comic.getDescription() != null && !comic.getDescription().isEmpty() ? comic.getDescription() : "");
+                            bundle.putString("image", comic.getCoverImage() != null && !comic.getCoverImage().isEmpty() ? comic.getCoverImage() : "");
+                            bundle.putString("publishers", comic.getPublisher() != null && !comic.getPublisher().isEmpty() ? comic.getPublisher() : "");
+                            bundle.putString("issueNumber", comic.getIssue() != null && !comic.getIssue().isEmpty() ? comic.getIssue() : "");
+
+                            // navigate to sub-level fragment logic
+                            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+                            navController.navigate(R.id.nav_library_comic_view, bundle);
+                        });
+
                         comicsContainer.addView(comicCard);
                     }
                 } else { // If no comics are in the folder
