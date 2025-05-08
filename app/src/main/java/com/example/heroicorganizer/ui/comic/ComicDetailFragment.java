@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.example.heroicorganizer.R;
@@ -84,7 +85,7 @@ public class ComicDetailFragment extends Fragment {
                 }
 
                 @Override
-                public void onSuccessFolders(List<LibraryFolder> folders) { // STOPPED HERE. Converting folderid to pass into method
+                public void onSuccessFolders(List<LibraryFolder> folders) {
                     List<String> folderNames = new ArrayList<>();
                     for (LibraryFolder folder : folders) {
                         folderList.add(folder);
@@ -145,7 +146,9 @@ public class ComicDetailFragment extends Fragment {
 
                         // Redirect user to Library Folders page
                         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-                        navController.popBackStack(R.id.nav_library, false);
+                        // Prevents a back stack to the same comic editing/add to folder
+                        navController.popBackStack(navController.getGraph().getStartDestinationId(), false);
+                        navController.navigate(R.id.nav_library);
                     }
 
                     @Override
@@ -160,13 +163,5 @@ public class ComicDetailFragment extends Fragment {
                 });
             });
         }
-    }
-
-    private void returnToSearch() {
-        // Sends user back to the Search Result(s) page
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.search_fragment_container, new SearchFragment())
-                .commit();
     }
 }
