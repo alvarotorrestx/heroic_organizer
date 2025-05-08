@@ -77,6 +77,19 @@ public class ComicDetailFragment extends Fragment {
             // For addToFolder method
             List<LibraryFolder> folderList = new ArrayList<>();
 
+            // Show Loading Folders but pulling in data - better UX
+            List<String> loadingList = new ArrayList<>();
+            loadingList.add("Loading Folders...");
+            ArrayAdapter<String> loadingAdapter = new ArrayAdapter<>(
+                    requireContext(),
+                    android.R.layout.simple_spinner_dropdown_item,
+                    loadingList
+            );
+
+            // Sets the folder field to show loading and disabled
+            folderSpinner.setAdapter(loadingAdapter);
+            folderSpinner.setEnabled(false);
+
             // Shows available folders to add comic to library
             LibraryFolderPresenter.getFolders(currentUser, new LibraryFolderCallback() {
                 @Override
@@ -87,6 +100,9 @@ public class ComicDetailFragment extends Fragment {
                 @Override
                 public void onSuccessFolders(List<LibraryFolder> folders) {
                     List<String> folderNames = new ArrayList<>();
+                    // Clears out existing folders to avoid duplicates
+                    folderList.clear();
+
                     for (LibraryFolder folder : folders) {
                         folderList.add(folder);
                         folderNames.add(folder.getName());
@@ -99,11 +115,22 @@ public class ComicDetailFragment extends Fragment {
                     );
                     adapter.setDropDownViewResource(R.layout.spinner_dropdown);
                     folderSpinner.setAdapter(adapter);
+                    folderSpinner.setEnabled(true);
                 }
 
                 @Override
                 public void onFailure(String errorMessage) {
-                    ToastMsg.show(requireContext(), "Failed to load folders");
+                    List<String> errorList = new ArrayList<>();
+                    errorList.add("Failed to load folders.");
+                    ArrayAdapter<String> errorAdapter = new ArrayAdapter<>(
+                            requireContext(),
+                            android.R.layout.simple_spinner_dropdown_item,
+                            errorList
+                    );
+                    folderSpinner.setAdapter(errorAdapter);
+                    folderSpinner.setEnabled(false);
+
+                    ToastMsg.show(requireContext(), "Failed to load folders.");
                     Log.e("FolderSpinner", "Error: " + errorMessage);
                 }
             });
