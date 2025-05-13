@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="rectangle">
+    <!-- BG color of circle -->
+    <solid android:color="#C738B9"/>
+    <!-- Rounding radius of corners to full circle -->
+    <corners android:radius="250dp"/>
+</shape>
