@@ -4,6 +4,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +21,15 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import com.example.heroicorganizer.utils.MarvelApiConfig;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.common.InputImage;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 public class ScanFragment extends Fragment {
 
@@ -86,6 +91,28 @@ public class ScanFragment extends Fragment {
                                             comicUPCField.setText(barcodeValue);
 
                                             ToastMsg.show(requireContext(), "Barcode: " + barcodeValue);
+
+                                            ///
+                                            MarvelApiConfig APICall  = new MarvelApiConfig(requireContext());
+                                            String baseUrl = "https://gateway.marvel.com";
+                                            String apiKey = String.valueOf(APICall.getApiKey(requireContext()));
+                                            if (apiKey == null || apiKey.isEmpty()) {
+                                                ToastMsg.show(requireContext(), "API Key missing");
+                                                return;
+                                            }
+                                            String finalUrl = baseUrl + "/v1/public/characters?apikey=$" + APICall.getPublicKey() + "&ts=$" + APICall.getTimeStamp() + "&hash=$" + APICall.getMd5Hash();
+
+                                            OkHttpClient client = new OkHttpClient();
+                                            Request request = new Request.Builder()
+                                                    .url(finalUrl)
+                                                    .addHeader("User-Agent", "HeroicOrganizerApp/1.0")
+                                                    .build();
+
+                                            Log.d("SearchComics", barcodeValue);
+                                            Log.d("SearchComics", request.toString());
+                                            Log.d("SearchComics", finalUrl);
+
+                                            ///
 
                                         } else {
                                             ToastMsg.show(requireContext(), "No barcode found");

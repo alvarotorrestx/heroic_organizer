@@ -11,6 +11,9 @@ google-services.json
 # Ignore comic vine json
 /app/src/main/assets/comic-vine.json
 
+# Ignore marvel API json
+/app/src/main/assets/marvel-api.json
+
 # Ignore local SDK path
 local.properties
 

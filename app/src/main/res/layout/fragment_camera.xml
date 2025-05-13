@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:gravity="center"
+              android:background="#2a2a2a"
+              android:padding="16dp">
+
+    <androidx.camera.view.PreviewView
+            android:id="@+id/previewView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+    <LinearLayout
+            android:id="@+id/cameraControls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingTop="12dp"
+            android:paddingBottom="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+        <!-- Flash Toggle Button -->
+        <ImageButton
+                android:id="@+id/btnFlash"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/rounded_button"
+                android:src="@drawable/ic_flash_auto"
+                android:scaleType="fitCenter"
+                android:padding="12dp"
+                app:tint="#2A2A2A"
+                android:contentDescription="Toggle Flash"/>
+
+        <!-- Capture Button -->
+        <ImageButton
+                android:id="@+id/btnCapture"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginHorizontal="24dp"
+                android:background="@drawable/rounded_button"
+                android:src="@drawable/ic_camera"
+                android:scaleType="fitCenter"
+                android:padding="12dp"
+                app:tint="#2A2A2A"
+                android:contentDescription="Capture Image"/>
+
+        <!-- Retake Image Button -->
+        <ImageButton
+                android:id="@+id/btnRetake"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/rounded_button"
+                android:src="@drawable/ic_refresh"
+                android:scaleType="fitCenter"
+                android:padding="12dp"
+                app:tint="#2A2A2A"
+                android:contentDescription="Retake Image"/>
+
+    </LinearLayout>
+
+</LinearLayout>
