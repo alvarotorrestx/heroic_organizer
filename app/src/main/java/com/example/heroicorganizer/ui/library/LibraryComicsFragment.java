@@ -181,6 +181,7 @@ public class LibraryComicsFragment extends Fragment {
                         if (comic.getCoverImage() != null && !comic.getCoverImage().isEmpty()) {
                             Glide.with(requireContext())
                                     .load(comic.getCoverImage())
+                                    .fitCenter()
                                     .into(coverImage);
                         } else {
                             coverImage.setVisibility(View.GONE);
