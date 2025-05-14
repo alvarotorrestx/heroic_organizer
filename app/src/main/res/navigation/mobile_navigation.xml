@@ -26,6 +26,12 @@
             android:id="@+id/nav_scan"
             android:name="com.example.heroicorganizer.ui.scan.ScanFragment"
             android:label="Scan Comic Cover"
+            tools:layout="@layout/fragment_camera" />
+
+    <fragment
+            android:id="@+id/nav_scan_details"
+            android:name="com.example.heroicorganizer.ui.scan.ScanDetailFragment"
+            android:label="Scan Details"
             tools:layout="@layout/fragment_scan" />
 
     <fragment

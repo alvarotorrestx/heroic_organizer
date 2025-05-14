@@ -1,6 +1,7 @@
 package com.example.heroicorganizer.ui.scan;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import com.example.heroicorganizer.R;
 import com.example.heroicorganizer.ui.ToastMsg;
 
@@ -62,6 +65,7 @@ public class ScanFragment extends Fragment {
 
     // CameraX Necessities
     private ImageCapture imageCapture;
+    private Activity view;
 
     public ScanFragment() {
     }
@@ -221,9 +225,6 @@ public class ScanFragment extends Fragment {
                         if (!barcodes.isEmpty()) {
                             String barcodeValue = barcodes.get(0).getRawValue();
 
-//                            TextView comicUPCField = requireView().findViewById(R.id.coverUPC);
-//                            comicUPCField.setText(barcodeValue);
-
                             ToastMsg.show(requireContext(), "Barcode: " + barcodeValue);
 
                             // TODO: Fix API Call - missing api key
@@ -243,6 +244,14 @@ public class ScanFragment extends Fragment {
                             Log.d("SearchComics", request.toString());
                             Log.d("SearchComics", finalUrl);
 
+                            // Bundle up data to ScanDetailFragment
+                            Bundle bundle = new Bundle();
+                            bundle.putString("barcode", barcodeValue);
+                            bundle.putString("photoURI", uri.toString());
+
+                            // Navigate to ScanDetailFragment
+                            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+                            navController.navigate(R.id.nav_scan_details, bundle);
                         } else {
                             ToastMsg.show(requireContext(), "No barcode found");
                         }
