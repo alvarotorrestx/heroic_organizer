@@ -216,6 +216,7 @@ public class ScanFragment extends Fragment {
 
             BarcodeScannerOptions options = new BarcodeScannerOptions.Builder()
                     .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS)
+                    .enableAllPotentialBarcodes()
                     .build();
 
             BarcodeScanner scanner = BarcodeScanning.getClient(options);
@@ -225,14 +226,30 @@ public class ScanFragment extends Fragment {
                         if (!barcodes.isEmpty()) {
                             String barcodeValue = barcodes.get(0).getRawValue();
 
+                            if (barcodeValue == null || barcodeValue.isEmpty()) {
+                                ToastMsg.show(requireContext(), "No valid barcode detected. Try again.");
+                                return;
+                            }
+
                             ToastMsg.show(requireContext(), "Barcode: " + barcodeValue);
 
-                            // TODO: Fix API Call - missing api key
+                            // Marvel API call with 17 digit barcode scan
                             MarvelApiConfig APICall = new MarvelApiConfig(requireContext());
                             String baseUrl = "https://gateway.marvel.com";
-                            String finalUrl = baseUrl + "/v1/public/characters?apikey=$" + APICall.getPublicKey()
-                                    + "&ts=$" + APICall.getTimeStamp()
-                                    + "&hash=$" + APICall.getMd5Hash();
+                            // Search by characters
+//                            String finalUrl = baseUrl
+//                                    + "/v1/public/characters"
+//                                    + "?apikey=" + APICall.getPublicKey()
+//                                    + "&ts=" + APICall.getTimeStamp()
+//                                    + "&hash=" + APICall.getMd5Hash();
+
+                            // Search by UPC
+                            String finalUrl = baseUrl
+                                    + "/v1/public/comics?"
+                                    + "upc=" + barcodeValue
+                                    + "&ts=" + APICall.getTimeStamp()
+                                    + "&apikey=" + APICall.getPublicKey()
+                                    + "&hash=" + APICall.getMd5Hash();
 
                             OkHttpClient client = new OkHttpClient();
                             Request request = new Request.Builder()
