@@ -114,7 +114,7 @@ public class SearchFragment extends Fragment {
                     public void onFailure(String errorMessage) {
                         requireActivity().runOnUiThread(() -> {
                             comicResultsContainer.removeAllViews();
-                            comicResultsContainer.addView(ViewStatus.SetStatus(requireContext(), "No results found."));
+                            comicResultsContainer.addView(ViewStatus.SetStatus(requireContext(), "No results found for " + query + "."));
                             ToastMsg.show(requireContext(), errorMessage);
                         });
                     }
