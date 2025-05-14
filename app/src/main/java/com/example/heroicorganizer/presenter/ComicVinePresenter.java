@@ -55,6 +55,13 @@ public class ComicVinePresenter {
                     }
                 }
 
+                // If no results found after filtering
+                if (filteredResponse.isEmpty()) {
+                    String querySearch = call.request().url().queryParameter("query");
+                    callback.onFailure("No results found for " + (querySearch != null ? querySearch : "your search") + ".");
+                    return;
+                }
+
                 callback.onSuccess(filteredResponse);
             }
         });

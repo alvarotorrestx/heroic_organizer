@@ -29,21 +29,6 @@
                 android:contentDescription="Captured Image"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/field_bg"/>
-
-
-        <!-- Scan Button -->
-            <android.widget.Button
-                    android:id="@+id/btnOpenCam"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:foreground="@android:drawable/ic_menu_camera"
-                    android:foregroundGravity="center"
-                    android:textSize="18sp"
-                    android:textColor="#ffffff"
-                    android:textStyle="bold"
-                    android:background="@drawable/btn_bg"
-            />
         </FrameLayout>
 
         <!-- Tab -->
