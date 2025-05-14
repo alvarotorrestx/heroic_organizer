@@ -20,15 +20,15 @@ public class ComicVine {
                     name != null ? name : "",
                     deck != null ? deck : "",
                     description != null ? description : "",
-                    image != null ? image.screen_url : "",
+                    image != null ? image.original_url : "",
                     publisher != null ? publisher.name : "Unknown",
-                    first_appeared_in_issue != null ? first_appeared_in_issue.issue_number : "Unknown"
+                    first_appeared_in_issue != null ? first_appeared_in_issue.issue_number : "###"
             );
         }
     }
 
     public static class Image {
-        public String screen_url;
+        public String original_url;
     }
 
     public static class Publisher {

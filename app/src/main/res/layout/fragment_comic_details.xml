@@ -1,50 +1,160 @@
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp"
-        android:orientation="vertical"
-        android:background="#2A2A2A">
-
-    <ScrollView
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/fragment_comic_details_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="#2A2A2A"
-            >
+            android:fillViewport="true">
 
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#2A2A2A">
+
+        <!-- Comic Cover -->
+        <ImageView
+                android:id="@+id/comicCoverImage"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:minHeight="300dp"
+                android:scaleType="fitStart"
+                android:contentDescription="Comic Cover"
+                android:background="@drawable/field_bg"
+                android:layout_marginBottom="0dp"
+                android:adjustViewBounds="true"/>
+
+        <!-- Tab -->
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center_horizontal">
-
-            <!-- Comic Cover Avatar -->
-            <ImageView
-                    android:id="@+id/comicCoverImage"
-                    android:layout_width="200dp"
-                    android:layout_height="300dp"
-                    android:layout_gravity="center"
-                    android:scaleType="centerCrop"
+                android:background="@drawable/info_tabline_bg"
+                android:padding="16dp">
+            <!-- Issue Number & Tittle -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal"
+                          android:layout_marginTop="32dp" android:layout_marginBottom="12dp">
+            <EditText
+                    android:id="@+id/comicIssueNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="###"
+                    android:textColor="@color/white"
+                    android:minHeight="48dp"
                     android:background="@drawable/field_bg"
-                    android:contentDescription="Comic Cover"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="16dp"/>
-
-
-            <!-- Comic Name -->
+                    android:padding="12dp"
+                    android:layout_marginRight="12dp"
+            />
             <EditText
                     android:id="@+id/comicTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Comic Title"
-                    android:background="@drawable/field_bg"
+                    android:hint="Title"
                     android:textColor="@color/white"
+                    android:minHeight="48dp"
+                    android:background="@drawable/field_bg"
+                    android:padding="12dp"
+            />
+            </LinearLayout>
+
+            <!-- Publication Date & Publisher -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal" >
+                <!-- Publication Date -->
+                <EditText
+                        android:id="@+id/coverDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="Date Published"
+                        android:textColor="@color/white"
+                        android:minHeight="48dp"
+                        android:background="@drawable/field_bg"
+                        android:padding="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:layout_marginRight="12dp"
+                />
+
+                <!-- Publisher -->
+                <EditText
+                        android:id="@+id/comicPublishers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/field_bg"
+                        android:padding="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="Publisher Name"
+                />
+            </LinearLayout>
+
+            <!-- Cover Info -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                          android:orientation="horizontal">
+
+                <!-- Cover Variant ID -->
+                <EditText
+                        android:id="@+id/coverVariant"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="Variant ID"
+                        android:textColor="@color/white"
+                        android:minHeight="48dp"
+                        android:background="@drawable/field_bg"
+                        android:padding="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:layout_marginRight="12dp"
+                />
+                <!-- Cover Artist  -->
+                <EditText
+                        android:id="@+id/coverArtistVariant"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Cover Artist"
+                        android:textColor="@color/white"
+                        android:minHeight="48dp"
+                        android:background="@drawable/field_bg"
+                        android:padding="12dp"
+                        android:layout_marginBottom="12dp"
+                />
+            </LinearLayout>
+
+            <!-- Author/Writer -->
+            <EditText
+                    android:id="@+id/coverComicAuthor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Author (Writer)"
+                    android:textColor="@color/white"
+                    android:minHeight="48dp"
+                    android:background="@drawable/field_bg"
                     android:padding="12dp"
                     android:layout_marginBottom="12dp"/>
 
-            <!-- Comic Deck -->
+            <!-- UPC -->
+            <EditText
+                    android:id="@+id/coverUPC"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="UPC"
+                    android:textColor="@color/white"
+                    android:minHeight="48dp"
+                    android:background="@drawable/field_bg"
+                    android:padding="12dp"
+                    android:layout_marginBottom="12dp"/>
+
+            <!-- Description -->
+            <EditText
+                    android:id="@+id/comicDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="150dp"
+                    android:background="@drawable/field_bg"
+                    android:padding="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:scrollbars="vertical"
+                    android:text="Comic Description" />
+
             <EditText
                     android:id="@+id/comicDeck"
                     android:layout_width="match_parent"
@@ -55,48 +165,12 @@
                     android:textColor="@color/white"
                     android:padding="12dp"
                     android:layout_marginBottom="12dp"
-                    android:overScrollMode="always"
-                    android:scrollbarStyle="insideInset"
-                    android:scrollbars="vertical"/>
+                    android:scrollbars="vertical" android:visibility="gone"/>
 
-            <!-- Comic Description -->
-            <EditText
-                    android:id="@+id/comicDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxHeight="150dp"
-                    android:hint="Comic Description"
-                    android:background="@drawable/field_bg"
-                    android:textColor="@color/white"
-                    android:padding="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:overScrollMode="always"
-                    android:scrollbarStyle="insideInset"
-                    android:scrollbars="vertical"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="Folder:" android:textColor="@color/white" android:paddingTop="6dp"
+            android:textStyle="bold" android:textSize="16dp"/>
 
-            <!-- Comic Publisher -->
-            <EditText
-                    android:id="@+id/comicPublishers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Publisher"
-                    android:background="@drawable/field_bg"
-                    android:textColor="@color/white"
-                    android:padding="12dp"
-                    android:layout_marginBottom="12dp"/>
-
-            <!-- Issue Number -->
-            <EditText
-                    android:id="@+id/comicIssueNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Issue #"
-                    android:background="@drawable/field_bg"
-                    android:textColor="@color/white"
-                    android:padding="12dp"
-                    android:layout_marginBottom="16dp"/>
-
-            <!-- Folder Selection Spinner -->
             <Spinner
                     android:id="@+id/folderSpinner"
                     android:layout_width="match_parent"
@@ -104,9 +178,10 @@
                     android:background="@drawable/field_bg"
                     android:layout_marginBottom="24dp"
                     android:padding="12dp"
-                    android:popupBackground="@color/white"/>
+                    android:popupBackground="@color/white"
+                    android:foreground="@android:drawable/ic_menu_more"
+                    android:foregroundGravity="right|center_vertical"/>
 
-            <!-- Add Button -->
             <Button
                     android:id="@+id/addToLibrary"
                     android:layout_width="match_parent"
@@ -115,8 +190,7 @@
                     android:backgroundTint="#32D583"
                     android:textColor="#2A2A2A"
                     android:textStyle="bold"
-                    android:layout_marginBottom="12dp"/>
-
+                    android:layout_marginBottom="12dp" />
         </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

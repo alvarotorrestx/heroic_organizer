@@ -70,8 +70,8 @@ public class ScanFragment extends Fragment {
                         //ToastMsg.show(requireContext(), "Cover recognized successfully");
 
                         //toggle visibility ON for example fields
-                        View exampleFields = requireView().findViewById(R.id.exampleFields);
-                        exampleFields.setVisibility(View.VISIBLE);
+                        //View exampleFields = requireView().findViewById(R.id.exampleFields);
+                        //exampleFields.setVisibility(View.VISIBLE);
 
                         // if barcode was found
                         try {
@@ -133,8 +133,8 @@ public class ScanFragment extends Fragment {
                         ToastMsg.show(requireContext(), "Failed to recognize cover");
 
                         //toggle visibility OFF on example fields
-                        View exampleFields = requireView().findViewById(R.id.exampleFields);
-                        exampleFields.setVisibility(View.GONE);
+                        //View exampleFields = requireView().findViewById(R.id.exampleFields);
+                        //exampleFields.setVisibility(View.GONE);
 
 
                     }
