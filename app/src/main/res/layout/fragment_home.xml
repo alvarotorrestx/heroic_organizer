@@ -2,9 +2,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/fragment_home_root"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="#2A2A2A"
-            android:padding="16dp">
+            android:padding="8dp">
 
     <LinearLayout
             android:orientation="vertical"
@@ -26,7 +26,8 @@
                 android:id="@+id/recycler_upcoming"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp"
+                />
 
         <android.widget.Button
                 android:id="@+id/btn_view_more_upcoming"
@@ -42,7 +43,7 @@
                 android:id="@+id/recentlyLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Recently Scanned"
+                android:text="Recently Saved"
                 android:textColor="@android:color/white"
                 android:textSize="34sp"
                 android:textStyle="bold"
