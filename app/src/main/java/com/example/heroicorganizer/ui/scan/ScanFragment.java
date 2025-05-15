@@ -3,9 +3,11 @@ package com.example.heroicorganizer.ui.scan;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import com.example.heroicorganizer.R;
+import com.example.heroicorganizer.callback.WeaviateSearchImageCallback;
+import com.example.heroicorganizer.presenter.WeaviatePresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
 
 import java.io.File;
@@ -176,7 +180,10 @@ public class ScanFragment extends Fragment {
                             ToastMsg.show(requireContext(), "Image captured");
 
                             // Read barcode details for api call
-                            scanBarcode(photoURI);
+//                            scanBarcode(photoURI);
+
+                            // Weaviate Image Reverse Search
+                            scanImage(photoURI);
                         }
 
                         @Override
@@ -281,6 +288,43 @@ public class ScanFragment extends Fragment {
         } catch (IOException e) {
             ToastMsg.show(requireContext(), "Failed to read image for barcode");
             e.printStackTrace();
+        }
+    }
+
+    private void scanImage(Uri uri) {
+        try {
+            Bitmap scannedImage = MediaStore.Images.Media.getBitmap(
+                    requireContext().getContentResolver(), uri
+            );
+
+            // Pass the scanned image to Weaviate
+            WeaviatePresenter.searchByImage(scannedImage, new WeaviateSearchImageCallback() {
+                @Override
+                public void onSuccess(String title, String image) {
+                    // Bundle response to send to ScanDetailFragment
+                    Bundle bundle = new Bundle();
+                    bundle.putString("title", title);
+                    bundle.putString("coverImage", image);
+                    bundle.putString("photoURI", image);
+
+                    // Navigate to ScanDetailFragment
+                    requireActivity().runOnUiThread(() -> {
+                        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+                        navController.navigate(R.id.nav_scan_details, bundle);
+                    });
+                }
+
+                @Override
+                public void onFailure(String errorMessage) {
+                    requireActivity().runOnUiThread(() -> {
+                        ToastMsg.show(requireContext(), errorMessage);
+                    });
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("ScanFragment", "Failed to convert URI to Bitmap: " + e.getMessage());
+            ToastMsg.show(requireContext(), "Failed to process image.");
         }
     }
 }
