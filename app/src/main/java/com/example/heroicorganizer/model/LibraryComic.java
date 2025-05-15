@@ -27,7 +27,7 @@ public class LibraryComic {
     private String coverImage;
     private String condition;
     private int quantity;
-    private long timestamp;
+    private String timestamp;
     public LibraryComic() {
     }
 
@@ -275,11 +275,11 @@ public class LibraryComic {
         this.quantity = quantity;
     }
 
-    public long getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 }

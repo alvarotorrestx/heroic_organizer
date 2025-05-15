@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 import androidx.core.view.GravityCompat;
+import com.example.heroicorganizer.ui.wishlist.WishlistData;
+import com.example.heroicorganizer.ui.wishlist.WishlistItem;
 import com.example.heroicorganizer.utils.WeaviateConfig;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.navigation.NavController;
@@ -40,22 +42,36 @@ public class MainActivity extends AppCompatActivity {
                         .setAnchorView(R.id.fab).show()
         );
 
-        // Boolean to see if first time opening app
-        // This is for Weaviate schema creation
-        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
-        boolean hasLaunchedBefore = prefs.getBoolean("hasLaunchedBefore", false);
+//        // Boolean to see if first time opening app
+//        // This is for Weaviate schema creation
+//        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+//        boolean hasLaunchedBefore = prefs.getBoolean("hasLaunchedBefore", false);
+//
+//        // If first time launch, create schema
+//        // TODO: Perhaps move this into another class
+//        if (!hasLaunchedBefore) {
+//            Log.d("WeaviateInit", "First launch — checking schema...");
+//            WeaviateConfig config = new WeaviateConfig();
+//            config.checkWeaviateSchema();
+//
+//            // Mark as launched
+//            prefs.edit().putBoolean("hasLaunchedBefore", true).apply();
+//        } else {
+//            Log.d("WeaviateInit", "Already launched — skipping schema check.");
+//        }
 
-        // If first time launch, create schema
-        // TODO: Perhaps move this into another class
-        if (!hasLaunchedBefore) {
-            Log.d("WeaviateInit", "First launch — checking schema...");
-            WeaviateConfig config = new WeaviateConfig();
-            config.checkWeaviateSchema();
+        // Temporary always check if schema is created to ensure Schema is created
+        // TODO: same as above
+        WeaviateConfig config = new WeaviateConfig();
+        config.checkWeaviateSchema();
 
-            // Mark as launched
-            prefs.edit().putBoolean("hasLaunchedBefore", true).apply();
-        } else {
-            Log.d("WeaviateInit", "Already launched — skipping schema check.");
+        // Temporary create static list of comics for wishlist
+        // TODO: Remove once Firebase DB for Wishlist is completed
+        if (WishlistData.itemList.isEmpty()) {
+            WishlistData.itemList.add(new WishlistItem(R.drawable.example4, "Marvel Rivals", "#1", "Peach Momoko", "Apr/2/2025", ""));
+            WishlistData.itemList.add(new WishlistItem(R.drawable.example1, "Magik", "#4", "Rose Besch", "Apr/23/2025", "Mar/24/2025"));
+            WishlistData.itemList.add(new WishlistItem(R.drawable.example3, "Jeff the Land Shark", "#1", "Todd Nauck Homage", "Jun/18/2025", "May/05/2026"));
+            WishlistData.itemList.add(new WishlistItem(R.drawable.example2, "Psylocke", "#8", "Puppeteer Lee", "Jun/18/2025", "May/19/2025"));
         }
 
         DrawerLayout drawer = binding.drawerLayout;

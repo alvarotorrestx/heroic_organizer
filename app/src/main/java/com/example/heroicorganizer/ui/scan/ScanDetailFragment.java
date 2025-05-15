@@ -1,9 +1,12 @@
 package com.example.heroicorganizer.ui.scan;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,18 +46,25 @@ public class ScanDetailFragment extends Fragment {
         // Pull in bundle from ScanFragment
         Bundle args = getArguments();
         if (args != null) {
-            String barcode = args.getString("barcode");
-            String photoUriString = args.getString("photoURI");
+            String title = args.getString("title");
+//            String photoUriString = args.getString("photoURI");
+            String base64Image = getArguments().getString("photoURI");
 
-            EditText coverUPC = view.findViewById(R.id.coverUPC);
-            coverUPC.setText(barcode);
+            TextView coverUPC = view.findViewById(R.id.coverUPC);
+            coverUPC.setText(title);
 
             // Show captured image
             ImageView imageView = view.findViewById(R.id.capturedImageView);
-            if (photoUriString != null) {
-                Uri photoUri = Uri.parse(photoUriString);
-                imageView.setImageURI(photoUri);
+//            if (photoUriString != null) {
+//                Uri photoUri = Uri.parse(photoUriString);
+//                imageView.setImageURI(photoUri);
+//            }
+            if (base64Image != null) {
+                byte[] imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                imageView.setImageBitmap(bitmap);
             }
+
         }
     }
 }

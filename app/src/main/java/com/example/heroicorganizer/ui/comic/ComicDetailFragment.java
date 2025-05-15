@@ -24,14 +24,18 @@ import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LibraryComicPresenter;
 import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
+import com.example.heroicorganizer.ui.home.RecentComicsData;
 import com.example.heroicorganizer.ui.library.LibraryFragment;
 import com.example.heroicorganizer.ui.search.SearchFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ComicDetailFragment extends Fragment {
     @Override
@@ -170,6 +174,13 @@ public class ComicDetailFragment extends Fragment {
                     @Override
                     public void onSuccess(String message) {
                         ToastMsg.show(requireContext(), "Comic successfully added to the " + folderName + " folder!");
+
+                        // Temporary static list of adding comics to home page
+                        // TODO: Remove after Firebase additions or scanning function works
+                        String formattedDate = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+                                .format(new Date());
+                        comic.setTimestamp(formattedDate);
+                        RecentComicsData.addRecentComic(comic);
 
                         // Redirect user to Library Folders page
                         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
