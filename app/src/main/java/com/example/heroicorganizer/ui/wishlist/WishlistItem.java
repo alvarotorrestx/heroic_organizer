@@ -16,4 +16,9 @@ public class WishlistItem {
         this.releaseDate = releaseDate;
         this.cutoffDate = cutoffDate;
     }
+
+    public String getReleaseDate() {
+        return this.releaseDate;
+    }
+
 }

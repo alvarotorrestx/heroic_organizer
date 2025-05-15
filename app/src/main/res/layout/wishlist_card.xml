@@ -18,7 +18,8 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                android:contentDescription="Comic Cover" />
+                android:contentDescription="Comic Cover"
+                android:foreground="@drawable/gloss_fg"/>
 
         <!-- Label -->
         <LinearLayout

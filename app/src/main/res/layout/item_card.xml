@@ -1,46 +1,64 @@
-<!-- Actual item card -->
-<FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_columnWeight="1"
-        android:background="@color/black"
-        android:elevation="4dp">
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_margin="8dp"
+                                   android:layout_columnWeight="1"
+                                   app:cardCornerRadius="20dp"
+                                   app:cardElevation="4dp"
+                                   android:backgroundTint="@color/black">
 
-    <ImageView
-            android:id="@+id/itemCoverImage"
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:scaleType="centerCrop"
-            android:background="@color/black"/>
+            android:layout_height="wrap_content">
 
-    <!-- Text overlay -->
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:orientation="vertical"
-            android:gravity="bottom|center_horizontal"
-            android:background="#80000000"
-            android:padding="8dp">
+        <!-- Cover image -->
+        <ImageView
+                android:id="@+id/itemCoverImage"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="fitXY"
+                android:contentDescription="Cover Image"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintDimensionRatio="2:3"
+                android:foreground="@drawable/gloss_fg"/>
 
-        <TextView
-                android:id="@+id/itemTitle"
-                android:layout_width="wrap_content"
+        <!-- Label -->
+        <LinearLayout
+                android:id="@+id/itemInfoContainer"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Title"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:orientation="vertical"
+                android:background="#222222"
+                android:padding="8dp"
+                app:layout_constraintBottom_toBottomOf="@id/itemCoverImage"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-                android:id="@+id/itemSubtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Subtitle"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"/>
+            <TextView
+                    android:id="@+id/itemTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Folder or Comic Name"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
 
-    </LinearLayout> <!-- Text overlay end -->
+            <TextView
+                    android:id="@+id/itemSubtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Total Comics / Subtitle"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+        </LinearLayout>
 
-</FrameLayout> <!-- Item card end -->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
