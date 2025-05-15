@@ -26,11 +26,7 @@ public class WishlistFragment extends Fragment {
         RecyclerView recyclerView = rootView.findViewById(R.id.wishlistRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
 
-        List<WishlistItem> itemList = new ArrayList<>();
-        itemList.add(new WishlistItem(R.drawable.example4, "Marvel Rivals", "#1", "Peach Momoko", "Apr/2/2025", ""));
-        itemList.add(new WishlistItem(R.drawable.example1, "Magik", "#4", "Rose Besch", "Apr/23/2025", "Mar/24/2025"));
-        itemList.add(new WishlistItem(R.drawable.example3, "Jeff the Land Shark", "#1", "Todd Nauck Homage", "Jun/18/2025", "May/05/2026"));
-        itemList.add(new WishlistItem(R.drawable.example2, "Psylocke", "#8", "Puppeteer Lee", "Jun/18/2025", "May/19/2025"));
+        List<WishlistItem> itemList = WishlistData.getItemList();
 
         WishlistAdapter adapter = new WishlistAdapter(itemList);
         recyclerView.setAdapter(adapter);

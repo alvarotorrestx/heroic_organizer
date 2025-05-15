@@ -19,6 +19,7 @@ import com.example.heroicorganizer.config.FirebaseDB;
 import com.example.heroicorganizer.model.LibraryComic;
 import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.ui.wishlist.WishlistAdapter;
+import com.example.heroicorganizer.ui.wishlist.WishlistData;
 import com.example.heroicorganizer.ui.wishlist.WishlistItem;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -71,24 +72,21 @@ public class HomeFragment extends Fragment {
         loadRecentLibraryItems();
     }
 
-    private void loadWishlistItems() {
-        String userId = FirebaseAuth.getInstance().getUid();
-        FirebaseDB.getDb().collection("wishlist")
-                .whereEqualTo("userId", userId)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    allWishlistItems.clear();
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        WishlistItem item = doc.toObject(WishlistItem.class);
-                        allWishlistItems.add(item);
-                    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadWishlistItems();
+    }
 
-                    Collections.sort(allWishlistItems, Comparator.comparing(WishlistItem::getReleaseDate));
-                    List<WishlistItem> limited = allWishlistItems.size() > 2 ? allWishlistItems.subList(0, 2) : allWishlistItems;
-                    upcomingRecycler.setAdapter(new WishlistAdapter(limited));
-                    Log.d(TAG, "Wishlist items found: " + allWishlistItems.size());
-                })
-                .addOnFailureListener(e -> Log.e(TAG, "Error loading wishlist", e));
+    private void loadWishlistItems() {
+        List<WishlistItem> items = WishlistData.itemList;
+
+        for (WishlistItem item : items) {
+            Log.d("WishlistItem", item.title + " " + item.issueNum);
+        }
+
+        WishlistAdapter adapter = new WishlistAdapter(items);
+        upcomingRecycler.setAdapter(adapter);
     }
 
     private void loadRecentLibraryItems() {
