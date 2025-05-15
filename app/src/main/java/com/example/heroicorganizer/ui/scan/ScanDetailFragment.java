@@ -50,7 +50,8 @@ public class ScanDetailFragment extends Fragment {
 //            String photoUriString = args.getString("photoURI");
             String base64Image = getArguments().getString("photoURI");
 
-            TextView coverUPC = view.findViewById(R.id.coverUPC);
+//            TextView coverUPC = view.findViewById(R.id.coverUPC);
+            TextView coverUPC = view.findViewById(R.id.coverComicName);
             coverUPC.setText(title);
 
             // Show captured image
