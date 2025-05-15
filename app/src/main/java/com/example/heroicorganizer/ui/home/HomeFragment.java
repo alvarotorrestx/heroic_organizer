@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,8 +56,8 @@ public class HomeFragment extends Fragment {
         viewMoreUpcomingBtn = view.findViewById(R.id.btn_view_more_upcoming);
         viewMoreRecentBtn = view.findViewById(R.id.btn_view_more_recent);
 
-        upcomingRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recentRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        upcomingRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recentRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         viewMoreUpcomingBtn.setOnClickListener(v -> {
             Navigation.findNavController(view).navigate(R.id.nav_wishlist);
