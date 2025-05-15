@@ -6,7 +6,6 @@ import com.example.heroicorganizer.config.FirebaseDB;
 import com.example.heroicorganizer.model.LibraryComic;
 import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
-import com.example.heroicorganizer.ui.wishlist.WishlistItem;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -264,64 +263,4 @@ public class LibraryComicPresenter {
                 });
 
     }
-
-    public interface WishlistCallback {
-        void onSuccess(List<WishlistItem> items);
-        void onFailure(String error);
-    }
-
-    public interface LibraryCallback {
-        void onSuccess(List<LibraryComic> comics);
-        void onFailure(String error);
-    }
-
-    public static void getLibraryComics(User user, LibraryComicCallback callback) {
-        FirebaseDB.getDb()
-                .collection("users")
-                .document(user.getUid())
-                .collection("folders")
-                .get()
-                .addOnCompleteListener(folderTask -> {
-                    if (folderTask.isSuccessful()) {
-                        List<LibraryComic> allComics = new ArrayList<>();
-
-                        List<DocumentReference> folderRefs = new ArrayList<>();
-                        for (QueryDocumentSnapshot folderDoc : folderTask.getResult()) {
-                            folderRefs.add(folderDoc.getReference());
-                        }
-
-                        if (folderRefs.isEmpty()) {
-                            callback.onSuccessComics(allComics); // No folders, return empty
-                            return;
-                        }
-
-                        final int[] loaded = {0};
-                        for (DocumentReference folderRef : folderRefs) {
-                            folderRef.collection("comics")
-                                    .get()
-                                    .addOnSuccessListener(comicTask -> {
-                                        for (QueryDocumentSnapshot comicDoc : comicTask) {
-                                            LibraryComic comic = comicDoc.toObject(LibraryComic.class);
-                                            allComics.add(comic);
-                                        }
-
-                                        loaded[0]++;
-                                        if (loaded[0] == folderRefs.size()) {
-                                            // All folders loaded
-                                            callback.onSuccessComics(allComics);
-                                        }
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        loaded[0]++;
-                                        if (loaded[0] == folderRefs.size()) {
-                                            callback.onSuccessComics(allComics);
-                                        }
-                                    });
-                        }
-                    } else {
-                        callback.onFailure("Failed to load folders.");
-                    }
-                });
-    }
-
 }
