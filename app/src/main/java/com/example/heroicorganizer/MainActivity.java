@@ -1,9 +1,12 @@
 package com.example.heroicorganizer;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.MenuItem;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 import androidx.core.view.GravityCompat;
+import com.example.heroicorganizer.utils.WeaviateConfig;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -36,6 +39,24 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null)
                         .setAnchorView(R.id.fab).show()
         );
+
+        // Boolean to see if first time opening app
+        // This is for Weaviate schema creation
+        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        boolean hasLaunchedBefore = prefs.getBoolean("hasLaunchedBefore", false);
+
+        // If first time launch, create schema
+        // TODO: Perhaps move this into another class
+        if (!hasLaunchedBefore) {
+            Log.d("WeaviateInit", "First launch — checking schema...");
+            WeaviateConfig config = new WeaviateConfig();
+            config.checkWeaviateSchema();
+
+            // Mark as launched
+            prefs.edit().putBoolean("hasLaunchedBefore", true).apply();
+        } else {
+            Log.d("WeaviateInit", "Already launched — skipping schema check.");
+        }
 
         DrawerLayout drawer = binding.drawerLayout;
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
