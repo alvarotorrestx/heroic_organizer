@@ -41,6 +41,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import com.example.heroicorganizer.utils.MarvelApiConfig;
+import com.example.heroicorganizer.utils.ViewStatus;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
@@ -66,6 +67,7 @@ public class ScanFragment extends Fragment {
     private ImageButton btnFlash;
     private ImageButton btnCapture;
     private ImageButton btnRetake;
+    private LinearLayout cameraControls;
 
     // CameraX Necessities
     private ImageCapture imageCapture;
@@ -97,6 +99,7 @@ public class ScanFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_camera, container, false);
 
         previewView = rootView.findViewById(R.id.previewView);
+        cameraControls = rootView.findViewById(R.id.cameraControls);
         btnFlash = rootView.findViewById(R.id.btnFlash);
         btnCapture = rootView.findViewById(R.id.btnCapture);
         btnRetake = rootView.findViewById(R.id.btnRetake);
@@ -292,6 +295,12 @@ public class ScanFragment extends Fragment {
     }
 
     private void scanImage(Uri uri) {
+        // Temporary loading message on scanning image
+        // TODO: Add a loading spinner
+        // TODO: If no image is detected, do not return an image from vector api
+        cameraControls.removeAllViews();
+        cameraControls.addView(ViewStatus.SetStatus(requireContext(), "Loading..."));
+
         try {
             Bitmap scannedImage = MediaStore.Images.Media.getBitmap(
                     requireContext().getContentResolver(), uri
