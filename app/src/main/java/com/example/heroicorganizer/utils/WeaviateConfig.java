@@ -3,6 +3,7 @@ package com.example.heroicorganizer.utils;
 import android.util.Log;
 import com.google.gson.Gson;
 import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class WeaviateConfig {
     private static void createWeaviateSchema() {
@@ -36,6 +38,11 @@ public class WeaviateConfig {
                 "name", "publisher_names",
                 "dataType", List.of("text"),
                 "description", "Publisher names"
+        ));
+        comicProperties.add(Map.of(
+                "name", "comic_variants",
+                "dataType",  List.of("ComicVariant"),
+                "description", "All variants of the comic"
         ));
         comicSchema.put("properties", comicProperties);
 
@@ -173,9 +180,10 @@ public class WeaviateConfig {
                             }
                         }
 
-                        // If either class object is missing, create both
+                        // If either class object is missing
+                        // First delete both schemas and then create both
                         if (!comicExists || !comicVariantExists) {
-                            WeaviateConfig.createWeaviateSchema();
+                            deleteSchemas();
                         } else {
                             Log.d("WeaviateSchema", "Comic & ComicVariant schemas already exist.");
                         }
@@ -188,6 +196,73 @@ public class WeaviateConfig {
 
                 // Helps avoid memory leaks
                 response.close();
+            }
+        });
+    }
+
+    private static void deleteSchemas() {
+        OkHttpClient client = new OkHttpClient();
+
+        Request delComic = new Request.Builder()
+                .url("http://10.0.2.2:8080/v1/schema/Comic")
+                .delete()
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+        Request delComicVariant = new Request.Builder()
+                .url("http://10.0.2.2:8080/v1/schema/ComicVariant")
+                .delete()
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+        // Booleans that will update on completed deletes
+        AtomicBoolean comicDeleted = new AtomicBoolean(false);
+        AtomicBoolean variantDeleted = new AtomicBoolean(false);
+
+        // Once deletes are complete, create the schemas
+        Runnable tryRecreateSchema = () -> {
+            if (comicDeleted.get() && variantDeleted.get()) {
+                WeaviateConfig.createWeaviateSchema();
+            }
+        };
+
+        // Delete Comic call
+        client.newCall(delComic).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Log.d("WeaviateSchema", "Comic schema deleted.");
+                }
+                comicDeleted.set(true);
+                tryRecreateSchema.run();
+                response.close();
+            }
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("WeaviateSchema", "Failed to delete Comic: " + e.getMessage());
+                comicDeleted.set(true);
+                tryRecreateSchema.run();
+            }
+        });
+
+        // Delete ComicVariant call
+        client.newCall(delComicVariant).enqueue(new Callback() {
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Log.d("WeaviateSchema", "ComicVariant schema deleted.");
+                }
+                variantDeleted.set(true);
+                tryRecreateSchema.run();
+                response.close();
+            }
+
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("WeaviateSchema", "Failed to delete ComicVariant: " + e.getMessage());
+                variantDeleted.set(true);
+                tryRecreateSchema.run();
             }
         });
     }

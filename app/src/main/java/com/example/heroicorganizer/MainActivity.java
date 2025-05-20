@@ -42,24 +42,6 @@ public class MainActivity extends AppCompatActivity {
                         .setAnchorView(R.id.fab).show()
         );
 
-//        // Boolean to see if first time opening app
-//        // This is for Weaviate schema creation
-//        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
-//        boolean hasLaunchedBefore = prefs.getBoolean("hasLaunchedBefore", false);
-//
-//        // If first time launch, create schema
-//        // TODO: Perhaps move this into another class
-//        if (!hasLaunchedBefore) {
-//            Log.d("WeaviateInit", "First launch — checking schema...");
-//            WeaviateConfig config = new WeaviateConfig();
-//            config.checkWeaviateSchema();
-//
-//            // Mark as launched
-//            prefs.edit().putBoolean("hasLaunchedBefore", true).apply();
-//        } else {
-//            Log.d("WeaviateInit", "Already launched — skipping schema check.");
-//        }
-
         // Temporary always check if schema is created to ensure Schema is created
         // TODO: same as above
         WeaviateConfig config = new WeaviateConfig();
