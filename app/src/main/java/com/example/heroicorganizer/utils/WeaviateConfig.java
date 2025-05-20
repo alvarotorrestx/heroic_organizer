@@ -33,14 +33,9 @@ public class WeaviateConfig {
                 "description", "The comic title"
         ));
         comicProperties.add(Map.of(
-                "name", "publisherNames",
+                "name", "publisher_names",
                 "dataType", List.of("text"),
                 "description", "Publisher names"
-        ));
-        comicProperties.add(Map.of(
-                "name", "comicVariants",
-                "dataType", List.of("ComicVariant"),
-                "description", "All variants of the comic"
         ));
         comicSchema.put("properties", comicProperties);
 
@@ -67,22 +62,17 @@ public class WeaviateConfig {
                 "description", "The comic title"
         ));
         comicMetadata.add(Map.of(
-                "name", "issueNumber",
+                "name", "issue_number",
                 "dataType", List.of("text"),
                 "description", "The issue number"
         ));
         comicMetadata.add(Map.of(
-                "name", "variantId",
+                "name", "variant_id",
                 "dataType", List.of("text"),
                 "description", "Variant ID"
         ));
         comicMetadata.add(Map.of(
-                "name", "parentComic",
-                "dataType", List.of("Comic"),
-                "description", "The main comic this variant belongs to"
-        ));
-        comicMetadata.add(Map.of(
-                "name", "coverArtist",
+                "name", "cover_artist",
                 "dataType", List.of("text"),
                 "description", "Cover artist"
         ));
@@ -92,7 +82,7 @@ public class WeaviateConfig {
                 "description", "Comic author"
         ));
         comicMetadata.add(Map.of(
-                "name", "datePublished",
+                "name", "date_published",
                 "dataType", List.of("text"),
                 "description", "Date of release"
         ));
@@ -133,6 +123,8 @@ public class WeaviateConfig {
                     } else {
                         Log.e("WeaviateSchema", "Schema creation failed: " + response.code() + " - " + response.message());
                     }
+
+                    // Helps avoid memory leaks
                     response.close();
                 }
             });
@@ -163,29 +155,35 @@ public class WeaviateConfig {
                         JSONObject json = new JSONObject(responseBody);
                         JSONArray classes = json.getJSONArray("classes");
 
-                        // Iterate through json response object
-                        boolean comicClassExists = false;
+                        // Booleans for checking if each schema exists
+                        boolean comicExists = false;
+                        boolean comicVariantExists = false;
+
+                        // Loop through response to find the classes in schema
                         for (int i = 0; i < classes.length(); i++) {
                             JSONObject classObj = classes.getJSONObject(i);
+                            String className = classObj.getString("class");
 
-                            // If the "Comic" class schema exists - stop
-                            if (classObj.getString("class").equals("Comic")) {
-                                comicClassExists = true;
-                                break;
+                            if (className.equals("Comic")) {
+                                comicExists = true;
+                            }
+
+                            if (className.equals("ComicVariant")) {
+                                comicVariantExists = true;
                             }
                         }
 
-                        // If the "Comic" class schema doesn't exist - create it
-                        if (!comicClassExists) {
+                        // If either class object is missing, create both
+                        if (!comicExists || !comicVariantExists) {
                             WeaviateConfig.createWeaviateSchema();
                         } else {
-                            Log.d("WeaviateSchema", "Comic schema already exists.");
+                            Log.d("WeaviateSchema", "Comic & ComicVariant schemas already exist.");
                         }
                     } else {
-                        Log.e("WeaviateSchema", "Error checking schema: " + response.code());
+                        Log.e("WeaviateSchema", "Error checking schemas: " + response.code());
                     }
                 } catch (Exception e) {
-                    Log.e("WeaviateSchema", "Error checking schema: " + e.getMessage());
+                    Log.e("WeaviateSchema", "Error checking schemas: " + e.getMessage());
                 }
 
                 // Helps avoid memory leaks
