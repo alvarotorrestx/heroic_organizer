@@ -222,7 +222,10 @@ public class WeaviateConfig {
         // Once deletes are complete, create the schemas
         Runnable tryRecreateSchema = () -> {
             if (comicDeleted.get() && variantDeleted.get()) {
-                WeaviateConfig.createWeaviateSchema();
+                // Create schemas
+                createWeaviateSchema();
+                // Add reference from Comic into the ComicVariant properties
+                addParentComicReference();
             }
         };
 
@@ -266,4 +269,45 @@ public class WeaviateConfig {
             }
         });
     }
+
+    // Method created to add parent_comic relation between Comic class
+    // Needs to be added after schema creation due to reference error on creation
+    private static void addParentComicReference() {
+        OkHttpClient client = new OkHttpClient();
+
+        Gson gson = new Gson();
+
+        Map<String, Object> parentComicProperty = new HashMap<>();
+        parentComicProperty.put("name", "parent_comic");
+        parentComicProperty.put("dataType", List.of("Comic"));
+        parentComicProperty.put("description", "The main comic this variant belongs to");
+
+        String json = gson.toJson(parentComicProperty);
+        RequestBody body = RequestBody.create(json, MediaType.parse("application/json"));
+
+        // Post method to push update to ComicVariant class properties
+        Request request = new Request.Builder()
+                .url("http://10.0.2.2:8080/v1/schema/ComicVariant/properties")
+                .post(body)
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.e("WeaviateSchema", "Failed to add parent_comic: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Log.d("WeaviateSchema", "Successfully added parent_comic to ComicVariant.");
+                } else {
+                    Log.e("WeaviateSchema", "Failed to add parent_comic: " + response.code() + " - " + response.message());
+                }
+                response.close();
+            }
+        });
+    }
+
 }
