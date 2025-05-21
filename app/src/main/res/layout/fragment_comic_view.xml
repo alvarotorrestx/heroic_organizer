@@ -1,37 +1,62 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+android:background="#2A2A2A">
+
+    <!-- Used for testing HIDDEN FOR NOW -->
+    <ImageView
+            android:id="@+id/background_gradient"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/info_tab_bg"
+            android:alpha="100"
+            android:contentDescription="background"
+            android:importantForAccessibility="no"
+            android:focusable="false"
+    android:visibility="gone"/>
+
+<ScrollView
             android:id="@+id/fragment_comic_view_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#2A2A2A"
-            android:fillViewport="true">
+            android:fillViewport="true"
+            android:background="@android:color/transparent"
+            >
 
     <LinearLayout
+            android:id="@+id/root_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#2A2A2A">
+            android:background="@android:color/transparent"
+            >
+
+<FrameLayout android:layout_width="match_parent" android:layout_height="547dp" android:background="#2A2A2A">
 
         <!-- Comic Cover -->
-        <ImageView
-                android:id="@+id/comicCoverImage"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:minHeight="300dp"
-                android:scaleType="fitStart"
-                android:background="@drawable/field_bg"
-                android:contentDescription="Comic Cover"
-                android:layout_marginBottom="0dp"
-                android:adjustViewBounds="true"/>
+    <ImageView
+            android:id="@+id/comicCoverImage"
+            android:layout_width="match_parent"
+            android:layout_height="547dp"
+            android:layout_weight="2"
+            android:minHeight="547dp"
+            android:scaleType="fitXY"
+            android:background="#2A2A2A"
+            android:contentDescription="Comic Cover"
+            android:layout_marginBottom="0dp"
+            android:adjustViewBounds="true"/>
+</FrameLayout>
 
         <!-- Tab -->
-        <LinearLayout
+        <com.example.heroicorganizer.ui.custom.MaskedLinearLayout
+                android:id="@+id/comicInfoTab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/info_tabline_bg"
-                android:padding="16dp">
+                android:padding="8dp"
+                >
 
 
             <!-- Issue Number & Tittle -->
@@ -39,31 +64,31 @@
                           android:orientation="horizontal"
                           android:layout_marginTop="32dp" android:layout_marginBottom="12dp">
 
-            <!-- Issue Number -->
-            <TextView
-                    android:id="@+id/comicIssueNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/field_bg"
-                    android:textColor="@color/white"
-                    android:padding="12dp"
-                    android:text="###"
-                    android:layout_marginRight="12dp"
-            />
-            <!-- Title -->
-            <TextView
-                    android:id="@+id/comicTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/field_bg"
-                    android:textColor="@color/white"
-                    android:padding="12dp"
-                    android:text="Title" />
+                <!-- Issue Number -->
+                <TextView
+                        android:id="@+id/comicIssueNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/field_bg"
+                        android:textColor="@color/white"
+                        android:padding="12dp"
+                        android:text="###"
+                        android:layout_marginRight="12dp"
+                />
+                <!-- Title -->
+                <TextView
+                        android:id="@+id/comicTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/field_bg"
+                        android:textColor="@color/white"
+                        android:padding="12dp"
+                        android:text="Title"/>
 
             </LinearLayout>
             <!-- Publication Date & Publisher -->
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
-                          android:orientation="horizontal" >
+                          android:orientation="horizontal">
 
                 <!-- Publication Date -->
                 <TextView
@@ -159,9 +184,9 @@
                     android:padding="12dp"
                     android:layout_marginBottom="12dp"
                     android:scrollbars="vertical"
-                    android:text="Comic Description" />
+                    android:text="Comic Description"/>
 
-                        <!-- What is this "DECK"??? -->
+            <!-- What is this "DECK"??? -->
             <TextView
                     android:id="@+id/comicDeck"
                     android:layout_width="match_parent"
@@ -174,7 +199,7 @@
                     android:scrollbars="vertical"
                     android:text="Comic Deck" android:visibility="gone"/>
 
-
-        </LinearLayout>
+        </com.example.heroicorganizer.ui.custom.MaskedLinearLayout>
     </LinearLayout>
 </ScrollView>
+</FrameLayout>
