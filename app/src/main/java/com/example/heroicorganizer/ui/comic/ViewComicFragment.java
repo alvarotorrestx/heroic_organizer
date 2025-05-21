@@ -3,10 +3,14 @@ package com.example.heroicorganizer.ui.comic;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,9 +33,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewComicFragment extends Fragment {
+///
+@Override
+public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    postponeEnterTransition();
+
+    Transition transition = TransitionInflater.from(requireContext())
+            .inflateTransition(R.transition.shared_image_transition);
+
+    transition.setInterpolator(new AccelerateDecelerateInterpolator());
+
+    setSharedElementEnterTransition(transition);
+    setSharedElementReturnTransition(transition);
+}
+///
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ///
+        postponeEnterTransition();
+        ///
+
         return inflater.inflate(R.layout.fragment_comic_view, container, false);
     }
 
@@ -52,6 +75,20 @@ public class ViewComicFragment extends Fragment {
         // Read from passed bundled responses from SearchFragment
         Bundle passedBundle = getArguments();
         if (passedBundle != null) {
+
+            ///
+            String comicId = passedBundle.getString("id");
+            comicCoverImage.setTransitionName("comicCover_" + comicId);
+            comicCoverImage.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    comicCoverImage.getViewTreeObserver().removeOnPreDrawListener(this);
+                    startPostponedEnterTransition();
+                    return true;
+                }
+            });
+            ///
+
             comicTitle.setText(passedBundle.getString("title"));
             comicDeck.setText(passedBundle.getString("deck"));
             // Cleans up HTML passed in from JSON response

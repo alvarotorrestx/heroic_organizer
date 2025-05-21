@@ -3,6 +3,7 @@ package com.example.heroicorganizer.ui.library;
 import android.animation.TimeInterpolator;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.*;
 import android.view.animation.Animation;
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
@@ -27,6 +29,7 @@ import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LibraryComicPresenter;
 import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
+import com.example.heroicorganizer.ui.comic.ViewComicFragment;
 import com.example.heroicorganizer.utils.ModalBox;
 import com.example.heroicorganizer.utils.ViewStatus;
 import com.google.firebase.auth.FirebaseAuth;
@@ -191,44 +194,26 @@ public class LibraryComicsFragment extends Fragment {
                             coverImage.setVisibility(View.GONE);
                         }
 
-                        // Bundle responses to push to the ViewComicFragment
+                        coverImage.setTransitionName("comicCover_" + comic.getId());
+
                         comicCard.setOnClickListener(v -> {
                             Bundle bundle = new Bundle();
-                            bundle.putString("id", comic.getId() != null && !comic.getId().isEmpty() ? comic.getId() : "");
-                            bundle.putString("title", comic.getTitle() != null && !comic.getTitle().isEmpty() ? comic.getTitle() : "");
-                            bundle.putString("deck", comic.getDeck() != null && !comic.getDeck().isEmpty() ? comic.getDeck() : "");
-                            bundle.putString("description", comic.getDescription() != null && !comic.getDescription().isEmpty() ? comic.getDescription() : "");
-                            bundle.putString("image", comic.getCoverImage() != null && !comic.getCoverImage().isEmpty() ? comic.getCoverImage() : "");
-                            bundle.putString("publishers", comic.getPublisher() != null && !comic.getPublisher().isEmpty() ? comic.getPublisher() : "");
-                            bundle.putString("issueNumber", comic.getIssue() != null && !comic.getIssue().isEmpty() ? comic.getIssue() : "");
+                            bundle.putString("id", comic.getId());
+                            bundle.putString("title", comic.getTitle());
+                            bundle.putString("deck", comic.getDeck());
+                            bundle.putString("description", comic.getDescription());
+                            bundle.putString("image", comic.getCoverImage());
+                            bundle.putString("publishers", comic.getPublisher());
+                            bundle.putString("issueNumber", comic.getIssue());
 
-                            ///  Testing Animation methods
-                            final ImageView comicCoverImage = view.findViewById(R.id.comicCoverImage);
-//                            ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(comicCoverImage.getWidth(), comicCoverImage.getHeight());
-//                            lp.setMargins(0, 0, 0, 0);
-//                            comicCard.setLayoutParams(lp);
-                            comicCard.animate().setDuration(2500).translationY(250).scaleX(4).scaleY(4).alpha(0)
-                                    .withEndAction(() -> {
-//                                        final ImageView comicCoverImage = view.findViewById(R.id.comicCoverImage);
-//                                        comicCard.clearAnimation();
-//                                        ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(comicCoverImage.getWidth(), comicCoverImage.getHeight());
-//                                        lp.setMargins(50, 100, 0, 0);
-//                                        comicCard.setLayoutParams(lp);
+                            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
 
+                            androidx.navigation.fragment.FragmentNavigator.Extras extras =
+                                    new androidx.navigation.fragment.FragmentNavigator.Extras.Builder()
+                                            .addSharedElement(coverImage, "comicCover_" + comic.getId())
+                                            .build();
 
-                                            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-                                            navController.navigate(R.id.fade_in_comic_view, bundle);
-
-                                    });
-
-
-
-                            ///
-
-                            // navigate to sub-level fragment logic (commented out wh
-
-//                            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-//                            navController.navigate(R.id.nav_library_comic_view, bundle);
+                            navController.navigate(R.id.nav_library_comic_view, bundle, null, extras);
                         });
 
                         comicsContainer.addView(comicCard);
