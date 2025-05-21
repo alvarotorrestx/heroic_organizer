@@ -74,4 +74,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     implementation("com.google.mlkit:barcode-scanning:17.3.0")
+
+    implementation("io.github.krupen:fabulousfilter:0.0.6")
 }

@@ -2,7 +2,7 @@
               android:id="@+id/comics_page_content"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:padding="16dp"
+
               android:orientation="vertical"
               android:background="#2A2A2A">
 
@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#2A2A2A"
-            android:padding="16dp">
+            >
 
         <!-- Folder container wrapper -->
         <GridLayout
