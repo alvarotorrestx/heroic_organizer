@@ -12,4 +12,7 @@
             android:textSize="18sp"
             android:textColor="#fff" />
 
+    <include layout="@layout/store_locator_layout"/>
+
+
 </FrameLayout>
