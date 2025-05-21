@@ -8,5 +8,26 @@
             android:id="@+id/wishlistRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="8dp" />
+            android:padding="8dp"/>
+
+    <!-- Actual Filter button -->
+    <Button
+            android:id="@+id/btn_open_filter"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Filter Options"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/toast_bg"
+            android:textColor="@android:color/white"
+            android:layout_gravity="bottom"/>
+
+    <!-- Dummy FAB button to help prevent crash -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/dummy_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:layout_margin="-100dp"
+            android:visibility="invisible"/>
+
 </FrameLayout>
