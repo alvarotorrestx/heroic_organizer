@@ -1,5 +1,8 @@
 package com.example.heroicorganizer.ui.comic;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -14,6 +17,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -27,6 +31,7 @@ import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LibraryComicPresenter;
 import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
+import com.example.heroicorganizer.ui.custom.MaskedLinearLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -37,7 +42,7 @@ public class ViewComicFragment extends Fragment {
 @Override
 public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    postponeEnterTransition();
+    //postponeEnterTransition();
 
     Transition transition = TransitionInflater.from(requireContext())
             .inflateTransition(R.transition.shared_image_transition);
@@ -52,7 +57,7 @@ public void onCreate(@Nullable Bundle savedInstanceState) {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ///
-        postponeEnterTransition();
+        //postponeEnterTransition();
         ///
 
         return inflater.inflate(R.layout.fragment_comic_view, container, false);
@@ -61,6 +66,16 @@ public void onCreate(@Nullable Bundle savedInstanceState) {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ///
+        MaskedLinearLayout comicInfoTab = view.findViewById(R.id.comicInfoTab);
+        Drawable bg = ContextCompat.getDrawable(requireContext(), R.drawable.info_tab_bg);
+        try {
+            comicInfoTab.setMaskedBackground(bg);
+        } catch (Exception e) {
+            Log.e("MaskedLayout", "Failed to set mask background", e);
+        }
+        ///
 
         User currentUser = new User();
         currentUser.setUid(FirebaseAuth.getInstance().getUid());
@@ -71,6 +86,10 @@ public void onCreate(@Nullable Bundle savedInstanceState) {
         final TextView comicDescription = view.findViewById(R.id.comicDescription);
         final TextView comicPublishers = view.findViewById(R.id.comicPublishers);
         final TextView comicIssueNumber = view.findViewById(R.id.comicIssueNumber);
+
+       // Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.green_info_tab_bg);
+        View infoTab = view.findViewById(R.id.comicInfoTab);
+
 
         // Read from passed bundled responses from SearchFragment
         Bundle passedBundle = getArguments();
@@ -83,7 +102,10 @@ public void onCreate(@Nullable Bundle savedInstanceState) {
                 @Override
                 public boolean onPreDraw() {
                     comicCoverImage.getViewTreeObserver().removeOnPreDrawListener(this);
-                    startPostponedEnterTransition();
+                    infoTab.setAlpha(0f);
+                    infoTab.animate().alpha(1f).setDuration(1250).start();
+
+                    //startPostponedEnterTransition();
                     return true;
                 }
             });

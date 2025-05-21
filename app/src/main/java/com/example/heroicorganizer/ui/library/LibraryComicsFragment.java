@@ -198,6 +198,14 @@ public class LibraryComicsFragment extends Fragment {
 
                         comicCard.setOnClickListener(v -> {
                             Bundle bundle = new Bundle();
+                            // leaving the old bundle setup commented out just in case I broke it by changing it
+//                            bundle.putString("id", comic.getId() != null && !comic.getId().isEmpty() ? comic.getId() : "");
+//                            bundle.putString("title", comic.getTitle() != null && !comic.getTitle().isEmpty() ? comic.getTitle() : "");
+//                            bundle.putString("deck", comic.getDeck() != null && !comic.getDeck().isEmpty() ? comic.getDeck() : "");
+//                            bundle.putString("description", comic.getDescription() != null && !comic.getDescription().isEmpty() ? comic.getDescription() : "");
+//                            bundle.putString("image", comic.getCoverImage() != null && !comic.getCoverImage().isEmpty() ? comic.getCoverImage() : "");
+//                            bundle.putString("publishers", comic.getPublisher() != null && !comic.getPublisher().isEmpty() ? comic.getPublisher() : "");
+//                            bundle.putString("issueNumber", comic.getIssue() != null && !comic.getIssue().isEmpty() ? comic.getIssue() : "");
                             bundle.putString("id", comic.getId());
                             bundle.putString("title", comic.getTitle());
                             bundle.putString("deck", comic.getDeck());
