@@ -24,27 +24,67 @@ public class WeaviateConfig {
         // Comic class creation
         Map<String, Object> comicSchema = new HashMap<>();
         comicSchema.put("class", "Comic");
-        comicSchema.put("vectorizer", "none");
+        comicSchema.put("vectorizer", "img2vec-neural");
         comicSchema.put("vectorIndexType", "hnsw");
 
-        // Set properties of Comic
-        List<Map<String, Object>> comicProperties = new ArrayList<>();
-        comicProperties.add(Map.of(
+        Map<String, Object> comicModuleConfig = new HashMap<>();
+        comicModuleConfig.put("img2vec-neural", Map.of("imageFields", List.of("image")));
+        comicSchema.put("moduleConfig", comicModuleConfig);
+
+
+        // Set properties of Comic - For Solo Comic and/or Parent Comics
+        List<Map<String, Object>> parentComicProperties = new ArrayList<>();
+        parentComicProperties.add(Map.of(
                 "name", "title",
                 "dataType", List.of("text"),
                 "description", "The comic title"
         ));
-        comicProperties.add(Map.of(
+        parentComicProperties.add(Map.of(
                 "name", "publisher_names",
                 "dataType", List.of("text"),
                 "description", "Publisher names"
         ));
-        comicProperties.add(Map.of(
+        parentComicProperties.add(Map.of(
                 "name", "comic_variants",
                 "dataType",  List.of("ComicVariant"),
                 "description", "All variants of the comic"
         ));
-        comicSchema.put("properties", comicProperties);
+        parentComicProperties.add(Map.of(
+                "name", "image",
+                "dataType", List.of("blob"),
+                "description", "The image to load"
+        ));
+        parentComicProperties.add(Map.of(
+                "name", "issue_number",
+                "dataType", List.of("text"),
+                "description", "The issue number"
+        ));
+        parentComicProperties.add(Map.of(
+                "name", "cover_artist",
+                "dataType", List.of("text"),
+                "description", "Cover artist"
+        ));
+        parentComicProperties.add(Map.of(
+                "name", "author",
+                "dataType", List.of("text"),
+                "description", "Comic author"
+        ));
+        parentComicProperties.add(Map.of(
+                "name", "date_published",
+                "dataType", List.of("text"),
+                "description", "Date of release"
+        ));
+        parentComicProperties.add(Map.of(
+                "name", "upc",
+                "dataType", List.of("text"),
+                "description", "UPC code"
+        ));
+        parentComicProperties.add(Map.of(
+                "name", "description",
+                "dataType", List.of("text"),
+                "description", "Comic description"
+        ));
+        comicSchema.put("properties", parentComicProperties);
 
         // ComicVariant class creation
         Map<String, Object> comicVariantSchema = new HashMap<>();
@@ -56,54 +96,55 @@ public class WeaviateConfig {
         moduleConfig.put("img2vec-neural", Map.of("imageFields", List.of("image")));
         comicVariantSchema.put("moduleConfig", moduleConfig);
 
-        // Properties that each Comic/Variant will hold - returned data from scanned comic
-        List<Map<String, Object>> comicMetadata = new ArrayList<>();
-        comicMetadata.add(Map.of(
+        // Properties that each Comic Variant will hold
+        // For Comic Variants that belong to a parent comic
+        List<Map<String, Object>> comicVariantProperties = new ArrayList<>();
+        comicVariantProperties.add(Map.of(
                 "name", "image",
                 "dataType", List.of("blob"),
                 "description", "The image to load"
         ));
-        comicMetadata.add(Map.of(
+        comicVariantProperties.add(Map.of(
                 "name", "title",
                 "dataType", List.of("text"),
                 "description", "The comic title"
         ));
-        comicMetadata.add(Map.of(
+        comicVariantProperties.add(Map.of(
                 "name", "issue_number",
                 "dataType", List.of("text"),
                 "description", "The issue number"
         ));
-        comicMetadata.add(Map.of(
+        comicVariantProperties.add(Map.of(
                 "name", "variant_id",
                 "dataType", List.of("text"),
                 "description", "Variant ID"
         ));
-        comicMetadata.add(Map.of(
+        comicVariantProperties.add(Map.of(
                 "name", "cover_artist",
                 "dataType", List.of("text"),
                 "description", "Cover artist"
         ));
-        comicMetadata.add(Map.of(
+        comicVariantProperties.add(Map.of(
                 "name", "author",
                 "dataType", List.of("text"),
                 "description", "Comic author"
         ));
-        comicMetadata.add(Map.of(
+        comicVariantProperties.add(Map.of(
                 "name", "date_published",
                 "dataType", List.of("text"),
                 "description", "Date of release"
         ));
-        comicMetadata.add(Map.of(
+        comicVariantProperties.add(Map.of(
                 "name", "upc",
                 "dataType", List.of("text"),
                 "description", "UPC code"
         ));
-        comicMetadata.add(Map.of(
+        comicVariantProperties.add(Map.of(
                 "name", "description",
                 "dataType", List.of("text"),
                 "description", "Comic description"
         ));
-        comicVariantSchema.put("properties", comicMetadata);
+        comicVariantSchema.put("properties", comicVariantProperties);
 
         // Convert both schemas to JSON and send POST requests
         List<Map<String, Object>> schemas = List.of(comicSchema, comicVariantSchema);
