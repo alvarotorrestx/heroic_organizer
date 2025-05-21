@@ -35,6 +35,11 @@ public class WeaviateConfig {
         // Set properties of Comic - For Solo Comic and/or Parent Comics
         List<Map<String, Object>> parentComicProperties = new ArrayList<>();
         parentComicProperties.add(Map.of(
+                "name", "comic_id",
+                "dataType", List.of("text"),
+                "description", "Comic ID"
+        ));
+        parentComicProperties.add(Map.of(
                 "name", "title",
                 "dataType", List.of("text"),
                 "description", "The comic title"
@@ -108,6 +113,11 @@ public class WeaviateConfig {
                 "name", "title",
                 "dataType", List.of("text"),
                 "description", "The comic title"
+        ));
+        comicVariantProperties.add(Map.of(
+                "name", "publisher_names",
+                "dataType", List.of("text"),
+                "description", "Publisher names"
         ));
         comicVariantProperties.add(Map.of(
                 "name", "issue_number",

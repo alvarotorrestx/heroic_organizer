@@ -1,9 +1,11 @@
 package com.example.heroicorganizer.presenter;
 
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import com.example.heroicorganizer.callback.WeaviateSearchImageCallback;
+import com.example.heroicorganizer.callback.WeaviateUploadCallback;
 import com.example.heroicorganizer.model.WeaviateImage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -16,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class WeaviatePresenter {
     public static String toBase64(Bitmap image) {
@@ -25,17 +28,61 @@ public class WeaviatePresenter {
         return Base64.encodeToString(imageArray, Base64.NO_WRAP);
     }
 
-    public static void uploadWeaviateImage(WeaviateImage weaviateImage) {
+    // classType is "Comic" or "ComicVariant"
+    // parentId should reference the existing parent comic if a variant or null if no parent
+    public static void uploadWeaviateImage(String classType, String parentId, WeaviateImage weaviateImage, WeaviateUploadCallback callback) {
+        if (classType == null || TextUtils.isEmpty(classType) || (!classType.equals("Comic") && !classType.equals("ComicVariant"))) {
+            Log.e("WeaviateUpload", "Invalid classType");
+            callback.onFailure("Invalid classType");
+            return;
+        }
+
+        if (classType.equals("ComicVariant") && TextUtils.isEmpty(parentId)) {
+            Log.e("WeaviateUpload", "Missing comic parent id of variant.");
+            callback.onFailure("Missing comic parent id of variant.");
+            return;
+        }
+
         OkHttpClient client = new OkHttpClient();
 
         // Create image - json body for post using gson
         Gson gson = new Gson();
+
+        // Generate random id for comic
+        String uuid = UUID.randomUUID().toString();
+
         Map<String, Object> body = new HashMap<>();
-        body.put("class", "Comic");
+        body.put("class", classType);
+        body.put("id", uuid);
 
         Map<String, Object> props = new HashMap<>();
-        props.put("image", weaviateImage.getImage());
-        props.put("title", weaviateImage.getTitle());
+        // Comic Props
+        if (classType.equals("Comic")) {
+            props.put("comic_id", uuid);
+            props.put("image", weaviateImage.getImage());
+            props.put("title", weaviateImage.getTitle());
+            props.put("publisher_names", weaviateImage.getPublishers());
+            props.put("issue_number", weaviateImage.getIssueNumber());
+            props.put("cover_artist", weaviateImage.getCoverArtist());
+            props.put("author", weaviateImage.getAuthor());
+            props.put("date_published", weaviateImage.getDatePublished());
+            props.put("upc", weaviateImage.getUpc());
+            props.put("description", weaviateImage.getDescription());
+        } else {
+            // Variant Comic Props
+            props.put("image", weaviateImage.getImage());
+            props.put("title", weaviateImage.getTitle());
+            props.put("publisher_names", weaviateImage.getPublishers());
+            props.put("issue_number", weaviateImage.getIssueNumber());
+            props.put("variant_id", weaviateImage.getVariantId());
+            props.put("cover_artist", weaviateImage.getCoverArtist());
+            props.put("author", weaviateImage.getAuthor());
+            props.put("date_published", weaviateImage.getDatePublished());
+            props.put("upc", weaviateImage.getUpc());
+            props.put("description", weaviateImage.getDescription());
+            // Attaches the parent comic through Weaviate beacon reference
+            props.put("parent_comic", Map.of("beacon", "weaviate://localhost/Comic/" + parentId));
+        }
 
         body.put("properties", props);
 
@@ -54,14 +101,17 @@ public class WeaviatePresenter {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("WeaviateUpload", "Upload failed: " + e.getMessage());
+                callback.onFailure("Upload failed: " + e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    Log.d("WeaviateUpload", "Image uploaded successfully");
+                    Log.d("WeaviateUpload", "Image uploaded successfully with ID: " + uuid);
+                    callback.onSuccess("Image uploaded successfully with ID: " + uuid);
                 } else {
                     Log.e("WeaviateUpload", "Upload failed: " + response.code() + " - " + response.message());
+                    callback.onFailure("Upload failed: " + response.message());
                 }
 
                 // Helps avoid memory leaks
