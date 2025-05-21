@@ -8,6 +8,7 @@ import com.example.heroicorganizer.callback.WeaviateSearchImageCallback;
 import com.example.heroicorganizer.callback.WeaviateUploadCallback;
 import com.example.heroicorganizer.model.WeaviateImage;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import okhttp3.*;
 import org.json.JSONArray;
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -55,6 +57,8 @@ public class WeaviatePresenter {
         body.put("class", classType);
         body.put("id", uuid);
 
+        // TODO: Find a way to automatically patch an update to parent Comic when a variant is added
+
         Map<String, Object> props = new HashMap<>();
         // Comic Props
         if (classType.equals("Comic")) {
@@ -74,14 +78,14 @@ public class WeaviatePresenter {
             props.put("title", weaviateImage.getTitle());
             props.put("publisher_names", weaviateImage.getPublishers());
             props.put("issue_number", weaviateImage.getIssueNumber());
-            props.put("variant_id", weaviateImage.getVariantId());
+            props.put("variant_id", uuid);
             props.put("cover_artist", weaviateImage.getCoverArtist());
             props.put("author", weaviateImage.getAuthor());
             props.put("date_published", weaviateImage.getDatePublished());
             props.put("upc", weaviateImage.getUpc());
             props.put("description", weaviateImage.getDescription());
             // Attaches the parent comic through Weaviate beacon reference
-            props.put("parent_comic", Map.of("beacon", "weaviate://localhost/Comic/" + parentId));
+            props.put("parent_comic", List.of(Map.of("beacon", "weaviate://localhost/Comic/" + parentId)));
         }
 
         body.put("properties", props);

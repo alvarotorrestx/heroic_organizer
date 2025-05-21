@@ -125,35 +125,30 @@ public class HomeFragment extends Fragment {
 //        WeaviatePresenter.uploadWeaviateImage("Comic", "", testImage, new WeaviateUploadCallback() {
 //            @Override
 //            public void onSuccess(String message) {
-//                ToastMsg.show(getContext(), message);
+//                Log.d("WeaviateImage", message);
 //            }
 //
 //            @Override
 //            public void onFailure(String errorMessage) {
-//                ToastMsg.show(getContext(), errorMessage);
+//                Log.e("WeaviateImage", errorMessage);
 //            }
 //        });
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.example2);
-        String base64 = WeaviatePresenter.toBase64(bitmap);
-
-        WeaviateImage testImage = new WeaviateImage(base64, "", "Magik", "", "#4", "Rose Besch", "", "Apr/23/2025", "", "A Magik Comic.", "5953d1b4-a04c-4a20-8d0e-a93abb060841");
-        WeaviatePresenter.uploadWeaviateImage("ComicVariant", testImage.getParentComic(), testImage, new WeaviateUploadCallback() {
-            @Override
-            public void onSuccess(String message) {
-                Log.d("WeaviateImage", message);
-            }
-
-            @Override
-            public void onFailure(String errorMessage) {
-                Log.e("WeaviateImage", errorMessage);
-            }
-        });
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.example2);
+//        String base64 = WeaviatePresenter.toBase64(bitmap);
+//
+//        WeaviateImage testImage = new WeaviateImage(base64, "Psylocke", "", "#8", "MG-#4", "Puppeteer Lee", "", "Jun/18/2025", "", "A Psylocke Comic.", "768eaecf-2f05-4bab-817f-28ef855716d5");
+//        WeaviatePresenter.uploadWeaviateImage("ComicVariant", testImage.getParentComic(), testImage, new WeaviateUploadCallback() {
+//            @Override
+//            public void onSuccess(String message) {
+//                Log.d("WeaviateImage", message);
+//            }
+//
+//            @Override
+//            public void onFailure(String errorMessage) {
+//                Log.e("WeaviateImage", errorMessage);
+//            }
+//        });
 
     }
-
-//    WishlistData.itemList.add(new WishlistItem(R.drawable.example1, "Magik", "#4", "Rose Besch", "Apr/23/2025", "Mar/24/2025"));
-//    WishlistData.itemList.add(new WishlistItem(R.drawable.example2, "Psylocke", "#8", "Puppeteer Lee", "Jun/18/2025", "May/19/2025"));
-//    WishlistData.itemList.add(new WishlistItem(R.drawable.example3, "Jeff the Land Shark", "#1", "Todd Nauck Homage", "Jun/18/2025", "May/05/2026"));
-//    WishlistData.itemList.add(new WishlistItem(R.drawable.example4, "Marvel Rivals", "#1", "Peach Momoko", "Apr/2/2025", ""));
 }
