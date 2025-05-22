@@ -1,7 +1,5 @@
 package com.example.heroicorganizer.ui.home;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -75,14 +73,15 @@ public class HomeFragment extends Fragment {
         });
 
         loadWishlistItems();
-        //loadRecentLibraryItems();
         RecentComicsData.loadComicList(requireContext());
+        loadRecentLibraryItems();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         loadWishlistItems();
+        RecentComicsData.loadComicList(requireContext());
         loadRecentLibraryItems();
     }
 
@@ -98,14 +97,14 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadRecentLibraryItems() {
-//        List<LibraryComic> recentItems = RecentComicsData.getComicList();
-//
-//        for (LibraryComic item : recentItems) {
-//            Log.d("ComicItem", item.getTitle() + " " + item.getIssue());
-//        }
-//
-//        RecentAdapter adapter = new RecentAdapter(recentItems, requireContext());
-//        recentRecycler.setAdapter(adapter);
+        List<LibraryComic> recentItems = RecentComicsData.getComicList();
+
+        for (LibraryComic item : recentItems) {
+            Log.d("ComicItem", item.getTitle() + " " + item.getIssue());
+        }
+
+        RecentAdapter adapter = new RecentAdapter(recentItems, requireContext());
+        recentRecycler.setAdapter(adapter);
     }
 
     private void updateRecentDisplay() {
