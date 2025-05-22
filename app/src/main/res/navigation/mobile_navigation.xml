@@ -3,49 +3,85 @@
             xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/mobile_navigation"
             app:startDestination="@id/nav_home">
-    <action
-            android:id="@+id/fade_in_comic_view"
-            app:destination="@id/nav_library_comic_view"
-            app:enterAnim="@transition/fade_in"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@transition/fade_in"
-            app:popExitAnim="@anim/nav_default_exit_anim" />
+
 
     <fragment
             android:id="@+id/nav_home"
             android:name="com.example.heroicorganizer.ui.home.HomeFragment"
             android:label="Home"
             tools:layout="@layout/fragment_home" />
+    <action
+            android:id="@+id/nav_home_fade"
+            app:destination="@id/nav_home"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
 
     <fragment
             android:id="@+id/nav_library"
             android:name="com.example.heroicorganizer.ui.library.LibraryFragment"
             android:label="Library"
             tools:layout="@layout/fragment_library" />
+    <action
+            android:id="@+id/nav_library_fade"
+            app:destination="@id/nav_library"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
 
     <fragment
             android:id="@+id/nav_wishlist"
             android:name="com.example.heroicorganizer.ui.wishlist.WishlistFragment"
             android:label="Wishlist"
             tools:layout="@layout/fragment_wishlist" />
+    <action
+            android:id="@+id/nav_wishlist_fade"
+            app:destination="@id/nav_wishlist"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
 
     <fragment
             android:id="@+id/nav_scan"
             android:name="com.example.heroicorganizer.ui.scan.ScanFragment"
             android:label="Scan Comic Cover"
             tools:layout="@layout/fragment_camera" />
+    <action
+            android:id="@+id/nav_scan_fade"
+            app:destination="@id/nav_scan"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
 
     <fragment
             android:id="@+id/nav_scan_details"
             android:name="com.example.heroicorganizer.ui.scan.ScanDetailFragment"
             android:label="Scan Details"
             tools:layout="@layout/fragment_scan" />
+    <action
+            android:id="@+id/nav_scan_details_fade"
+            app:destination="@id/nav_scan_details"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
 
     <fragment
             android:id="@+id/nav_locator"
             android:name="com.example.heroicorganizer.ui.locator.LocatorFragment"
             android:label="Store Locator"
             tools:layout="@layout/fragment_locator" />
+    <action
+            android:id="@+id/nav_locator_fade"
+            app:destination="@id/nav_locator"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
 
     <activity
             android:id="@+id/nav_settings"
@@ -53,37 +89,75 @@
             android:label="Settings"
             tools:layout="@layout/activity_settings" />
 
+
     <fragment
             android:id="@+id/nav_search"
             android:name="com.example.heroicorganizer.ui.search.SearchFragment"
             android:label="Search"
             tools:layout="@layout/fragment_search" />
+    <action
+            android:id="@+id/nav_search_fade"
+            app:destination="@id/nav_search"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
 
     <fragment
             android:id="@+id/nav_add_to_library"
             android:name="com.example.heroicorganizer.ui.comic.ComicDetailFragment"
             android:label="Add Comic to Library" />
+    <action
+            android:id="@+id/nav_add_to_library_fade"
+            app:destination="@id/nav_add_to_library"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
 
     <fragment
             android:id="@+id/nav_library_create"
             android:name="com.example.heroicorganizer.ui.library.LibraryCreateFolderFragment"
             android:label="Add Folder" />
+    <action
+            android:id="@+id/nav_library_create_fade"
+            app:destination="@id/nav_library_create"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
 
     <fragment
             android:id="@+id/nav_library_modify"
             android:name="com.example.heroicorganizer.ui.library.LibraryModifyFolderFragment"
             android:label="Update Folder" />
+    <action
+            android:id="@+id/nav_library_modify_fade"
+            app:destination="@id/nav_library_modify"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
 
     <fragment
             android:id="@+id/nav_library_comics"
             android:name="com.example.heroicorganizer.ui.library.LibraryComicsFragment"
             android:label="Comics" />
-
+    <action
+            android:id="@+id/nav_library_comics_fade"
+            app:destination="@id/nav_library_comics"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
 
     <fragment
             android:id="@+id/nav_library_comic_view"
-            android:name="com.example.heroicorganizer.ui.comic.ViewComicFragment"
-            android:label="Comic Details"/>
-
+            android:name="com.example.heroicorganizer.ui.comic.ViewComicFragment"/>
+    <action
+            android:id="@+id/nav_library_comic_view_fade"
+            app:destination="@id/nav_library_comic_view" app:exitAnim="@android:anim/slide_out_right"
+            app:popExitAnim="@android:anim/slide_out_right"
+    />
 
 </navigation>

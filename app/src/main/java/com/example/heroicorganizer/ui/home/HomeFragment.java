@@ -77,7 +77,7 @@ public class HomeFragment extends Fragment {
 
 
         viewMoreUpcomingBtn.setOnClickListener(v -> {
-            Navigation.findNavController(view).navigate(R.id.nav_wishlist);
+            Navigation.findNavController(view).navigate(R.id.nav_wishlist_fade);
         });
 
         viewMoreRecentBtn.setOnClickListener(v -> {

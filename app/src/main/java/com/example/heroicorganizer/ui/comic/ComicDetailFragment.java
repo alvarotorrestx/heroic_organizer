@@ -186,7 +186,7 @@ public class ComicDetailFragment extends Fragment {
                         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
                         // Prevents a back stack to the same comic editing/add to folder
                         navController.popBackStack(navController.getGraph().getStartDestinationId(), false);
-                        navController.navigate(R.id.nav_library);
+                        navController.navigate(R.id.nav_library_fade);
                     }
 
                     @Override

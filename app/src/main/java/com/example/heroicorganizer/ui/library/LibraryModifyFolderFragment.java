@@ -79,10 +79,10 @@ public class LibraryModifyFolderFragment extends Fragment {
 
                     // Prevents a back stack to the update folder page with previous data
                     NavOptions navOptions = new NavOptions.Builder()
-                            .setPopUpTo(R.id.nav_library_comics, true)
+                            .setPopUpTo(R.id.nav_library_comics_fade, true)
                             .build();
 
-                    navController.navigate(R.id.nav_library_comics, updatedFolderBundle, navOptions);
+                    navController.navigate(R.id.nav_library_comics_fade, updatedFolderBundle, navOptions);
                 }
 
                 @Override

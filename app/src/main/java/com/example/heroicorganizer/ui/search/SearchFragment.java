@@ -102,7 +102,7 @@ public class SearchFragment extends Fragment {
 
                                     // navigate to sub-level fragment logic
                                     NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-                                    navController.navigate(R.id.nav_add_to_library, bundle);
+                                    navController.navigate(R.id.nav_add_to_library_fade, bundle);
                                 });
 
                                 comicResultsContainer.addView(comicCard);

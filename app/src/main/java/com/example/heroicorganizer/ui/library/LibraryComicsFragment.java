@@ -80,7 +80,7 @@ public class LibraryComicsFragment extends Fragment {
 
             // navigate to sub-level fragment logic
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-            navController.navigate(R.id.nav_library_modify, modifyBundle);
+            navController.navigate(R.id.nav_library_modify_fade, modifyBundle);
 
             return true;
         } else if (item.getItemId() == R.id.deleteFolder) {
@@ -105,9 +105,9 @@ public class LibraryComicsFragment extends Fragment {
                                         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
                                         // Prevents a back stack to the deleted folder
                                         NavOptions navOptions = new NavOptions.Builder()
-                                                .setPopUpTo(R.id.nav_library, true)
+                                                .setPopUpTo(R.id.nav_library_fade, true)
                                                 .build();
-                                        navController.navigate(R.id.nav_library, null, navOptions);
+                                        navController.navigate(R.id.nav_library_fade, null, navOptions);
                                     }
 
                                     @Override
@@ -221,7 +221,7 @@ public class LibraryComicsFragment extends Fragment {
                                             .addSharedElement(coverImage, "comicCover_" + comic.getId())
                                             .build();
 
-                            navController.navigate(R.id.nav_library_comic_view, bundle, null, extras);
+                            navController.navigate(R.id.nav_library_comic_view_fade, bundle, null, extras);
                         });
 
                         comicsContainer.addView(comicCard);
