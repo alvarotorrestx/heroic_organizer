@@ -60,7 +60,7 @@ public class LibraryFragment extends Fragment {
         if (item.getItemId() == R.id.addFolder) {
             // navigate to sub-level fragment logic
             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-            navController.navigate(R.id.nav_library_create);
+            navController.navigate(R.id.nav_library_create_fade);
 
             return true;
         }
@@ -143,7 +143,7 @@ public class LibraryFragment extends Fragment {
 
                             // navigate to sub-level fragment logic
                             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-                            navController.navigate(R.id.nav_library_comics, bundle);
+                            navController.navigate(R.id.nav_library_comics_fade, bundle);
                         });
                     }
                 } else { // If no folders are created by user or found

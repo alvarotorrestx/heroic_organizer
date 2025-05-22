@@ -275,7 +275,7 @@ public class ScanFragment extends Fragment {
 
                             // Navigate to ScanDetailFragment
                             NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-                            navController.navigate(R.id.nav_scan_details, bundle);
+                            navController.navigate(R.id.nav_scan_details_fade, bundle);
                         } else {
                             ToastMsg.show(requireContext(), "No barcode found");
                         }
@@ -310,7 +310,7 @@ public class ScanFragment extends Fragment {
                     // Navigate to ScanDetailFragment
                     requireActivity().runOnUiThread(() -> {
                         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-                        navController.navigate(R.id.nav_scan_details, bundle);
+                        navController.navigate(R.id.nav_scan_details_fade, bundle);
                     });
                 }
 

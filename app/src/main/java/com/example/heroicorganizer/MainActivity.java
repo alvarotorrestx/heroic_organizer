@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         // drawer item click handling
         findViewById(R.id.menu_home).setOnClickListener(v -> {
-            navController.navigate(R.id.nav_home);
+            navController.navigate(R.id.nav_home_fade);
             drawer.closeDrawer(GravityCompat.START);
         });
 
@@ -105,17 +105,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.menu_wishlist).setOnClickListener(v -> {
-            navController.navigate(R.id.nav_wishlist);
+            navController.navigate(R.id.nav_wishlist_fade);
             drawer.closeDrawer(GravityCompat.START);
         });
 
         findViewById(R.id.menu_scan).setOnClickListener(v -> {
-            navController.navigate(R.id.nav_scan);
+            navController.navigate(R.id.nav_scan_fade);
             drawer.closeDrawer(GravityCompat.START);
         });
 
         findViewById(R.id.menu_locator).setOnClickListener(v -> {
-            navController.navigate(R.id.nav_locator);
+            navController.navigate(R.id.nav_locator_fade);
             drawer.closeDrawer(GravityCompat.START);
         });
 
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_search) {
             NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-            navController.navigate(R.id.nav_search);
+            navController.navigate(R.id.nav_search_fade);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -154,10 +154,5 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
-
-    /// Testing animation
-
-
-
 
 }
