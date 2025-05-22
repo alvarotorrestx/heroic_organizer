@@ -178,6 +178,9 @@ public class WeaviatePresenter {
                         "    }, limit: 3) { " +
                         "      title " +
                         "      image " +
+                        "      _additional { " +
+                        "           certainty " +
+                        "      }" +
                         "      variant_id " +
                         "      issue_number " +
                         "      publisher_names " +
@@ -219,7 +222,6 @@ public class WeaviatePresenter {
                 if (response.isSuccessful()) {
                     String res = response.body().string();
                     try {
-                        Log.d("WeaviateSearch", "Raw JSON response: " + res);
                         JSONObject json = new JSONObject(res);
                         JSONArray results = json
                                 .getJSONObject("data")
@@ -278,6 +280,9 @@ public class WeaviatePresenter {
                         "    }, limit: 3) { " +
                         "      title " +
                         "      image " +
+                        "      _additional { " +
+                        "           certainty " +
+                        "      }" +
                         "      variant_id " +
                         "      issue_number " +
                         "      publisher_names " +
@@ -317,7 +322,6 @@ public class WeaviatePresenter {
                 if (response.isSuccessful()) {
                     String res = response.body().string();
                     try {
-                        Log.d("WeaviateSearch", "Raw JSON response: " + res);
                         JSONObject json = new JSONObject(res);
                         JSONArray results = json
                                 .getJSONObject("data")

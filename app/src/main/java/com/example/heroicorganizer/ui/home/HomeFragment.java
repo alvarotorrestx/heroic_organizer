@@ -118,10 +118,26 @@ public class HomeFragment extends Fragment {
 //        }
 //        recentRecycler.setAdapter(new RecentAdapter(displayList, requireContext()));
 
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.batman_beyond1);
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.batman_beyond_return_of_the_joker);
 //        String base64 = WeaviatePresenter.toBase64(bitmap);
 //
-//        WeaviateImage testImage = new WeaviateImage(base64, "", "Batman Beyond", "", "#1", "Bruce Timm", "Hilary J. Bader", "Jan 20, 1999", "76194121637900111", "An adaptation of Batman Beyond Season 1, Episode 1: Rebirth, Part One.");
+//        WeaviateImage testImage = new WeaviateImage(base64, "", "Batman : Return of the Joker", "", "#1", "Craig Rousseau, Rob Leigh", "Darren Vincenzo", "Dec 13, 2000", "76194122581400111", "We've all learned that in the future Gotham City of BATMAN BEYOND, young Terry McGinnis has assumed the mantle of the bat. As the new Batman and protector of Gotham, he's had to face many strange new villains and even more bizarre challenges. However, nothing could have prepared him for the return of original Batman's greatest foe, the Joker! What happens when the Clown Prince of Crime lets loose in a future that seems all new and ready for the taking? More importantly: how has he seemingly returned from the dead?");
+//        WeaviatePresenter.uploadWeaviateImage("Comic", "", testImage, new WeaviateUploadCallback() {
+//            @Override
+//            public void onSuccess(String message) {
+//                Log.d("WeaviateImage", message);
+//            }
+//
+//            @Override
+//            public void onFailure(String errorMessage) {
+//                Log.e("WeaviateImage", errorMessage);
+//            }
+//        });
+
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.absolute_carnage);
+//        String base64 = WeaviatePresenter.toBase64(bitmap);
+//
+//        WeaviateImage testImage = new WeaviateImage(base64, "", "Absolute Carnage", "", "#1", "Ryan Stegman, J.P. Mayer, Frank Martin", "Donny Cates, Clay McLeod Chapman", "Aug 7, 2019", "75960609413400111", "After turning Venom's world upside down a year ago, Donny Cates and Ryan Stegman are about to put the Sinister Symbiote through hell again, only this time Carnage has come calling, and everyone who's ever worn a symbiote is dead in his sights! He's skirted the periphery of the Marvel Universe for months, but Cletus Kasady at last stands poised to make his grand return to New York in a blistering 60-page story... and he wants to paint the town red!");
 //        WeaviatePresenter.uploadWeaviateImage("Comic", "", testImage, new WeaviateUploadCallback() {
 //            @Override
 //            public void onSuccess(String message) {
@@ -138,6 +154,22 @@ public class HomeFragment extends Fragment {
 //        String base64 = WeaviatePresenter.toBase64(bitmap);
 //
 //        WeaviateImage testImage = new WeaviateImage(base64, "Batman Beyond", "", "#1", "", "", "Hilary J. Bader", "Mar 1, 1999", "", "Six Flags Giveaway Variant - An adaptation of Batman Beyond Season 1, Episode 1: Rebirth, Part One.", "f96a8afc-bf57-4d43-8fbc-043e4da0af57");
+//        WeaviatePresenter.uploadWeaviateImage("ComicVariant", testImage.getParentComic(), testImage, new WeaviateUploadCallback() {
+//            @Override
+//            public void onSuccess(String message) {
+//                Log.d("WeaviateImage", message);
+//            }
+//
+//            @Override
+//            public void onFailure(String errorMessage) {
+//                Log.e("WeaviateImage", errorMessage);
+//            }
+//        });
+
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.absolute_carnage);
+//        String base64 = WeaviatePresenter.toBase64(bitmap);
+//
+//        WeaviateImage testImage = new WeaviateImage(base64, "Absolute Carnage", "", "#1", "", "Ryan Stegman, J.P. Mayer, Frank Martin", "Donny Cates, Clay McLeod Chapman", "Aug 7, 2019", "75960609413400111", "After turning Venom's world upside down a year ago, Donny Cates and Ryan Stegman are about to put the Sinister Symbiote through hell again, only this time Carnage has come calling, and everyone who's ever worn a symbiote is dead in his sights! He's skirted the periphery of the Marvel Universe for months, but Cletus Kasady at last stands poised to make his grand return to New York in a blistering 60-page story... and he wants to paint the town red!", "5b487042-73e4-43e0-8029-d6d3d6cbf3d1");
 //        WeaviatePresenter.uploadWeaviateImage("ComicVariant", testImage.getParentComic(), testImage, new WeaviateUploadCallback() {
 //            @Override
 //            public void onSuccess(String message) {
