@@ -75,7 +75,8 @@ public class HomeFragment extends Fragment {
         });
 
         loadWishlistItems();
-        loadRecentLibraryItems();
+        //loadRecentLibraryItems();
+        RecentComicsData.loadComicList(requireContext());
     }
 
     @Override
@@ -97,14 +98,14 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadRecentLibraryItems() {
-        List<LibraryComic> recentItems = RecentComicsData.getComicList();
-
-        for (LibraryComic item : recentItems) {
-            Log.d("ComicItem", item.getTitle() + " " + item.getIssue());
-        }
-
-        RecentAdapter adapter = new RecentAdapter(recentItems, requireContext());
-        recentRecycler.setAdapter(adapter);
+//        List<LibraryComic> recentItems = RecentComicsData.getComicList();
+//
+//        for (LibraryComic item : recentItems) {
+//            Log.d("ComicItem", item.getTitle() + " " + item.getIssue());
+//        }
+//
+//        RecentAdapter adapter = new RecentAdapter(recentItems, requireContext());
+//        recentRecycler.setAdapter(adapter);
     }
 
     private void updateRecentDisplay() {

@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         );
 
         // Temporary always check if schema is created to ensure Schema is created
-        // TODO: same as above
         WeaviateConfig config = new WeaviateConfig();
         config.checkWeaviateSchema();
 
