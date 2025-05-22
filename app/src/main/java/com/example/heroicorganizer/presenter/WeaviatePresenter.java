@@ -169,41 +169,27 @@ public class WeaviatePresenter {
 
         OkHttpClient client = new OkHttpClient();
 
-        // Search for image through ComicVariant class
-        String variantQuery =
+        // Search for image through both ComicVariant and Comic to find closest match (certainty)
+        String graphQLQuery =
                 "{ " +
                         "  Get { " +
-                        "    ComicVariant(nearImage: { " +
-                        "      image: \"" + convertedImage + "\" " +
-                        "    }, limit: 3) { " +
-                        "      title " +
-                        "      image " +
-                        "      _additional { " +
-                        "           certainty " +
-                        "      }" +
-                        "      variant_id " +
-                        "      issue_number " +
-                        "      publisher_names " +
-                        "      cover_artist " +
-                        "      author " +
-                        "      date_published " +
-                        "      upc " +
-                        "      description " +
-                        "      parent_comic { " +
-                        "        ... on Comic { " +
-                        "          title " +
-                        "          comic_id " +
-                        "          issue_number " +
-                        "        }" +
-                        "      }" +
+                        "    ComicVariant(nearImage: { image: \"" + convertedImage + "\" }, limit: 3) { " +
+                        "      title image variant_id issue_number publisher_names cover_artist author date_published upc description " +
+                        "      _additional { certainty } " +
+                        "      parent_comic { ... on Comic { title comic_id issue_number } } " +
+                        "    } " +
+                        "    Comic(nearImage: { image: \"" + convertedImage + "\" }, limit: 3) { " +
+                        "      title image issue_number publisher_names cover_artist author date_published upc description " +
+                        "      comic_variants { ... on ComicVariant { variant_id issue_number title } } " +
+                        "      _additional { certainty } " +
                         "    } " +
                         "  } " +
                         "}";
 
-        JsonObject variantPayload = new JsonObject();
-        variantPayload.addProperty("query", variantQuery);
+        JsonObject payload = new JsonObject();
+        payload.addProperty("query", graphQLQuery);
 
-        RequestBody requestBody = RequestBody.create(variantPayload.toString(), MediaType.parse("application/json"));
+        RequestBody requestBody = RequestBody.create(payload.toString(), MediaType.parse("application/json"));
         Request request = new Request.Builder()
                 .url("http://10.0.2.2:8080/v1/graphql")
                 .post(requestBody)
@@ -213,165 +199,107 @@ public class WeaviatePresenter {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e("WeaviateSearch", "Search failed: " + e.getMessage());
                 callback.onFailure("Search failed: " + e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String res = response.body().string();
-                    try {
-                        JSONObject json = new JSONObject(res);
-                        JSONArray results = json
-                                .getJSONObject("data")
-                                .getJSONObject("Get")
-                                .getJSONArray("ComicVariant");
-
-                        if (results.length() > 0) {
-                            // Match found in ComicVariant
-                            JSONObject match = results.getJSONObject(0);
-                            WeaviateSearchResult variantResults = new WeaviateSearchResult();
-                            variantResults.setTitle(match.getString("title"));
-                            variantResults.setImage(match.getString("image"));
-                            variantResults.setIssueNumber(match.getString("issue_number"));
-                            variantResults.setPublisherNames(match.getString("publisher_names"));
-                            variantResults.setCoverArtist(match.getString("cover_artist"));
-                            variantResults.setAuthor(match.getString("author"));
-                            variantResults.setDatePublished(match.getString("date_published"));
-                            variantResults.setUpc(match.getString("upc"));
-                            variantResults.setDescription(match.getString("description"));
-                            JSONArray parentComicArray = match.getJSONArray("parent_comic");
-                            if (parentComicArray.length() > 0) {
-                                JSONObject parentComic = parentComicArray.getJSONObject(0);
-                                variantResults.setParentComicTitle(parentComic.optString("title"));
-                                variantResults.setParentComicId(parentComic.optString("comic_id"));
-                                variantResults.setParentComicIssueNumber(parentComic.optString("issue_number"));
-                            }
-
-
-                            callback.onSuccess(variantResults);
-                        } else {
-                            // If no matches found in ComicVariant, try Comic
-                            searchImageByComic(convertedImage, callback);
-                        }
-                    } catch (JSONException e) {
-                        Log.e("WeaviateSearch", "Failed to parse JSON: " + e.getMessage());
-                        callback.onFailure("Failed to parse JSON.");
-                    }
-                } else {
+                if (!response.isSuccessful()) {
                     callback.onFailure("Server error: " + response.code());
+                    response.close();
+                    return;
                 }
 
+                String res = response.body().string();
+                Log.d("WeaviateSearch", "Raw JSON response: " + res);
                 response.close();
-            }
-        });
-    }
 
-    private static void searchImageByComic(String convertedImage, WeaviateSearchImageCallback callback) {
-        OkHttpClient client = new OkHttpClient();
+                try {
+                    JSONObject json = new JSONObject(res);
+                    JSONObject data = json.getJSONObject("data").getJSONObject("Get");
 
-        // Search for image through Comic class
-        String comicQuery =
-                "{ " +
-                        "  Get { " +
-                        "    Comic(nearImage: { " +
-                        "      image: \"" + convertedImage + "\" " +
-                        "    }, limit: 3) { " +
-                        "      title " +
-                        "      image " +
-                        "      _additional { " +
-                        "           certainty " +
-                        "      }" +
-                        "      variant_id " +
-                        "      issue_number " +
-                        "      publisher_names " +
-                        "      cover_artist " +
-                        "      author " +
-                        "      date_published " +
-                        "      upc " +
-                        "      description " +
-                        "      comic_variants { " +
-                        "        variant_id " +
-                        "        issue_number " +
-                        "        title " +
-                        "      }" +
-                        "    } " +
-                        "  } " +
-                        "}";
+                    JSONArray variantResults = data.optJSONArray("ComicVariant");
+                    JSONArray comicResults = data.optJSONArray("Comic");
 
-        JsonObject comicPayload = new JsonObject();
-        comicPayload.addProperty("query", comicQuery);
+                    JSONObject bestMatch = null;
+                    double highestCertainty = -1;
+                    boolean isVariant = false;
 
-        RequestBody requestBody = RequestBody.create(comicPayload.toString(), MediaType.parse("application/json"));
-        Request request = new Request.Builder()
-                .url("http://10.0.2.2:8080/v1/graphql")
-                .post(requestBody)
-                .addHeader("Content-Type", "application/json")
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e("WeaviateSearch", "Search failed: " + e.getMessage());
-                callback.onFailure("Search failed: " + e.getMessage());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String res = response.body().string();
-                    try {
-                        JSONObject json = new JSONObject(res);
-                        JSONArray results = json
-                                .getJSONObject("data")
-                                .getJSONObject("Get")
-                                .getJSONArray("Comic");
-
-                        if (results.length() > 0) {
-                            // Match found in Comic
-                            JSONObject match = results.getJSONObject(0);
-                            WeaviateSearchResult comicResults = new WeaviateSearchResult();
-                            comicResults.setTitle(match.getString("title"));
-                            comicResults.setImage(match.getString("image"));
-                            comicResults.setIssueNumber(match.getString("issue_number"));
-                            comicResults.setPublisherNames(match.getString("publisher_names"));
-                            comicResults.setCoverArtist(match.getString("cover_artist"));
-                            comicResults.setAuthor(match.getString("author"));
-                            comicResults.setDatePublished(match.getString("date_published"));
-                            comicResults.setUpc(match.getString("upc"));
-                            comicResults.setDescription(match.getString("description"));
-
-                            JSONArray variants = match.getJSONArray("comic_variants");
-
-                            List<String> foundVariants = new ArrayList<>();
-
-                            for (int i = 0; i < variants.length(); i++) {
-                                JSONObject variant = variants.getJSONObject(i);
-                                String variantId = variant.optString("variant_id", "");
-                                String variantIssueNumber = variant.optString("issue_number", "");
-                                String variantTitle = variant.optString("title", "");
-
-                                foundVariants.add(variantId);
-                                foundVariants.add(variantIssueNumber);
-                                foundVariants.add(variantTitle);
+                    // If Weaviate finds the highest certainty result to be of ComicVariant return the variant
+                    if (variantResults != null) {
+                        for (int i = 0; i < variantResults.length(); i++) {
+                            JSONObject result = variantResults.getJSONObject(i);
+                            double certainty = result.getJSONObject("_additional").optDouble("certainty", 0);
+                            Log.d("WeaviateSearch", "ComicVariant Match " + i + ": " + result.optString("title") + " (certainty: " + certainty + ")");
+                            if (certainty > highestCertainty) {
+                                highestCertainty = certainty;
+                                bestMatch = result;
+                                isVariant = true;
                             }
-
-                            comicResults.setVariants(foundVariants);
-
-                            callback.onSuccess(comicResults);
-                        } else {
-                            Log.e("WeaviateSearch", "No match found in Comic fallback: " + response.code() + " - " + response.message());
-                            callback.onFailure("No match found in Comic fallback: " + response.code());
                         }
-                    } catch (JSONException e) {
-                        callback.onFailure("Failed to parse JSON.");
                     }
-                } else {
-                    callback.onFailure("Server error: " + response.code());
-                }
 
-                response.close();
+                    // If Weaviate finds the highest certainty result to be of Comic return the comic
+                    if (comicResults != null) {
+                        for (int i = 0; i < comicResults.length(); i++) {
+                            JSONObject result = comicResults.getJSONObject(i);
+                            double certainty = result.getJSONObject("_additional").optDouble("certainty", 0);
+                            Log.d("WeaviateSearch", "Comic Match " + i + ": " + result.optString("title") + " (certainty: " + certainty + ")");
+                            if (certainty > highestCertainty) {
+                                highestCertainty = certainty;
+                                bestMatch = result;
+                                isVariant = false;
+                            }
+                        }
+                    }
+
+                    if (bestMatch != null) {
+                        WeaviateSearchResult resultModel = new WeaviateSearchResult();
+
+                        resultModel.setTitle(bestMatch.getString("title"));
+                        resultModel.setImage(bestMatch.getString("image"));
+                        resultModel.setIssueNumber(bestMatch.optString("issue_number", ""));
+                        resultModel.setPublisherNames(bestMatch.optString("publisher_names", ""));
+                        resultModel.setCoverArtist(bestMatch.optString("cover_artist", ""));
+                        resultModel.setAuthor(bestMatch.optString("author", ""));
+                        resultModel.setDatePublished(bestMatch.optString("date_published", ""));
+                        resultModel.setUpc(bestMatch.optString("upc", ""));
+                        resultModel.setDescription(bestMatch.optString("description", ""));
+
+                        if (isVariant) {
+                            resultModel.setVariantId(bestMatch.optString("variant_id", ""));
+                            if (bestMatch.has("parent_comic") && !bestMatch.isNull("parent_comic")) {
+                                JSONArray parentArray = bestMatch.getJSONArray("parent_comic");
+                                if (parentArray.length() > 0) {
+                                    JSONObject parent = parentArray.getJSONObject(0);
+                                    resultModel.setParentComicTitle(parent.optString("title", ""));
+                                    resultModel.setParentComicId(parent.optString("comic_id", ""));
+                                    resultModel.setParentComicIssueNumber(parent.optString("issue_number", ""));
+                                }
+                            }
+                        } else {
+                            JSONArray variants = bestMatch.optJSONArray("comic_variants");
+                            List<String> variantList = new ArrayList<>();
+                            if (variants != null) {
+                                for (int i = 0; i < variants.length(); i++) {
+                                    JSONObject v = variants.getJSONObject(i);
+                                    variantList.add(v.optString("variant_id", ""));
+                                    variantList.add(v.optString("issue_number", ""));
+                                    variantList.add(v.optString("title", ""));
+                                }
+                            }
+                            resultModel.setVariants(variantList);
+                        }
+
+                        Log.d("WeaviateSearch", "Final best match: " + resultModel.getTitle() + " (isVariant: " + isVariant + ")");
+                        callback.onSuccess(resultModel);
+                    } else {
+                        callback.onFailure("No matches found.");
+                    }
+                } catch (JSONException e) {
+                    Log.e("WeaviateSearch", "JSON parsing failed: " + e.getMessage());
+                    callback.onFailure("Failed to parse JSON.");
+                }
             }
         });
     }
