@@ -14,6 +14,9 @@ google-services.json
 # Ignore marvel API json
 /app/src/main/assets/marvel-api.json
 
+# Ignore Metron API json
+/app/src/main/assets/metron-api.json
+
 # Ignore local SDK path
 local.properties
 

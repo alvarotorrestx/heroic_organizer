@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,16 +17,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.heroicorganizer.R;
+import com.example.heroicorganizer.callback.MetronComicCallback;
 import com.example.heroicorganizer.callback.WeaviateUploadCallback;
 import com.example.heroicorganizer.config.FirebaseDB;
 import com.example.heroicorganizer.model.LibraryComic;
+import com.example.heroicorganizer.model.MetronComic;
 import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.model.WeaviateImage;
+import com.example.heroicorganizer.presenter.MetronComicPresenter;
 import com.example.heroicorganizer.presenter.WeaviatePresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
 import com.example.heroicorganizer.ui.wishlist.WishlistAdapter;
 import com.example.heroicorganizer.ui.wishlist.WishlistData;
 import com.example.heroicorganizer.ui.wishlist.WishlistItem;
+import com.example.heroicorganizer.utils.ViewStatus;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,7 +50,8 @@ public class HomeFragment extends Fragment {
 
     private final String TAG = "HomeFragment";
 
-    public HomeFragment() {}
+    public HomeFragment() {
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,6 +69,13 @@ public class HomeFragment extends Fragment {
         upcomingRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recentRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
+        FrameLayout upcomingContainer = view.findViewById(R.id.upcomingContainer);
+
+        // Clear recycler and show loading for upcoming releases
+        upcomingContainer.removeAllViews();
+        upcomingContainer.addView(ViewStatus.SetStatus(requireContext(), "Loading..."));
+
+
         viewMoreUpcomingBtn.setOnClickListener(v -> {
             Navigation.findNavController(view).navigate(R.id.nav_wishlist);
         });
@@ -72,15 +85,37 @@ public class HomeFragment extends Fragment {
             updateRecentDisplay();
         });
 
-        loadWishlistItems();
+        // Hidden to show upcoming releases
+        //        loadWishlistItems();
         RecentComicsData.loadComicList(requireContext());
         loadRecentLibraryItems();
+
+        MetronComicPresenter.apiCall(requireContext(), new MetronComicCallback() {
+            @Override
+            public void onSuccess(List<MetronComic> results) {
+                requireActivity().runOnUiThread(() -> {
+                    // Clear loading message and restore recycler with the returned results from Metron api
+                    upcomingContainer.removeAllViews();
+                    upcomingContainer.addView(upcomingRecycler);
+
+                    upcomingRecycler.setAdapter(new MetronComicAdapter(results));
+                });
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                upcomingContainer.removeAllViews();
+                upcomingContainer.addView(ViewStatus.SetStatus(requireContext(), "Failed to load upcoming releases."));
+            }
+        });
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadWishlistItems();
+        // Hidden to show upcoming releases
+//        loadWishlistItems();
         RecentComicsData.loadComicList(requireContext());
         loadRecentLibraryItems();
     }

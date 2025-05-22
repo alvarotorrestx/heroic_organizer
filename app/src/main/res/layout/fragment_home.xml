@@ -22,12 +22,20 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" android:layout_gravity="center"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_upcoming"
+        <!-- Added to work with Loading... status -->
+        <FrameLayout
+                android:id="@+id/upcomingContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                />
+                android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_upcoming"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+            />
+
+        </FrameLayout>
 
         <android.widget.Button
                 android:id="@+id/btn_view_more_upcoming"
