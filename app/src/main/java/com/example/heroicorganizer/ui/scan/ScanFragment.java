@@ -30,13 +30,16 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import com.example.heroicorganizer.R;
 import com.example.heroicorganizer.callback.WeaviateSearchImageCallback;
+import com.example.heroicorganizer.model.WeaviateSearchResult;
 import com.example.heroicorganizer.presenter.WeaviatePresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
@@ -309,12 +312,22 @@ public class ScanFragment extends Fragment {
             // Pass the scanned image to Weaviate
             WeaviatePresenter.searchByImage(scannedImage, new WeaviateSearchImageCallback() {
                 @Override
-                public void onSuccess(String title, String image) {
+                public void onSuccess(WeaviateSearchResult result) {
                     // Bundle response to send to ScanDetailFragment
                     Bundle bundle = new Bundle();
-                    bundle.putString("title", title);
-                    bundle.putString("coverImage", image);
-                    bundle.putString("photoURI", image);
+                    bundle.putString("title", result.getTitle());
+                    bundle.putString("image", result.getImage());
+                    bundle.putString("issueNumber", result.getIssueNumber());
+                    bundle.putString("publisher_names", result.getPublisherNames());
+                    bundle.putString("cover_artist", result.getCoverArtist());
+                    bundle.putString("author", result.getAuthor());
+                    bundle.putString("datePublished", result.getDatePublished());
+                    bundle.putString("upc", result.getUpc());
+                    bundle.putString("description", result.getDescription());
+                    bundle.putString("parentComicTitle", result.getParentComicTitle());
+                    bundle.putString("parentComicId", result.getParentComicId());
+                    bundle.putString("parentComicIssueNumber", result.getParentComicIssueNumber());
+                    bundle.putStringArrayList("comicVariants", (ArrayList<String>) result.getVariants());
 
                     // Navigate to ScanDetailFragment
                     requireActivity().runOnUiThread(() -> {

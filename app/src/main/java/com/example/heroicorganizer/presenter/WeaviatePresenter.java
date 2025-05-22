@@ -7,6 +7,7 @@ import android.util.Log;
 import com.example.heroicorganizer.callback.WeaviateSearchImageCallback;
 import com.example.heroicorganizer.callback.WeaviateUploadCallback;
 import com.example.heroicorganizer.model.WeaviateImage;
+import com.example.heroicorganizer.model.WeaviateSearchResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -17,10 +18,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class WeaviatePresenter {
     public static String toBase64(Bitmap image) {
@@ -128,6 +126,7 @@ public class WeaviatePresenter {
         });
     }
 
+    // TODO: Avoid duplicate comics created/added to parent_comic
     private static void patchParentComicWithVariant(String parentId, String variantId) {
         OkHttpClient client = new OkHttpClient();
 
@@ -170,25 +169,36 @@ public class WeaviatePresenter {
 
         OkHttpClient client = new OkHttpClient();
 
-        // Build the GraphQL query string
-        String graphQLQuery =
+        // Search for image through ComicVariant class
+        String variantQuery =
                 "{ " +
                         "  Get { " +
-                        "    Comic(nearImage: { " +
+                        "    ComicVariant(nearImage: { " +
                         "      image: \"" + convertedImage + "\" " +
                         "    }, limit: 3) { " +
                         "      title " +
                         "      image " +
+                        "      variant_id " +
+                        "      issue_number " +
+                        "      publisher_names " +
+                        "      cover_artist " +
+                        "      author " +
+                        "      date_published " +
+                        "      upc " +
+                        "      description " +
+                        "      parent_comic { " +
+                        "        title " +
+                        "        comic_id " +
+                        "        issue_number " +
+                        "      }" +
                         "    } " +
                         "  } " +
                         "}";
 
-        // Make a json payload
-        JsonObject payload = new JsonObject();
-        payload.addProperty("query", graphQLQuery);
+        JsonObject variantPayload = new JsonObject();
+        variantPayload.addProperty("query", variantQuery);
 
-        // Send a post request with the json payload
-        RequestBody requestBody = RequestBody.create(payload.toString(), MediaType.parse("application/json"));
+        RequestBody requestBody = RequestBody.create(variantPayload.toString(), MediaType.parse("application/json"));
         Request request = new Request.Builder()
                 .url("http://10.0.2.2:8080/v1/graphql")
                 .post(requestBody)
@@ -199,6 +209,7 @@ public class WeaviatePresenter {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("WeaviateSearch", "Search failed: " + e.getMessage());
+                callback.onFailure("Search failed: " + e.getMessage());
             }
 
             @Override
@@ -206,21 +217,35 @@ public class WeaviatePresenter {
                 if (response.isSuccessful()) {
                     String res = response.body().string();
                     try {
+                        Log.d("WeaviateSearch", "Raw JSON response: " + res);
                         JSONObject json = new JSONObject(res);
                         JSONArray results = json
                                 .getJSONObject("data")
                                 .getJSONObject("Get")
-                                .getJSONArray("Comic");
+                                .getJSONArray("ComicVariant");
 
-                        // Send response through callback for access on method call
                         if (results.length() > 0) {
+                            // Match found in ComicVariant
                             JSONObject match = results.getJSONObject(0);
-                            String title = match.getString("title");
-                            String image = match.getString("image");
+                            WeaviateSearchResult variantResults = new WeaviateSearchResult();
+                            variantResults.setTitle(match.getString("title"));
+                            variantResults.setImage(match.getString("image"));
+                            variantResults.setIssueNumber(match.getString("issue_number"));
+                            variantResults.setPublisherNames(match.getString("publisher_names"));
+                            variantResults.setCoverArtist(match.getString("cover_artist"));
+                            variantResults.setAuthor(match.getString("author"));
+                            variantResults.setDatePublished(match.getString("date_published"));
+                            variantResults.setUpc(match.getString("upc"));
+                            variantResults.setDescription(match.getString("description"));
+                            JSONObject parentComic = match.getJSONObject("parent_comic");
+                            variantResults.setParentComicTitle(parentComic.getString("parent_comic_title"));
+                            variantResults.setParentComicIssueNumber(parentComic.getString("parent_comic_issue_number"));
+                            variantResults.setParentComicId(parentComic.getString("parent_comic_id"));
 
-                            callback.onSuccess(title, image);
+                            callback.onSuccess(variantResults);
                         } else {
-                            callback.onFailure("No matches found.");
+                            // If no matches found in ComicVariant, try Comic
+                            searchImageByComic(convertedImage, callback);
                         }
                     } catch (JSONException e) {
                         callback.onFailure("Failed to parse JSON.");
@@ -228,6 +253,113 @@ public class WeaviatePresenter {
                 } else {
                     callback.onFailure("Server error: " + response.code());
                 }
+
+                response.close();
+            }
+        });
+    }
+
+    private static void searchImageByComic(String convertedImage, WeaviateSearchImageCallback callback) {
+        OkHttpClient client = new OkHttpClient();
+
+        // Search for image through Comic class
+        String comicQuery =
+                "{ " +
+                        "  Get { " +
+                        "    Comic(nearImage: { " +
+                        "      image: \"" + convertedImage + "\" " +
+                        "    }, limit: 3) { " +
+                        "      title " +
+                        "      image " +
+                        "      variant_id " +
+                        "      issue_number " +
+                        "      publisher_names " +
+                        "      cover_artist " +
+                        "      author " +
+                        "      date_published " +
+                        "      upc " +
+                        "      description " +
+                        "      comic_variants { " +
+                        "        variant_id " +
+                        "        issue_number " +
+                        "        title " +
+                        "      }" +
+                        "    } " +
+                        "  } " +
+                        "}";
+
+        JsonObject comicPayload = new JsonObject();
+        comicPayload.addProperty("query", comicQuery);
+
+        RequestBody requestBody = RequestBody.create(comicPayload.toString(), MediaType.parse("application/json"));
+        Request request = new Request.Builder()
+                .url("http://10.0.2.2:8080/v1/graphql")
+                .post(requestBody)
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("WeaviateSearch", "Search failed: " + e.getMessage());
+                callback.onFailure("Search failed: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String res = response.body().string();
+                    try {
+                        Log.d("WeaviateSearch", "Raw JSON response: " + res);
+                        JSONObject json = new JSONObject(res);
+                        JSONArray results = json
+                                .getJSONObject("data")
+                                .getJSONObject("Get")
+                                .getJSONArray("Comic");
+
+                        if (results.length() > 0) {
+                            // Match found in Comic
+                            JSONObject match = results.getJSONObject(0);
+                            WeaviateSearchResult comicResults = new WeaviateSearchResult();
+                            comicResults.setTitle(match.getString("title"));
+                            comicResults.setImage(match.getString("image"));
+                            comicResults.setIssueNumber(match.getString("issue_number"));
+                            comicResults.setPublisherNames(match.getString("publisher_names"));
+                            comicResults.setCoverArtist(match.getString("cover_artist"));
+                            comicResults.setAuthor(match.getString("author"));
+                            comicResults.setDatePublished(match.getString("date_published"));
+                            comicResults.setUpc(match.getString("upc"));
+                            comicResults.setDescription(match.getString("description"));
+
+                            JSONArray variants = match.getJSONArray("comic_variants");
+
+                            List<String> foundVariants = new ArrayList<>();
+
+                            for (int i = 0; i < variants.length(); i++) {
+                                JSONObject variant = variants.getJSONObject(i);
+                                String variantId = variant.optString("variant_id", "");
+                                String variantIssueNumber = variant.optString("issue_number", "");
+                                String variantTitle = variant.optString("title", "");
+
+                                foundVariants.add(variantId);
+                                foundVariants.add(variantIssueNumber);
+                                foundVariants.add(variantTitle);
+                            }
+
+                            comicResults.setVariants(foundVariants);
+
+                            callback.onSuccess(comicResults);
+                        } else {
+                            Log.e("WeaviateSearch", "No match found in Comic fallback: " + response.code() + " - " + response.message());
+                            callback.onFailure("No match found in Comic fallback: " + response.code());
+                        }
+                    } catch (JSONException e) {
+                        callback.onFailure("Failed to parse JSON.");
+                    }
+                } else {
+                    callback.onFailure("Server error: " + response.code());
+                }
+
                 response.close();
             }
         });

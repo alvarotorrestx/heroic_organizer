@@ -47,23 +47,28 @@ public class ScanDetailFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             String title = args.getString("title");
-//            String photoUriString = args.getString("photoURI");
-            String base64Image = getArguments().getString("photoURI");
+            String image = getArguments().getString("image");
+            String issueNumber = getArguments().getString("issueNumber");
+            String publisher_names = getArguments().getString("publisher_names");
+            String cover_artist = getArguments().getString("cover_artist");
+            String author = getArguments().getString("author");
+            String datePublished = getArguments().getString("date_published");
+            String upc = getArguments().getString("upc");
+            String description = getArguments().getString("description");
+            String parentComicTitle = getArguments().getString("parentComicTitle");
+            String parentComicId = getArguments().getString("parentComicId");
+            String parentComicIssueNumber = getArguments().getString("parentComicIssueNumber");
+            List<String> comicVariants = getArguments().getStringArrayList("comicVariants");
 
-//            TextView coverUPC = view.findViewById(R.id.coverUPC);
-            TextView coverUPC = view.findViewById(R.id.coverComicName);
-            coverUPC.setText(title);
+            TextView comicTitle = view.findViewById(R.id.coverComicName);
+            comicTitle.setText(title);
 
             // Show captured image
-            ImageView imageView = view.findViewById(R.id.capturedImageView);
-//            if (photoUriString != null) {
-//                Uri photoUri = Uri.parse(photoUriString);
-//                imageView.setImageURI(photoUri);
-//            }
-            if (base64Image != null) {
-                byte[] imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-                imageView.setImageBitmap(bitmap);
+            ImageView comicImage = view.findViewById(R.id.capturedImageView);
+            if (image != null) {
+                byte[] imageBytes = Base64.decode(image, Base64.DEFAULT);
+                Bitmap convertedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                comicImage.setImageBitmap(convertedImage);
             }
 
         }

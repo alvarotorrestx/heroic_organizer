@@ -118,10 +118,10 @@ public class HomeFragment extends Fragment {
 //        }
 //        recentRecycler.setAdapter(new RecentAdapter(displayList, requireContext()));
 
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.example1);
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.batman_beyond1);
 //        String base64 = WeaviatePresenter.toBase64(bitmap);
 //
-//        WeaviateImage testImage = new WeaviateImage(base64, "", "Magik", "", "#4", "Rose Besch", "", "Apr/23/2025", "", "A Magik Comic.");
+//        WeaviateImage testImage = new WeaviateImage(base64, "", "Batman Beyond", "", "#1", "Bruce Timm", "Hilary J. Bader", "Jan 20, 1999", "76194121637900111", "An adaptation of Batman Beyond Season 1, Episode 1: Rebirth, Part One.");
 //        WeaviatePresenter.uploadWeaviateImage("Comic", "", testImage, new WeaviateUploadCallback() {
 //            @Override
 //            public void onSuccess(String message) {
@@ -134,10 +134,10 @@ public class HomeFragment extends Fragment {
 //            }
 //        });
 
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.example2);
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.batman_beyond_six_flags);
 //        String base64 = WeaviatePresenter.toBase64(bitmap);
 //
-//        WeaviateImage testImage = new WeaviateImage(base64, "Psylocke", "", "#8", "MG-#4", "Puppeteer Lee", "", "Jun/18/2025", "", "A Psylocke Comic.", "6e7e489f-6853-40e8-9c1c-40aac5684ce5");
+//        WeaviateImage testImage = new WeaviateImage(base64, "Batman Beyond", "", "#1", "", "", "Hilary J. Bader", "Mar 1, 1999", "", "Six Flags Giveaway Variant - An adaptation of Batman Beyond Season 1, Episode 1: Rebirth, Part One.", "f96a8afc-bf57-4d43-8fbc-043e4da0af57");
 //        WeaviatePresenter.uploadWeaviateImage("ComicVariant", testImage.getParentComic(), testImage, new WeaviateUploadCallback() {
 //            @Override
 //            public void onSuccess(String message) {
