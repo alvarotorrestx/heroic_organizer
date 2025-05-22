@@ -30,17 +30,21 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import com.example.heroicorganizer.R;
 import com.example.heroicorganizer.callback.WeaviateSearchImageCallback;
+import com.example.heroicorganizer.model.WeaviateSearchResult;
 import com.example.heroicorganizer.presenter.WeaviatePresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import com.example.heroicorganizer.utils.MarvelApiConfig;
+import com.example.heroicorganizer.utils.ViewStatus;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
@@ -66,6 +70,7 @@ public class ScanFragment extends Fragment {
     private ImageButton btnFlash;
     private ImageButton btnCapture;
     private ImageButton btnRetake;
+    private LinearLayout cameraControls;
 
     // CameraX Necessities
     private ImageCapture imageCapture;
@@ -97,6 +102,7 @@ public class ScanFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_camera, container, false);
 
         previewView = rootView.findViewById(R.id.previewView);
+        cameraControls = rootView.findViewById(R.id.cameraControls);
         btnFlash = rootView.findViewById(R.id.btnFlash);
         btnCapture = rootView.findViewById(R.id.btnCapture);
         btnRetake = rootView.findViewById(R.id.btnRetake);
@@ -292,6 +298,12 @@ public class ScanFragment extends Fragment {
     }
 
     private void scanImage(Uri uri) {
+        // Temporary loading message on scanning image
+        // TODO: Add a loading spinner
+        // TODO: If no image is detected, do not return an image from vector api
+        cameraControls.removeAllViews();
+        cameraControls.addView(ViewStatus.SetStatus(requireContext(), "Loading..."));
+
         try {
             Bitmap scannedImage = MediaStore.Images.Media.getBitmap(
                     requireContext().getContentResolver(), uri
@@ -300,12 +312,22 @@ public class ScanFragment extends Fragment {
             // Pass the scanned image to Weaviate
             WeaviatePresenter.searchByImage(scannedImage, new WeaviateSearchImageCallback() {
                 @Override
-                public void onSuccess(String title, String image) {
+                public void onSuccess(WeaviateSearchResult result) {
                     // Bundle response to send to ScanDetailFragment
                     Bundle bundle = new Bundle();
-                    bundle.putString("title", title);
-                    bundle.putString("coverImage", image);
-                    bundle.putString("photoURI", image);
+                    bundle.putString("title", result.getTitle());
+                    bundle.putString("image", result.getImage());
+                    bundle.putString("issueNumber", result.getIssueNumber());
+                    bundle.putString("publisher_names", result.getPublisherNames());
+                    bundle.putString("cover_artist", result.getCoverArtist());
+                    bundle.putString("author", result.getAuthor());
+                    bundle.putString("datePublished", result.getDatePublished());
+                    bundle.putString("upc", result.getUpc());
+                    bundle.putString("description", result.getDescription());
+                    bundle.putString("parentComicTitle", result.getParentComicTitle());
+                    bundle.putString("parentComicId", result.getParentComicId());
+                    bundle.putString("parentComicIssueNumber", result.getParentComicIssueNumber());
+                    bundle.putStringArrayList("comicVariants", (ArrayList<String>) result.getVariants());
 
                     // Navigate to ScanDetailFragment
                     requireActivity().runOnUiThread(() -> {

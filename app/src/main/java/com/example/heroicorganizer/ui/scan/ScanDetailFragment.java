@@ -43,27 +43,49 @@ public class ScanDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        TextView comicTitle = view.findViewById(R.id.coverComicName);
+        ImageView comicImage = view.findViewById(R.id.capturedImageView);
+        TextView comicIssue = view.findViewById(R.id.comicIssueNumber);
+        TextView comicPublishDate = view.findViewById(R.id.coverDate);
+        TextView comicPublishers = view.findViewById(R.id.comicPublishers);
+        TextView comicVariantId = view.findViewById(R.id.coverVariant);
+        TextView comicArtist = view.findViewById(R.id.coverArtistVariant);
+        TextView comicAuthor = view.findViewById(R.id.coverComicAuthor);
+        TextView comicUPC = view.findViewById(R.id.coverUPC);
+        TextView comicDescription = view.findViewById(R.id.comicDescription);
+
         // Pull in bundle from ScanFragment
         Bundle args = getArguments();
         if (args != null) {
             String title = args.getString("title");
-//            String photoUriString = args.getString("photoURI");
-            String base64Image = getArguments().getString("photoURI");
+            String image = getArguments().getString("image");
+            String issueNumber = getArguments().getString("issueNumber");
+            String publisher_names = getArguments().getString("publisher_names");
+            String cover_artist = getArguments().getString("cover_artist");
+            String author = getArguments().getString("author");
+            String datePublished = getArguments().getString("datePublished");
+            String upc = getArguments().getString("upc");
+            String description = getArguments().getString("description");
+            String parentComicTitle = getArguments().getString("parentComicTitle");
+            String parentComicId = getArguments().getString("parentComicId");
+            String parentComicIssueNumber = getArguments().getString("parentComicIssueNumber");
+            List<String> comicVariants = getArguments().getStringArrayList("comicVariants");
 
-//            TextView coverUPC = view.findViewById(R.id.coverUPC);
-            TextView coverUPC = view.findViewById(R.id.coverComicName);
-            coverUPC.setText(title);
+            // Set each view to the appropriate response
+            comicTitle.setText(title);
+            comicIssue.setText(issueNumber);
+            comicPublishDate.setText(datePublished);
+            comicPublishers.setText(publisher_names);
+            comicAuthor.setText(author);
+            comicArtist.setText(cover_artist);
+            comicUPC.setText(upc);
+            comicDescription.setText(description);
 
             // Show captured image
-            ImageView imageView = view.findViewById(R.id.capturedImageView);
-//            if (photoUriString != null) {
-//                Uri photoUri = Uri.parse(photoUriString);
-//                imageView.setImageURI(photoUri);
-//            }
-            if (base64Image != null) {
-                byte[] imageBytes = Base64.decode(base64Image, Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-                imageView.setImageBitmap(bitmap);
+            if (image != null) {
+                byte[] imageBytes = Base64.decode(image, Base64.DEFAULT);
+                Bitmap convertedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+                comicImage.setImageBitmap(convertedImage);
             }
 
         }

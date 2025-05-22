@@ -180,7 +180,7 @@ public class ComicDetailFragment extends Fragment {
                         String formattedDate = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
                                 .format(new Date());
                         comic.setTimestamp(formattedDate);
-                        RecentComicsData.addRecentComic(comic);
+                        RecentComicsData.addRecentComic(comic, requireContext());
 
                         // Redirect user to Library Folders page
                         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
