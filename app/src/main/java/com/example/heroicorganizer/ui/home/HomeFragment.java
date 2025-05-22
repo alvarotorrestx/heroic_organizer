@@ -137,7 +137,7 @@ public class HomeFragment extends Fragment {
 //        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.example2);
 //        String base64 = WeaviatePresenter.toBase64(bitmap);
 //
-//        WeaviateImage testImage = new WeaviateImage(base64, "Psylocke", "", "#8", "MG-#4", "Puppeteer Lee", "", "Jun/18/2025", "", "A Psylocke Comic.", "768eaecf-2f05-4bab-817f-28ef855716d5");
+//        WeaviateImage testImage = new WeaviateImage(base64, "Psylocke", "", "#8", "MG-#4", "Puppeteer Lee", "", "Jun/18/2025", "", "A Psylocke Comic.", "6e7e489f-6853-40e8-9c1c-40aac5684ce5");
 //        WeaviatePresenter.uploadWeaviateImage("ComicVariant", testImage.getParentComic(), testImage, new WeaviateUploadCallback() {
 //            @Override
 //            public void onSuccess(String message) {

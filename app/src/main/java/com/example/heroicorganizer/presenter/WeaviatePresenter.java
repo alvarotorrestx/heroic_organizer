@@ -57,8 +57,6 @@ public class WeaviatePresenter {
         body.put("class", classType);
         body.put("id", uuid);
 
-        // TODO: Find a way to automatically patch an update to parent Comic when a variant is added
-
         Map<String, Object> props = new HashMap<>();
         // Comic Props
         if (classType.equals("Comic")) {
@@ -112,6 +110,12 @@ public class WeaviatePresenter {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     Log.d("WeaviateUpload", "Image uploaded successfully with ID: " + uuid);
+
+                    // Creates a parent comic reference to the comic variant -> comic_variants
+                    if (classType.equals("ComicVariant")) {
+                        patchParentComicWithVariant(parentId, uuid);
+                    }
+
                     callback.onSuccess("Image uploaded successfully with ID: " + uuid);
                 } else {
                     Log.e("WeaviateUpload", "Upload failed: " + response.code() + " - " + response.message());
@@ -119,6 +123,42 @@ public class WeaviatePresenter {
                 }
 
                 // Helps avoid memory leaks
+                response.close();
+            }
+        });
+    }
+
+    private static void patchParentComicWithVariant(String parentId, String variantId) {
+        OkHttpClient client = new OkHttpClient();
+
+        Gson gson = new Gson();
+
+        Map<String, Object> patchBody = new HashMap<>();
+        patchBody.put("properties", Map.of("comic_variants", List.of(Map.of("beacon", "weaviate://localhost/ComicVariant/" + variantId))));
+
+        String json = gson.toJson(patchBody);
+
+        RequestBody requestBody = RequestBody.create(json, MediaType.parse("application/json"));
+        Request patchRequest = new Request.Builder()
+                .url("http://10.0.2.2:8080/v1/objects/Comic/" + parentId)
+                .patch(requestBody)
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+        client.newCall(patchRequest).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("WeaviatePatch", "Failed to patch parent comic: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Log.d("WeaviatePatch", "Parent comic patched with new variant.");
+                } else {
+                    Log.e("WeaviatePatch", "Patch failed: " + response.code() + " - " + response.message());
+                }
+
                 response.close();
             }
         });
