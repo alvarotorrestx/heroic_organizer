@@ -3,6 +3,13 @@
             xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/mobile_navigation"
             app:startDestination="@id/nav_home">
+    <action
+            android:id="@+id/fade_in_comic_view"
+            app:destination="@id/nav_library_comic_view"
+            app:enterAnim="@transition/fade_in"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@transition/fade_in"
+            app:popExitAnim="@anim/nav_default_exit_anim" />
 
     <fragment
             android:id="@+id/nav_home"
@@ -72,9 +79,11 @@
             android:name="com.example.heroicorganizer.ui.library.LibraryComicsFragment"
             android:label="Comics" />
 
+
     <fragment
             android:id="@+id/nav_library_comic_view"
             android:name="com.example.heroicorganizer.ui.comic.ViewComicFragment"
-            android:label="Comic Details" />
+            android:label="Comic Details"/>
+
 
 </navigation>

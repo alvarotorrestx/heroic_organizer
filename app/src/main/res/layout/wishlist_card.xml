@@ -27,7 +27,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintDimensionRatio="2:3" />
 
-        <!-- Info Container -->
+        <!-- Label -->
         <LinearLayout
                 android:id="@+id/comicInfoContainer"
                 android:layout_width="0dp"

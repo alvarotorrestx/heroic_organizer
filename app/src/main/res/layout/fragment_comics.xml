@@ -3,7 +3,7 @@
              android:id="@+id/library_comics_container"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="#2A2A2A" android:paddingTop="16dp">
+             android:background="#2A2A2A">
     <include
             layout="@layout/fragment_library_comics"/>
 
