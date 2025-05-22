@@ -187,9 +187,11 @@ public class WeaviatePresenter {
                         "      upc " +
                         "      description " +
                         "      parent_comic { " +
-                        "        title " +
-                        "        comic_id " +
-                        "        issue_number " +
+                        "        ... on Comic { " +
+                        "          title " +
+                        "          comic_id " +
+                        "          issue_number " +
+                        "        }" +
                         "      }" +
                         "    } " +
                         "  } " +
@@ -237,10 +239,14 @@ public class WeaviatePresenter {
                             variantResults.setDatePublished(match.getString("date_published"));
                             variantResults.setUpc(match.getString("upc"));
                             variantResults.setDescription(match.getString("description"));
-                            JSONObject parentComic = match.getJSONObject("parent_comic");
-                            variantResults.setParentComicTitle(parentComic.getString("parent_comic_title"));
-                            variantResults.setParentComicIssueNumber(parentComic.getString("parent_comic_issue_number"));
-                            variantResults.setParentComicId(parentComic.getString("parent_comic_id"));
+                            JSONArray parentComicArray = match.getJSONArray("parent_comic");
+                            if (parentComicArray.length() > 0) {
+                                JSONObject parentComic = parentComicArray.getJSONObject(0);
+                                variantResults.setParentComicTitle(parentComic.optString("title"));
+                                variantResults.setParentComicId(parentComic.optString("comic_id"));
+                                variantResults.setParentComicIssueNumber(parentComic.optString("issue_number"));
+                            }
+
 
                             callback.onSuccess(variantResults);
                         } else {
@@ -248,6 +254,7 @@ public class WeaviatePresenter {
                             searchImageByComic(convertedImage, callback);
                         }
                     } catch (JSONException e) {
+                        Log.e("WeaviateSearch", "Failed to parse JSON: " + e.getMessage());
                         callback.onFailure("Failed to parse JSON.");
                     }
                 } else {
