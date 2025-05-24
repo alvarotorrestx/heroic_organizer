@@ -1,11 +1,8 @@
 package com.example.heroicorganizer;
-import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.MenuItem;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
-import android.view.animation.Animation;
 import androidx.core.view.GravityCompat;
 import com.example.heroicorganizer.ui.wishlist.WishlistData;
 import com.example.heroicorganizer.ui.wishlist.WishlistItem;

@@ -5,7 +5,7 @@
               android:layout_height="match_parent"
               android:padding="16dp"
               android:orientation="vertical"
-              android:background="#2A2A2A">
+              android:background="#292929">
 
     <EditText
             android:id="@+id/folderName"
