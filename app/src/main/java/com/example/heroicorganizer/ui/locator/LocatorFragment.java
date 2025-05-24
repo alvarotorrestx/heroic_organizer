@@ -1,42 +1,43 @@
 package com.example.heroicorganizer.ui.locator;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.heroicorganizer.R;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class LocatorFragment extends Fragment implements OnMapReadyCallback {
 
-    private FusedLocationProviderClient fusedLocationClient;
     private MapView mapView;
     private GoogleMap googleMap;
-    private double userLatitude, userLongitude;
     private ArrayList<Store> allStores = new ArrayList<>();
+    private EditText zipCodeInput, radiusInput;
+    private Button searchButton;
+
+    private static final String API_KEY = "AIzaSyBhlhhCDvfyAT1t2g3Gzrv0hZJxl5mIboA"; // Replace securely
 
     public LocatorFragment() {}
 
@@ -44,123 +45,115 @@ public class LocatorFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_locator, container, false);
 
-        // Request location permissions if needed
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
-
-        // Initialize Google Maps
         mapView = view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
-        // Initialize location services
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        zipCodeInput = view.findViewById(R.id.zipCodeInput);
+        radiusInput = view.findViewById(R.id.radiusInput);
+        searchButton = view.findViewById(R.id.searchButton);
 
-        populateStores();
-        getUserLocation(view);
+        searchButton.setOnClickListener(v -> searchForStores());
 
         return view;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getUserLocation(getView());
-        } else {
-            Log.e("LocatorFragment", "Location permission denied.");
+    private void searchForStores() {
+        String zipCode = zipCodeInput.getText().toString();
+        String radius = radiusInput.getText().toString();
+
+        if (zipCode.isEmpty() || radius.isEmpty()) {
+            Toast.makeText(getContext(), "Please enter both ZIP code and radius.", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        getCoordinatesFromZip(zipCode, Integer.parseInt(radius));
     }
 
-    private void getUserLocation(View view) {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-                if (location != null) {
-                    userLatitude = location.getLatitude();
-                    userLongitude = location.getLongitude();
-                    findNearbyStores(view);
-                } else {
-                    Log.e("LocatorFragment", "Location not found—requesting update.");
-                    requestNewLocationData();
+    private void getCoordinatesFromZip(String zipCode, int radius) {
+        new Thread(() -> {
+            try {
+                String url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + zipCode + "&key=" + API_KEY;
+                HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+                connection.setRequestMethod("GET");
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder json = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    json.append(line);
                 }
-            }).addOnFailureListener(e -> Log.e("LocatorFragment", "Error getting location: " + e.getMessage()));
-        } else {
-            Log.e("LocatorFragment", "Location permission missing—requesting permission.");
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
-    }
 
-    private void requestNewLocationData() {
-        LocationRequest locationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(5000)
-                .setFastestInterval(2000)
-                .setNumUpdates(1);
+                JSONObject response = new JSONObject(json.toString());
+                JSONObject location = response.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
+                double latitude = location.getDouble("lat");
+                double longitude = location.getDouble("lng");
 
-        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, requireActivity().getMainLooper());
-    }
+                fetchNearbyStores(latitude, longitude, radius);
 
-    private final LocationCallback locationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            if (locationResult == null) return;
-            Location location = locationResult.getLastLocation();
-            userLatitude = location.getLatitude();
-            userLongitude = location.getLongitude();
-            findNearbyStores(getView());
-        }
-    };
-
-    private void populateStores() {
-        allStores.add(new Store("Heroic Superstore", "123 Main St, Atlanta, GA", 33.7490, -84.3880));
-        allStores.add(new Store("Guardian's Depot", "456 Elm St, Los Angeles, CA", 34.0522, -118.2437));
-        allStores.add(new Store("Avenger's Supplies", "789 Oak St, New York, NY", 40.7128, -74.0060));
-        allStores.add(new Store("Elite Gear Shop", "135 Maple Rd, Miami, FL", 25.7617, -80.1918));
-        allStores.add(new Store("Superhero HQ", "902 Broadway, San Francisco, CA", 37.7749, -122.4194));
-    }
-
-    private void findNearbyStores(View view) {
-        ArrayList<Store> nearbyStores = new ArrayList<>();
-        for (Store store : allStores) {
-            double distance = calculateDistance(userLatitude, userLongitude, store.getLatitude(), store.getLongitude());
-            Log.d("LocatorFragment", "Store: " + store.getName() + " | Distance: " + distance + " miles");
-            if (distance <= 50) { // Filter stores within 50 miles
-                nearbyStores.add(store);
+            } catch (Exception e) {
+                requireActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Error retrieving location. Check ZIP code.", Toast.LENGTH_SHORT).show());
             }
-        }
-        displayNearbyStores(view, nearbyStores);
+        }).start();
     }
 
-    private void displayNearbyStores(View view, ArrayList<Store> stores) {
-        ListView storeList = view.findViewById(R.id.storeList);
-        ArrayList<String> storeDetails = new ArrayList<>();
+    private void fetchNearbyStores(double latitude, double longitude, int radius) {
+        new Thread(() -> {
+            try {
+                String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
+                        "location=" + latitude + "," + longitude +
+                        "&radius=" + (radius * 1609) + // Convert miles to meters
+                        "&type=book_store&keyword=comic&key=" + API_KEY;
 
-        for (Store store : stores) {
+                HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+                connection.setRequestMethod("GET");
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder json = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    json.append(line);
+                }
+
+                JSONObject response = new JSONObject(json.toString());
+                JSONArray results = response.getJSONArray("results");
+
+                allStores.clear();
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject store = results.getJSONObject(i);
+                    String name = store.getString("name");
+                    String address = store.getString("vicinity");
+                    String placeId = store.optString("place_id", ""); // Ensure `placeId` is retrieved
+                    double storeLat = store.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+                    double storeLng = store.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
+
+                    allStores.add(new Store(name, address, placeId, storeLat, storeLng));
+                }
+
+                requireActivity().runOnUiThread(() -> {
+                    displayNearbyStores();
+                    populateMap();
+                });
+
+            } catch (Exception e) {
+                requireActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Error retrieving stores.", Toast.LENGTH_SHORT).show());
+            }
+        }).start();
+    }
+
+    private void displayNearbyStores() {
+        ListView storeList = requireView().findViewById(R.id.storeList);
+        ArrayList<String> storeDetails = new ArrayList<>();
+        for (Store store : allStores) {
             storeDetails.add(store.getName() + "\n" + store.getAddress());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, storeDetails);
-        storeList.setAdapter(adapter);
-
-        Log.d("LocatorFragment", "Displaying " + stores.size() + " stores in list.");
+        storeList.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, storeDetails));
     }
 
-    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        final int R = 6371; // Earth's radius in km
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c * 0.621371; // Convert km to miles
-    }
+    private void populateMap() {
+        if (googleMap == null) return;
 
-    @Override
-    public void onMapReady(GoogleMap map) {
-        googleMap = map;
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
         for (Store store : allStores) {
             LatLng storeLocation = new LatLng(store.getLatitude(), store.getLongitude());
             googleMap.addMarker(new MarkerOptions().position(storeLocation).title(store.getName()));
@@ -168,27 +161,8 @@ public class LocatorFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mapView.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
+    public void onMapReady(GoogleMap map) {
+        googleMap = map;
     }
 }
 

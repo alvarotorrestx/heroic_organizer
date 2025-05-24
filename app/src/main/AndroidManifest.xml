@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Features & Permissions -->
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -23,6 +24,7 @@
             android:theme="@style/Theme.HeroicOrganizer"
             tools:targetApi="31">
 
+        <!-- Launcher Activity -->
         <activity android:name=".ui.login.Onboarding" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -30,11 +32,12 @@
             </intent-filter>
         </activity>
 
+        <!-- Main Activities -->
         <activity android:name=".MainActivity"/>
-
         <activity android:name=".ui.SettingsActivity"/>
+        <activity android:name=".ui.locator.LocatorActivity"/>
 
-
+        <!-- File Provider for Secure Storage Access -->
         <provider
                 android:name="androidx.core.content.FileProvider"
                 android:authorities="com.example.heroicorganizer.fileprovider"
@@ -45,14 +48,17 @@
                     android:resource="@xml/file_paths"/>
         </provider>
 
-
+        <!-- Google Maps API Key -->
         <meta-data
                 android:name="com.google.android.geo.API_KEY"
                 android:value="AIzaSyBhlhhCDvfyAT1t2g3Gzrv0hZJxl5mIboA"/>
 
-
+        <!-- Google Places API Key -->
+        <meta-data
+                android:name="com.google.android.gms.maps.API_KEY"
+                android:value="AIzaSyBhlhhCDvfyAT1t2g3Gzrv0hZJxl5mIboA"/>
 
     </application>
 
-
 </manifest>
+
