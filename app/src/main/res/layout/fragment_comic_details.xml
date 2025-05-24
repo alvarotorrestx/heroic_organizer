@@ -3,14 +3,14 @@
             android:id="@+id/fragment_comic_details_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#2A2A2A"
+            android:background="#292929"
             android:fillViewport="true">
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="#2A2A2A">
+            android:background="#292929">
 
         <!-- Comic Cover -->
         <ImageView

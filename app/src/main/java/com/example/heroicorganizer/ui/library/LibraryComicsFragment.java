@@ -30,6 +30,7 @@ import com.example.heroicorganizer.presenter.LibraryComicPresenter;
 import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
 import com.example.heroicorganizer.ui.comic.ViewComicFragment;
+import com.example.heroicorganizer.utils.LoadingOverlayHelper;
 import com.example.heroicorganizer.utils.ModalBox;
 import com.example.heroicorganizer.utils.ViewStatus;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,6 +42,7 @@ public class LibraryComicsFragment extends Fragment {
 
     public LibraryComicsFragment() {
     }
+    private View loadingOverlay;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -157,7 +159,7 @@ public class LibraryComicsFragment extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
         // Shows loading message to user (ux)
-        comicsContainer.addView(ViewStatus.SetStatus(requireContext(), "Loading Comics..."));
+        loadingOverlay = LoadingOverlayHelper.showLoading(requireView());
 
         // To pass into the getComicsInFolder method
         String folderId = passedBundle.getString("folderId");
@@ -173,6 +175,7 @@ public class LibraryComicsFragment extends Fragment {
             public void onSuccessComics(List<LibraryComic> comics) {
                 // Removes Loading...
                 comicsContainer.removeAllViews();
+                LoadingOverlayHelper.hideLoading(requireView());
 
                 if (!comics.isEmpty()) {
                     for (LibraryComic comic : comics) {
@@ -234,7 +237,9 @@ public class LibraryComicsFragment extends Fragment {
             @Override
             public void onFailure(String errorMessage) {
                 // Removes Loading...
+
                 comicsContainer.removeAllViews();
+                LoadingOverlayHelper.hideLoading(requireView());
 
                 ToastMsg.show(requireContext(), errorMessage);
             }

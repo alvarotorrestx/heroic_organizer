@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:text="Yes, Delete"
             android:backgroundTint="#32D583"
-            android:textColor="#2A2A2A"
+            android:textColor="#292929"
             android:textStyle="bold"
             android:layout_marginBottom="3dp"/>
 
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:text="Oops, Cancel"
             android:backgroundTint="#F97066"
-            android:textColor="#2A2A2A"
+            android:textColor="#292929"
             android:textStyle="bold"
             android:layout_marginBottom="6dp"/>
 </LinearLayout>

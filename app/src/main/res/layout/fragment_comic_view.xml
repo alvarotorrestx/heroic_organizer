@@ -2,7 +2,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-android:background="#2A2A2A">
+android:background="#292929">
 
     <!-- Used for testing HIDDEN FOR NOW -->
     <ImageView
@@ -43,7 +43,7 @@ android:background="#2A2A2A">
             android:layout_weight="2"
             android:minHeight="547dp"
             android:scaleType="fitXY"
-            android:background="#2A2A2A"
+            android:background="#292929"
             android:contentDescription="Comic Cover"
             android:layout_marginBottom="0dp"
             android:adjustViewBounds="true"/>
