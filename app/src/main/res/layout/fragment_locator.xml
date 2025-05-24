@@ -1,15 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="#2A2A2A">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#2A2A2A"
+              android:padding="16dp">
 
+    <!-- Title -->
     <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Store Locator"
-            android:layout_gravity="center"
-            android:textSize="18sp"
-            android:textColor="#fff" />
+            android:textSize="20sp"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:paddingBottom="10dp"/>
 
-</FrameLayout>
+    <!-- ZIP Code Input -->
+    <EditText
+            android:id="@+id/zipCodeInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter ZIP Code"
+            android:textColor="#ffffff"
+            android:background="#424242"
+            android:padding="8dp"
+            android:inputType="number"/>
+
+    <!-- Search Radius Input -->
+    <EditText
+            android:id="@+id/radiusInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Search Radius (miles)"
+            android:textColor="#ffffff"
+            android:background="#424242"
+            android:padding="8dp"
+            android:inputType="number"/>
+
+    <!-- Search Button -->
+    <Button
+            android:id="@+id/searchButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Search Stores"
+            android:textColor="#ffffff"
+            android:backgroundTint="#3F51B5"
+            android:padding="8dp"
+            android:layout_marginTop="10dp"/>
+
+    <!-- Google Map -->
+    <com.google.android.gms.maps.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="10dp"/>
+
+    <!-- Store List -->
+    <ListView
+            android:id="@+id/storeList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp"
+            android:background="#1E1E1E"
+            android:textColor="#ffffff"
+            android:layout_marginTop="10dp"/>
+</LinearLayout>
+
