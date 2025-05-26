@@ -3,7 +3,7 @@
             android:id="@+id/fragment_home_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#2A2A2A"
+            android:background="#292929"
             android:padding="8dp">
 
     <LinearLayout

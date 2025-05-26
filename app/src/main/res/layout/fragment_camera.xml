@@ -4,7 +4,7 @@
               android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:gravity="center"
-              android:background="#2a2a2a"
+              android:background="#292929"
               android:padding="16dp">
 
     <androidx.camera.view.PreviewView
@@ -34,7 +34,7 @@
                 android:src="@drawable/ic_flash_auto"
                 android:scaleType="fitCenter"
                 android:padding="20dp"
-                app:tint="#2A2A2A"
+                app:tint="#292929"
                 android:contentDescription="Toggle Flash"/>
 
         <!-- Capture Button -->
@@ -47,7 +47,7 @@
                 android:src="@drawable/ic_camera"
                 android:scaleType="fitCenter"
                 android:padding="20dp"
-                app:tint="#2A2A2A"
+                app:tint="#292929"
                 android:contentDescription="Capture Image"/>
 
         <!-- Retake Image Button -->
@@ -59,7 +59,7 @@
                 android:src="@drawable/ic_refresh"
                 android:scaleType="fitCenter"
                 android:padding="20dp"
-                app:tint="#2A2A2A"
+                app:tint="#292929"
                 android:contentDescription="Retake Image"/>
 
     </LinearLayout>

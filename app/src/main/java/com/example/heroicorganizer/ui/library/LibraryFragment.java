@@ -18,6 +18,7 @@ import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
+import com.example.heroicorganizer.utils.LoadingOverlayHelper;
 import com.example.heroicorganizer.utils.ViewStatus;
 import com.google.firebase.auth.FirebaseAuth;
 import com.bumptech.glide.Glide;
@@ -25,9 +26,9 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 public class LibraryFragment extends Fragment {
-
     public LibraryFragment() {
     }
+    private View loadingOverlay;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,8 +86,8 @@ public class LibraryFragment extends Fragment {
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
-        // Shows loading message to user (ux)
-        folderContainer.addView(ViewStatus.SetStatus(requireContext(), "Loading Folders..."));
+        // Shows loading to user (ux)
+        loadingOverlay = LoadingOverlayHelper.showLoading(requireView());
 
         // Pull in all of user's folders
         LibraryFolderPresenter.getFolders(currentUser, new LibraryFolderCallback() {
@@ -99,6 +100,7 @@ public class LibraryFragment extends Fragment {
             public void onSuccessFolders(List<LibraryFolder> folders) {
                 // Removes Loading...
                 folderContainer.removeAllViews();
+                LoadingOverlayHelper.hideLoading(requireView());
 
                 if (!folders.isEmpty()) {
                     for (LibraryFolder folder : folders) {
@@ -155,6 +157,7 @@ public class LibraryFragment extends Fragment {
             public void onFailure(String errorMessage) {
                 // Removes Loading...
                 folderContainer.removeAllViews();
+                LoadingOverlayHelper.hideLoading(requireView());
 
                 ToastMsg.show(requireContext(), errorMessage);
             }

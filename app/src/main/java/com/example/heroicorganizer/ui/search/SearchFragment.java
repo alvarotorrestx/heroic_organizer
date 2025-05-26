@@ -20,6 +20,7 @@ import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.ComicVinePresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
 import com.example.heroicorganizer.utils.ComicVineConfig;
+import com.example.heroicorganizer.utils.LoadingOverlayHelper;
 import com.example.heroicorganizer.utils.ViewStatus;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
@@ -29,6 +30,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class SearchFragment extends Fragment {
+    private View loadingOverlay;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,7 +63,8 @@ public class SearchFragment extends Fragment {
 
                 // Shows "Loading... message to user (UX)
                 comicResultsContainer.removeAllViews();
-                comicResultsContainer.addView(ViewStatus.SetStatus(requireContext(), "Loading..."));
+                loadingOverlay = LoadingOverlayHelper.showLoading(requireView());
+
 
                 ComicVinePresenter.searchComics(requireContext(), query, new ComicVineCallback() {
                     @Override
@@ -69,6 +72,7 @@ public class SearchFragment extends Fragment {
                         requireActivity().runOnUiThread(() -> {
                             //Removes Loading...
                             comicResultsContainer.removeAllViews();
+                            LoadingOverlayHelper.hideLoading(requireView());
 
                             // TODO: Temporary limit on search result until we have a better design or pagination
                             int limit = Math.min(results.size(), 10);

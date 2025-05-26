@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="#2A2A2A">
+             android:background="#292929">
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/wishlistRecyclerView"
