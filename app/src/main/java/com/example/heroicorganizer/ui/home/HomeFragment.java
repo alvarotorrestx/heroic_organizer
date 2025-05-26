@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.heroicorganizer.R;
 import com.example.heroicorganizer.callback.MetronComicCallback;
+import com.example.heroicorganizer.callback.RecentComicsCallback;
 import com.example.heroicorganizer.callback.WeaviateUploadCallback;
 import com.example.heroicorganizer.config.FirebaseDB;
 import com.example.heroicorganizer.model.LibraryComic;
@@ -25,6 +26,7 @@ import com.example.heroicorganizer.model.MetronComic;
 import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.model.WeaviateImage;
 import com.example.heroicorganizer.presenter.MetronComicPresenter;
+import com.example.heroicorganizer.presenter.RecentComicsPresenter;
 import com.example.heroicorganizer.presenter.WeaviatePresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
 import com.example.heroicorganizer.ui.wishlist.WishlistAdapter;
@@ -44,8 +46,6 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView upcomingRecycler, recentRecycler;
     private Button viewMoreUpcomingBtn, viewMoreRecentBtn;
-
-    private List<LibraryComic> allRecentComics = new ArrayList<>();
     private boolean isRecentExpanded = false;
 
     private final String TAG = "HomeFragment";
@@ -70,6 +70,7 @@ public class HomeFragment extends Fragment {
         recentRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         FrameLayout upcomingContainer = view.findViewById(R.id.upcomingContainer);
+        FrameLayout recentContainer = view.findViewById(R.id.recentContainer);
 
         // Clear recycler and show loading for upcoming releases
         upcomingContainer.removeAllViews();
@@ -87,8 +88,7 @@ public class HomeFragment extends Fragment {
 
         // Hidden to show upcoming releases
         //        loadWishlistItems();
-        RecentComicsData.loadComicList(requireContext());
-        loadRecentLibraryItems();
+        loadRecentComics();
 
         MetronComicPresenter.apiCall(requireContext(), new MetronComicCallback() {
             @Override
@@ -116,8 +116,7 @@ public class HomeFragment extends Fragment {
         super.onResume();
         // Hidden to show upcoming releases
 //        loadWishlistItems();
-        RecentComicsData.loadComicList(requireContext());
-        loadRecentLibraryItems();
+        loadRecentComics();
     }
 
     private void loadWishlistItems() {
@@ -131,15 +130,23 @@ public class HomeFragment extends Fragment {
         upcomingRecycler.setAdapter(adapter);
     }
 
-    private void loadRecentLibraryItems() {
-        List<LibraryComic> recentItems = RecentComicsData.getComicList();
+    private void loadRecentComics() {
+        User currentUser = new User();
+        currentUser.setUid(FirebaseAuth.getInstance().getUid());
 
-        for (LibraryComic item : recentItems) {
-            Log.d("ComicItem", item.getTitle() + " " + item.getIssue());
-        }
+        RecentComicsPresenter.getRecentComics(currentUser, new RecentComicsCallback() {
 
-        RecentAdapter adapter = new RecentAdapter(recentItems, requireContext());
-        recentRecycler.setAdapter(adapter);
+            @Override
+            public void onSuccess(List<LibraryComic> comics) {
+                RecentAdapter adapter = new RecentAdapter(comics, requireContext());
+                recentRecycler.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                Log.e("RecentComics", errorMessage);
+            }
+        });
     }
 
     private void updateRecentDisplay() {
