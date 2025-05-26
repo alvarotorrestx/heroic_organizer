@@ -8,12 +8,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.example.heroicorganizer.BuildConfig;
 import com.example.heroicorganizer.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -37,7 +41,7 @@ public class LocatorFragment extends Fragment implements OnMapReadyCallback {
     private EditText zipCodeInput, radiusInput;
     private Button searchButton;
 
-    private static final String API_KEY = "AIzaSyBhlhhCDvfyAT1t2g3Gzrv0hZJxl5mIboA"; // Replace securely
+    private static final String API_KEY = BuildConfig.GOOGLE_API_KEY;
 
     public LocatorFragment() {}
 
@@ -52,6 +56,15 @@ public class LocatorFragment extends Fragment implements OnMapReadyCallback {
         zipCodeInput = view.findViewById(R.id.zipCodeInput);
         radiusInput = view.findViewById(R.id.radiusInput);
         searchButton = view.findViewById(R.id.searchButton);
+
+        // Clear input boxes when clicked
+        zipCodeInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) zipCodeInput.setText("");
+        });
+
+        radiusInput.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) radiusInput.setText("");
+        });
 
         searchButton.setOnClickListener(v -> searchForStores());
 
@@ -123,11 +136,15 @@ public class LocatorFragment extends Fragment implements OnMapReadyCallback {
                     JSONObject store = results.getJSONObject(i);
                     String name = store.getString("name");
                     String address = store.getString("vicinity");
-                    String placeId = store.optString("place_id", ""); // Ensure `placeId` is retrieved
+                    String placeId = store.optString("place_id", "");
+                    String phone = store.optString("formatted_phone_number", "N/A");
+                    String hours = store.optString("opening_hours", "N/A");
+                    String notableComics = "Popular Comics Here"; // Placeholder
+
                     double storeLat = store.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
                     double storeLng = store.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
 
-                    allStores.add(new Store(name, address, placeId, storeLat, storeLng));
+                    allStores.add(new Store(name, address, placeId, storeLat, storeLng, phone, hours, notableComics));
                 }
 
                 requireActivity().runOnUiThread(() -> {
@@ -144,11 +161,34 @@ public class LocatorFragment extends Fragment implements OnMapReadyCallback {
     private void displayNearbyStores() {
         ListView storeList = requireView().findViewById(R.id.storeList);
         ArrayList<String> storeDetails = new ArrayList<>();
+
         for (Store store : allStores) {
             storeDetails.add(store.getName() + "\n" + store.getAddress());
         }
 
-        storeList.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, storeDetails));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, storeDetails);
+        storeList.setAdapter(adapter);
+
+        storeList.setOnItemClickListener((parent, view, position, id) -> showStorePopup(allStores.get(position)));
+    }
+
+    private void showStorePopup(Store store) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = getLayoutInflater();
+        View popupView = inflater.inflate(R.layout.store_info_popup, null);
+        builder.setView(popupView);
+
+        ((TextView) popupView.findViewById(R.id.storeName)).setText(store.getName());
+        ((TextView) popupView.findViewById(R.id.storeAddress)).setText(store.getAddress());
+        ((TextView) popupView.findViewById(R.id.storePhone)).setText(store.getPhone());
+        ((TextView) popupView.findViewById(R.id.storeHours)).setText(store.getHours());
+        ((TextView) popupView.findViewById(R.id.storeComics)).setText(store.getNotableComics());
+
+        Button closeButton = popupView.findViewById(R.id.closePopup);
+        AlertDialog dialog = builder.create();
+        closeButton.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
     }
 
     private void populateMap() {
@@ -156,13 +196,17 @@ public class LocatorFragment extends Fragment implements OnMapReadyCallback {
 
         for (Store store : allStores) {
             LatLng storeLocation = new LatLng(store.getLatitude(), store.getLongitude());
-            googleMap.addMarker(new MarkerOptions().position(storeLocation).title(store.getName()));
+            googleMap.addMarker(new MarkerOptions().position(storeLocation).title(store.getName()).snippet(store.getAddress()));
         }
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
         googleMap = map;
+        googleMap.setOnMarkerClickListener(marker -> {
+            marker.showInfoWindow();
+            return true;
+        });
     }
 }
 

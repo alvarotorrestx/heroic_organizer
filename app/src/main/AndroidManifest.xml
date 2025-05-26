@@ -5,6 +5,7 @@
     <!-- Features & Permissions -->
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
                      android:maxSdkVersion="32"
@@ -35,7 +36,7 @@
         <!-- Main Activities -->
         <activity android:name=".MainActivity"/>
         <activity android:name=".ui.SettingsActivity"/>
-        <activity android:name=".ui.locator.LocatorActivity"/>
+        <activity android:name=".ui.locator.LocatorFragment"/>
 
         <!-- File Provider for Secure Storage Access -->
         <provider
@@ -51,12 +52,12 @@
         <!-- Google Maps API Key -->
         <meta-data
                 android:name="com.google.android.geo.API_KEY"
-                android:value="AIzaSyBhlhhCDvfyAT1t2g3Gzrv0hZJxl5mIboA"/>
+                android:value="AIzaSyDBtziPeoyJ8j1OGMsm_ShyccRcG9-qwUM"/>
 
         <!-- Google Places API Key -->
         <meta-data
                 android:name="com.google.android.gms.maps.API_KEY"
-                android:value="AIzaSyBhlhhCDvfyAT1t2g3Gzrv0hZJxl5mIboA"/>
+                android:value="AIzaSyDBtziPeoyJ8j1OGMsm_ShyccRcG9-qwUM"/>
 
     </application>
 
