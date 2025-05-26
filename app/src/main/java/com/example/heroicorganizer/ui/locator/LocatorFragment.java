@@ -57,15 +57,6 @@ public class LocatorFragment extends Fragment implements OnMapReadyCallback {
         radiusInput = view.findViewById(R.id.radiusInput);
         searchButton = view.findViewById(R.id.searchButton);
 
-        // Clear input boxes when clicked
-        zipCodeInput.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) zipCodeInput.setText("");
-        });
-
-        radiusInput.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) radiusInput.setText("");
-        });
-
         searchButton.setOnClickListener(v -> searchForStores());
 
         return view;
@@ -203,6 +194,15 @@ public class LocatorFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap map) {
         googleMap = map;
+
+        // Enable zoom controls and gestures
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setZoomGesturesEnabled(true);
+
+        // Default location and zoom level
+        LatLng defaultLocation = new LatLng(37.7749, -122.4194); // Example: San Francisco
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 12));
+
         googleMap.setOnMarkerClickListener(marker -> {
             marker.showInfoWindow();
             return true;
