@@ -174,6 +174,8 @@ public class ComicDetailFragment extends Fragment {
                         String formattedDate = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
                                 .format(new Date());
                         comic.setTimestamp(formattedDate);
+                        // For comic sorting on home page
+                        comic.setTimestampLong(System.currentTimeMillis());
 
                         // Save recent additions to Firebase user
                         RecentComicsPresenter.addRecentComic(currentUser, comic);

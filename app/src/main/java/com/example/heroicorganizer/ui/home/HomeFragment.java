@@ -144,10 +144,14 @@ public class HomeFragment extends Fragment {
             public void onSuccess(List<LibraryComic> comics) {
                 requireActivity().runOnUiThread(() -> {
                     recentContainer.removeAllViews();
-                    recentContainer.addView(recentRecycler);
 
-                    RecentAdapter adapter = new RecentAdapter(comics, requireContext());
-                    recentRecycler.setAdapter(adapter);
+                    if (comics.isEmpty()) {
+                        recentContainer.addView(ViewStatus.SetStatus(requireContext(), "No recently saved comics."));
+                    } else {
+                        recentContainer.addView(recentRecycler);
+                        RecentAdapter adapter = new RecentAdapter(comics, requireContext());
+                        recentRecycler.setAdapter(adapter);
+                    }
                 });
             }
 

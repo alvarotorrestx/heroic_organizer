@@ -5,6 +5,7 @@ import com.example.heroicorganizer.callback.RecentComicsCallback;
 import com.example.heroicorganizer.config.FirebaseDB;
 import com.example.heroicorganizer.model.LibraryComic;
 import com.example.heroicorganizer.model.User;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class RecentComicsPresenter {
                 .collection("users")
                 .document(Objects.requireNonNull(user.getUid()))
                 .collection("recent_comics")
+                .orderBy("timestampLong", Query.Direction.DESCENDING)
+                .limit(10)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
