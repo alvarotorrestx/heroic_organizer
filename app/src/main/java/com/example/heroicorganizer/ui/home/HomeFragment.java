@@ -47,6 +47,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView upcomingRecycler, recentRecycler;
     private Button viewMoreUpcomingBtn, viewMoreRecentBtn;
     private boolean isRecentExpanded = false;
+    private FrameLayout recentContainer;
 
     private final String TAG = "HomeFragment";
 
@@ -70,7 +71,7 @@ public class HomeFragment extends Fragment {
         recentRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         FrameLayout upcomingContainer = view.findViewById(R.id.upcomingContainer);
-        FrameLayout recentContainer = view.findViewById(R.id.recentContainer);
+        recentContainer = view.findViewById(R.id.recentContainer);
 
         // Clear recycler and show loading for upcoming releases
         upcomingContainer.removeAllViews();
@@ -134,17 +135,29 @@ public class HomeFragment extends Fragment {
         User currentUser = new User();
         currentUser.setUid(FirebaseAuth.getInstance().getUid());
 
+        recentContainer.removeAllViews();
+        recentContainer.addView(ViewStatus.SetStatus(requireContext(), "Loading..."));
+
         RecentComicsPresenter.getRecentComics(currentUser, new RecentComicsCallback() {
 
             @Override
             public void onSuccess(List<LibraryComic> comics) {
-                RecentAdapter adapter = new RecentAdapter(comics, requireContext());
-                recentRecycler.setAdapter(adapter);
+                requireActivity().runOnUiThread(() -> {
+                    recentContainer.removeAllViews();
+                    recentContainer.addView(recentRecycler);
+
+                    RecentAdapter adapter = new RecentAdapter(comics, requireContext());
+                    recentRecycler.setAdapter(adapter);
+                });
             }
 
             @Override
             public void onFailure(String errorMessage) {
-                Log.e("RecentComics", errorMessage);
+                requireActivity().runOnUiThread(() -> {
+                    recentContainer.removeAllViews();
+                    recentContainer.addView(ViewStatus.SetStatus(requireContext(), "Failed to load recent comics."));
+                    Log.e("RecentComics", errorMessage);
+                });
             }
         });
     }
