@@ -362,16 +362,6 @@ public class Onboarding extends AppCompatActivity {
 
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-        ToastMsg.show(getApplicationContext(), welcome);
-    }
-
-    private void showLoginFailed(@StringRes Integer errorString) {
-
-    }
-
     private void addResetOnType(EditText editText) {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
