@@ -3,6 +3,7 @@ package com.example.heroicorganizer.ui.login;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableContainer;
 import android.graphics.drawable.shapes.Shape;
+import android.util.Log;
 import android.util.Patterns;
 import android.os.Bundle;
 import androidx.annotation.StringRes;
@@ -19,6 +20,7 @@ import com.example.heroicorganizer.MainActivity;
 import com.example.heroicorganizer.R;
 import com.example.heroicorganizer.callback.LoginCallback;
 import com.example.heroicorganizer.callback.RegisterCallback;
+import com.example.heroicorganizer.config.FirebaseDB;
 import com.example.heroicorganizer.databinding.ActivityOnboardingBinding;
 import android.app.DatePickerDialog;
 import com.example.heroicorganizer.model.User;
@@ -29,6 +31,7 @@ import java.util.Calendar;
 
 import com.example.heroicorganizer.ui.ToastMsg;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 
 
 public class Onboarding extends AppCompatActivity {
@@ -319,11 +322,23 @@ public class Onboarding extends AppCompatActivity {
             }
         });
 
-        forgotBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ToastMsg.show(Onboarding.this, "TODO: Add forgot password form LOL");
+        forgotBtn.setOnClickListener(v -> {
+            String email = usernameEditText.getText().toString().trim();
+
+            if (email.isEmpty()) {
+                ToastMsg.show(Onboarding.this, "Please enter your email.");
+                return;
             }
+
+            FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            ToastMsg.show(Onboarding.this, "Check your inbox for a reset link!");
+                        } else {
+                            ToastMsg.show(Onboarding.this, "Error sending reset link. Please try again.");
+                            Log.e("ForgotPassword", "Error sending reset link: " + task.getException().getMessage());
+                        }
+                    });
         });
 
 
@@ -365,7 +380,8 @@ public class Onboarding extends AppCompatActivity {
     private void addResetOnType(EditText editText) {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -373,7 +389,8 @@ public class Onboarding extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
     }
 
