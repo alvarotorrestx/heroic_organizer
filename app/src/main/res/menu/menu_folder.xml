@@ -1,10 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/findComic"
-          android:title="Search"
+    <item android:id="@+id/sortComics"
+          android:title="Sort Comics"
           app:showAsAction="always"
-          android:icon="@android:drawable/ic_menu_search"/>
+          android:icon="@android:drawable/ic_menu_sort_by_size"/>
 
     <item android:id="@+id/updateFolder"
           android:title="Update Folder"

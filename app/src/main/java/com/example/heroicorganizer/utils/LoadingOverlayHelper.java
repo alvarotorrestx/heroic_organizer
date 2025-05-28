@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.heroicorganizer.R;
 
 public class LoadingOverlayHelper {
@@ -20,6 +21,7 @@ public class LoadingOverlayHelper {
         Glide.with(rootView.getContext())
                 .asGif()
                 .load(R.drawable.loading_animation)
+                .transform(new RoundedCorners(30))
                 .skipMemoryCache(true)
                 .into(gifView);
 

@@ -5,6 +5,8 @@ import android.graphics.drawable.DrawableContainer;
 import android.graphics.drawable.shapes.Shape;
 import android.util.Patterns;
 import android.os.Bundle;
+import android.widget.LinearLayout;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
@@ -15,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.content.Intent;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.heroicorganizer.MainActivity;
 import com.example.heroicorganizer.R;
 import com.example.heroicorganizer.callback.LoginCallback;
@@ -70,8 +73,8 @@ public class Onboarding extends AppCompatActivity {
         final EditText createPasswordEditText = findViewById(R.id.createPassword);
         final EditText confirmPasswordEditText = findViewById(R.id.confirmPassword);
         final Button backBtn = findViewById(R.id.back);
-
         final Button forgotBtn = findViewById(R.id.ForgotPassword);
+        View darkOverlay = findViewById(R.id.dark_overlay);
 
         // Helper to undo red invalidations when user starts typing again
         // Login Fields
@@ -106,6 +109,8 @@ public class Onboarding extends AppCompatActivity {
                     registerBtn.animate().alpha(1).setDuration(1500);
                     backBtn.setVisibility(View.GONE);
                     forgotBtn.setVisibility(View.GONE);
+                    darkOverlay.animate().alpha(0f).setDuration(1500)
+                            .withEndAction(() -> darkOverlay.setVisibility(View.GONE)).start();
                 }
             }
         });
@@ -301,6 +306,8 @@ public class Onboarding extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                darkOverlay.setVisibility(View.VISIBLE);
+                darkOverlay.animate().alpha(0.6f).setDuration(1500);
                 loginForm.setAlpha(0);
                 loginForm.setVisibility(View.VISIBLE);
                 loginForm.animate().alpha(1).setDuration(1500);
@@ -324,6 +331,8 @@ public class Onboarding extends AppCompatActivity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                darkOverlay.setVisibility(View.VISIBLE);
+                darkOverlay.animate().alpha(0.6f).setDuration(1500);
                 loginForm.setVisibility(View.GONE);
                 registerForm.setAlpha(0);
                 registerForm.setVisibility(View.VISIBLE);

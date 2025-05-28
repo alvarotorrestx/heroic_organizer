@@ -28,11 +28,13 @@ import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LibraryComicPresenter;
 import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
+import com.example.heroicorganizer.ui.SortingFragment;
 import com.example.heroicorganizer.ui.ToastMsg;
 import com.example.heroicorganizer.ui.comic.ViewComicFragment;
 import com.example.heroicorganizer.utils.LoadingOverlayHelper;
 import com.example.heroicorganizer.utils.ModalBox;
 import com.example.heroicorganizer.utils.ViewStatus;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import kotlinx.coroutines.Delay;
 
@@ -127,6 +129,14 @@ public class LibraryComicsFragment extends Fragment {
                             })
                     .show();
 
+            return true;
+
+        } else if (item.getItemId() == R.id.sortComics) {
+            FloatingActionButton dummyFab = requireView().findViewById(R.id.dummy_fab);
+
+            SortingFragment dialogFrag = SortingFragment.newInstance();
+            dialogFrag.setParentFab(dummyFab);
+            dialogFrag.show(getParentFragmentManager(), dialogFrag.getTag());
             return true;
         }
 
