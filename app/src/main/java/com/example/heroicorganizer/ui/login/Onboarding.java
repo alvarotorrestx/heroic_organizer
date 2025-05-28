@@ -95,9 +95,15 @@ public class Onboarding extends AppCompatActivity {
                     loginForm.setVisibility(View.GONE);
                     submitRegisterBtn.setVisibility(View.GONE);
                     submitLoginBtn.setVisibility(View.GONE);
+                    appTitle.setAlpha(0);
                     appTitle.setVisibility(View.VISIBLE);
+                    appTitle.animate().alpha(1).setDuration(1500);
+                    loginBtn.setAlpha(0);
                     loginBtn.setVisibility(View.VISIBLE);
+                    loginBtn.animate().alpha(1).setDuration(1500);
+                    registerBtn.setAlpha(0);
                     registerBtn.setVisibility(View.VISIBLE);
+                    registerBtn.animate().alpha(1).setDuration(1500);
                     backBtn.setVisibility(View.GONE);
                     forgotBtn.setVisibility(View.GONE);
                 }
@@ -295,14 +301,23 @@ public class Onboarding extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loginForm.setAlpha(0);
                 loginForm.setVisibility(View.VISIBLE);
+                loginForm.animate().alpha(1).setDuration(1500);
+                submitLoginBtn.setAlpha(0);
                 submitLoginBtn.setVisibility(View.VISIBLE);
+                submitLoginBtn.animate().alpha(1).setDuration(1500);
                 loginBtn.setVisibility(View.GONE);
                 registerForm.setVisibility(View.GONE);
                 appTitle.setVisibility(View.GONE);
                 registerBtn.setVisibility(View.GONE);
+                backBtn.setAlpha(0);
                 backBtn.setVisibility(View.VISIBLE);
+                backBtn.animate().alpha(1).setDuration(1500);
+                forgotBtn.setAlpha(0);
                 forgotBtn.setVisibility(View.VISIBLE);
+                forgotBtn.animate().alpha(1).setDuration(1500);
+
             }
         });
 
@@ -310,12 +325,18 @@ public class Onboarding extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loginForm.setVisibility(View.GONE);
+                registerForm.setAlpha(0);
                 registerForm.setVisibility(View.VISIBLE);
+                registerForm.animate().alpha(1).setDuration(1500);
+                submitRegisterBtn.setAlpha(0);
                 submitRegisterBtn.setVisibility(View.VISIBLE);
+                submitRegisterBtn.animate().alpha(1).setDuration(1500);
                 appTitle.setVisibility(View.GONE);
                 loginBtn.setVisibility(View.GONE);
                 registerBtn.setVisibility(View.GONE);
+                backBtn.setAlpha(0);
                 backBtn.setVisibility(View.VISIBLE);
+                backBtn.animate().alpha(1).setDuration(1500);
             }
         });
 

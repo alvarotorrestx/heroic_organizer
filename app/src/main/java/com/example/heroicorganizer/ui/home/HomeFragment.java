@@ -104,8 +104,10 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(String errorMessage) {
+                requireActivity().runOnUiThread(() ->{
                 upcomingContainer.removeAllViews();
                 upcomingContainer.addView(ViewStatus.SetStatus(requireContext(), "Failed to load upcoming releases."));
+                });
             }
         });
 

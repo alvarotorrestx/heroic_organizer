@@ -69,7 +69,7 @@ public void onCreate(@Nullable Bundle savedInstanceState) {
 
         ///
         MaskedLinearLayout comicInfoTab = view.findViewById(R.id.comicInfoTab);
-        Drawable bg = ContextCompat.getDrawable(requireContext(), R.drawable.info_tab_bg);
+        Drawable bg = ContextCompat.getDrawable(requireContext(), R.drawable.info_tabline_bg);
         try {
             comicInfoTab.setMaskedBackground(bg);
         } catch (Exception e) {
