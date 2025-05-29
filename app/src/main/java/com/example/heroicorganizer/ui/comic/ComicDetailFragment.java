@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import com.bumptech.glide.Glide;
 import com.example.heroicorganizer.R;
@@ -25,14 +25,15 @@ import com.example.heroicorganizer.model.LibraryFolder;
 import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LibraryComicPresenter;
 import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
+import com.example.heroicorganizer.presenter.RecentComicsPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
+
 import com.example.heroicorganizer.ui.custom.MaskedLinearLayout;
 import com.example.heroicorganizer.ui.home.RecentComicsData;
 import com.example.heroicorganizer.ui.library.LibraryFragment;
 import com.example.heroicorganizer.ui.search.SearchFragment;
+
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,6 +71,7 @@ public class ComicDetailFragment extends Fragment {
         final EditText comicDescription = view.findViewById(R.id.comicDescription);
         final EditText comicPublishers = view.findViewById(R.id.comicPublishers);
         final EditText comicIssueNumber = view.findViewById(R.id.comicIssueNumber);
+        final EditText comicTeams = view.findViewById(R.id.comicTeams);
         final Spinner folderSpinner = view.findViewById(R.id.folderSpinner);
         final Button addToLibrary = view.findViewById(R.id.addToLibrary);
 
@@ -86,6 +88,13 @@ public class ComicDetailFragment extends Fragment {
             comicDescription.setText(cleanedDescription);
             comicPublishers.setText(passedBundle.getString("publishers"));
             comicIssueNumber.setText(passedBundle.getString("issueNumber"));
+            ArrayList<String> teamList = passedBundle.getStringArrayList("teams");
+            if (teamList != null && !teamList.isEmpty()) {
+                comicTeams.setText(TextUtils.join(", ", teamList));
+            } else {
+                comicTeams.setText("No team affiliations found.");
+            }
+
 
             Glide.with(requireContext())
                     .load(passedBundle.getString("image"))
@@ -188,12 +197,15 @@ public class ComicDetailFragment extends Fragment {
                     public void onSuccess(String message) {
                         ToastMsg.show(requireContext(), "Comic successfully added to the " + folderName + " folder!");
 
-                        // Temporary static list of adding comics to home page
-                        // TODO: Remove after Firebase additions or scanning function works
+                        // Get current date
                         String formattedDate = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
                                 .format(new Date());
                         comic.setTimestamp(formattedDate);
-                        RecentComicsData.addRecentComic(comic, requireContext());
+                        // For comic sorting on home page
+                        comic.setTimestampLong(System.currentTimeMillis());
+
+                        // Save recent additions to Firebase user
+                        RecentComicsPresenter.addRecentComic(currentUser, comic);
 
                         // Redirect user to Library Folders page
                         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);

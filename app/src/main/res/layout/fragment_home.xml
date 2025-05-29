@@ -58,11 +58,19 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp" android:layout_gravity="center"/>
 
+        <!-- Added to work with Loading... status -->
+        <FrameLayout
+                android:id="@+id/recentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_recent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"/>
+
+        </FrameLayout>
 
         <android.widget.Button
                 android:id="@+id/btn_view_more_recent"

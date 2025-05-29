@@ -1,5 +1,8 @@
 package com.example.heroicorganizer.model;
 
+import kotlin.collections.EmptyList;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ComicVine {
@@ -13,6 +16,8 @@ public class ComicVine {
         public String description;
         public Publisher publisher;
         public FirstAppeared first_appeared_in_issue;
+        public String resource_type;
+        public String api_detail_url;
 
         public ComicVineDisplay toDisplay() {
             return new ComicVineDisplay(
@@ -22,7 +27,8 @@ public class ComicVine {
                     description != null ? description : "",
                     image != null ? image.original_url : "",
                     publisher != null ? publisher.name : "Unknown",
-                    first_appeared_in_issue != null ? first_appeared_in_issue.issue_number : "###"
+                    first_appeared_in_issue != null ? first_appeared_in_issue.issue_number : "###",
+                    new ArrayList<>()
             );
         }
     }

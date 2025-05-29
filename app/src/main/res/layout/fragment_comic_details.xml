@@ -154,6 +154,18 @@
                     android:scrollbars="vertical"
                     android:text="Comic Description"/>
 
+            <!-- Character Teams -->
+            <EditText
+                    android:id="@+id/comicTeams"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="150dp"
+                    android:background="@drawable/field_bg"
+                    android:padding="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:scrollbars="vertical"
+                    android:text="Character Teams" />
+
             <EditText
                     android:id="@+id/comicDeck"
                     android:layout_width="match_parent"

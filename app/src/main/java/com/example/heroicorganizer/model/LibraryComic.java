@@ -28,6 +28,8 @@ public class LibraryComic {
     private String condition;
     private int quantity;
     private String timestamp;
+    private long timestampLong;
+
     public LibraryComic() {
     }
 
@@ -190,6 +192,14 @@ public class LibraryComic {
         return quantity;
     }
 
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public long getTimestampLong() {
+        return timestampLong;
+    }
+
     // Setters
     public void setId(String id) {
         this.id = id;
@@ -275,13 +285,14 @@ public class LibraryComic {
         this.quantity = quantity;
     }
 
-    public String getTimestamp() {
-        return timestamp;
-    }
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
+
+
+    public void setTimestampLong(long timestampLong) {
+        this.timestampLong = timestampLong;
 
     private String author;
     private String coverArtist;
