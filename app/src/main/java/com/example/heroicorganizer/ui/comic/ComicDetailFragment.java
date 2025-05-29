@@ -3,6 +3,7 @@ package com.example.heroicorganizer.ui.comic;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,7 @@ public class ComicDetailFragment extends Fragment {
         final EditText comicDescription = view.findViewById(R.id.comicDescription);
         final EditText comicPublishers = view.findViewById(R.id.comicPublishers);
         final EditText comicIssueNumber = view.findViewById(R.id.comicIssueNumber);
+        final EditText comicTeams = view.findViewById(R.id.comicTeams);
         final Spinner folderSpinner = view.findViewById(R.id.folderSpinner);
         final Button addToLibrary = view.findViewById(R.id.addToLibrary);
 
@@ -68,6 +70,13 @@ public class ComicDetailFragment extends Fragment {
             comicDescription.setText(cleanedDescription);
             comicPublishers.setText(passedBundle.getString("publishers"));
             comicIssueNumber.setText(passedBundle.getString("issueNumber"));
+            ArrayList<String> teamList = passedBundle.getStringArrayList("teams");
+            if (teamList != null && !teamList.isEmpty()) {
+                comicTeams.setText(TextUtils.join(", ", teamList));
+            } else {
+                comicTeams.setText("No team affiliations found.");
+            }
+
 
             Glide.with(requireContext())
                     .load(passedBundle.getString("image"))

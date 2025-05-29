@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchFragment extends Fragment {
@@ -75,7 +76,7 @@ public class SearchFragment extends Fragment {
                             LoadingOverlayHelper.hideLoading(requireView());
 
                             // TODO: Temporary limit on search result until we have a better design or pagination
-                            int limit = Math.min(results.size(), 10);
+                            int limit = Math.min(results.size(), 25);
                             for (int i = 0; i < limit; i++) {
                                 ComicVineDisplay comic = results.get(i);
 
@@ -103,6 +104,7 @@ public class SearchFragment extends Fragment {
                                     bundle.putString("image", comic.imageUrl);
                                     bundle.putString("publishers", comic.publisher);
                                     bundle.putString("issueNumber", comic.issueNumber);
+                                    bundle.putStringArrayList("teams", (ArrayList<String>) comic.teams);
 
                                     // navigate to sub-level fragment logic
                                     NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
