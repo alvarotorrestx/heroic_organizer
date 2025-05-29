@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <com.allattentionhere.fabulousfilter.AAH_FilterView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="24dp"
+              android:background="@drawable/dialog_bg"
+android:scaleX="1.09" android:scaleY="1.09">
+
+    <android.widget.Button
+            android:id="@+id/btn_sort_title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:text="Sort by Title" android:textColor="@color/white"
+            android:background="@drawable/btn_sm_bg"/>
 
-        <RelativeLayout
-                android:id="@+id/rl_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/h_o_bgimage"
-                android:visibility="invisible"
-                tools:ignore="MissingPrefix"
-                tools:visibility="visible">
+    <android.widget.Button
+            android:id="@+id/btn_sort_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sort by Author" android:textColor="@color/white"
+            android:background="@drawable/btn_sm_bg"/>
 
-            <LinearLayout
-                    android:id="@+id/ll_buttons"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="@drawable/toast_bg"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-            </LinearLayout>
+    <android.widget.Button
+            android:id="@+id/btn_sort_cover"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sort by Cover Artist" android:textColor="@color/white"
+            android:background="@drawable/btn_sm_bg"/>
 
-        </RelativeLayout>
-
-    </com.allattentionhere.fabulousfilter.AAH_FilterView>
+    <android.widget.Button
+            android:id="@+id/btn_sort_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sort by Date Published" android:textColor="@color/white"
+            android:background="@drawable/btn_sm_bg"/>
+</LinearLayout>

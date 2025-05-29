@@ -11,7 +11,13 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:context=".ui.login.Onboarding" android:background="@drawable/h_o_bgimage">
-
+    <View
+            android:id="@+id/dark_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#000000"
+            android:visibility="gone"
+            android:alpha="0"/>
 
     <android.widget.Button
             android:id="@+id/back"
@@ -26,8 +32,8 @@
             android:layout_marginStart="24dp"
             android:background="@drawable/btn_bg"
             android:textColor="@color/white" android:scaleX="1.25" android:scaleY="1.25"/>
-<!--            android:backgroundTint="#4C0945" android:textColor="@color/white" app:strokeColor="@color/white"-->
-<!--            app:strokeWidth="2.5sp"-->
+    <!--            android:backgroundTint="#4C0945" android:textColor="@color/white" app:strokeColor="@color/white"-->
+    <!--            app:strokeWidth="2.5sp"-->
 
     <LinearLayout
             android:id="@+id/loginForm"

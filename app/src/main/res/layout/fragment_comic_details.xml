@@ -26,42 +26,41 @@
                 android:adjustViewBounds="true"/>
 
         <!-- Tab -->
-        <LinearLayout
+        <com.example.heroicorganizer.ui.custom.MaskedLinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/info_tabline_bg"
-                android:padding="16dp">
+                android:padding="16dp" android:id="@+id/comicDetailTab">
             <!-- Issue Number & Tittle -->
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
                           android:orientation="horizontal"
                           android:layout_marginTop="32dp" android:layout_marginBottom="12dp">
-            <EditText
-                    android:id="@+id/comicIssueNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="###"
-                    android:textColor="@color/white"
-                    android:minHeight="48dp"
-                    android:background="@drawable/field_bg"
-                    android:padding="12dp"
-                    android:layout_marginRight="12dp"
-            />
-            <EditText
-                    android:id="@+id/comicTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Title"
-                    android:textColor="@color/white"
-                    android:minHeight="48dp"
-                    android:background="@drawable/field_bg"
-                    android:padding="12dp"
-            />
+                <EditText
+                        android:id="@+id/comicIssueNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="###"
+                        android:textColor="@color/white"
+                        android:minHeight="48dp"
+                        android:background="@drawable/field_bg"
+                        android:padding="12dp"
+                        android:layout_marginRight="12dp"
+                />
+                <EditText
+                        android:id="@+id/comicTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Title"
+                        android:textColor="@color/white"
+                        android:minHeight="48dp"
+                        android:background="@drawable/field_bg"
+                        android:padding="12dp"
+                />
             </LinearLayout>
 
             <!-- Publication Date & Publisher -->
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
-                          android:orientation="horizontal" >
+                          android:orientation="horizontal">
                 <!-- Publication Date -->
                 <EditText
                         android:id="@+id/coverDate"
@@ -153,7 +152,7 @@
                     android:padding="12dp"
                     android:layout_marginBottom="12dp"
                     android:scrollbars="vertical"
-                    android:text="Comic Description" />
+                    android:text="Comic Description"/>
 
             <EditText
                     android:id="@+id/comicDeck"
@@ -168,8 +167,8 @@
                     android:scrollbars="vertical" android:visibility="gone"/>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Folder:" android:textColor="@color/white" android:paddingTop="6dp"
-            android:textStyle="bold" android:textSize="16dp"/>
+                      android:text="Folder:" android:textColor="@color/white" android:paddingTop="6dp"
+                      android:textStyle="bold" android:textSize="16dp"/>
 
             <Spinner
                     android:id="@+id/folderSpinner"
@@ -190,7 +189,7 @@
                     android:backgroundTint="#32D583"
                     android:textColor="#2A2A2A"
                     android:textStyle="bold"
-                    android:layout_marginBottom="12dp" />
-        </LinearLayout>
+                    android:layout_marginBottom="12dp"/>
+        </com.example.heroicorganizer.ui.custom.MaskedLinearLayout>
     </LinearLayout>
 </ScrollView>

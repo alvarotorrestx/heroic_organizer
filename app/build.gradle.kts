@@ -63,8 +63,8 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
-    implementation("androidx.navigation:navigation-fragment:2.6.0")
-    implementation("androidx.navigation:navigation-ui:2.6.0")
+    implementation("androidx.navigation:navigation-fragment:2.7.7")
+    implementation("androidx.navigation:navigation-ui:2.7.7")
     implementation("androidx.annotation:annotation:1.6.0")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -75,5 +75,4 @@ dependencies {
 
     implementation("com.google.mlkit:barcode-scanning:17.3.0")
 
-    implementation("io.github.krupen:fabulousfilter:0.0.6")
 }
