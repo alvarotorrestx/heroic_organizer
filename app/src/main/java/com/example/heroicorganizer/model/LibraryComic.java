@@ -290,7 +290,23 @@ public class LibraryComic {
         this.timestamp = timestamp;
     }
 
+
     public void setTimestampLong(long timestampLong) {
         this.timestampLong = timestampLong;
+
+    private String author;
+    private String coverArtist;
+    private String datePublished;
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getCoverArtist() {
+        return coverArtist;
+    }
+
+    public String getPublishedDate() {
+        return datePublished;
     }
 }

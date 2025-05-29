@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.heroicorganizer.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class WishlistFragment extends Fragment {
@@ -30,6 +29,21 @@ public class WishlistFragment extends Fragment {
 
         WishlistAdapter adapter = new WishlistAdapter(itemList);
         recyclerView.setAdapter(adapter);
+
+//        Button btnFilter = rootView.findViewById(R.id.sortComics;
+//
+//        // Sets a dummy fab floating button to prevent crash
+//        // Can be adapted
+//        FloatingActionButton dummyFab = rootView.findViewById(R.id.dummy_fab);
+//
+//        btnFilter.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                SortingFragment dialogFrag = SortingFragment.newInstance();
+//                dialogFrag.setParentFab(dummyFab);
+//                dialogFrag.show(getParentFragmentManager(), dialogFrag.getTag());
+//            }
+//        });
 
         return rootView;
     }

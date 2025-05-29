@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
+import com.example.heroicorganizer.utils.LoadingOverlayHelper;
 import com.example.heroicorganizer.utils.MarvelApiConfig;
 import com.example.heroicorganizer.utils.ViewStatus;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -75,6 +76,7 @@ public class ScanFragment extends Fragment {
     // CameraX Necessities
     private ImageCapture imageCapture;
     private Activity view;
+    private View loadingOverlay;
 
     public ScanFragment() {
     }
@@ -299,7 +301,7 @@ public class ScanFragment extends Fragment {
 
     private void scanImage(Uri uri) {
         // Temporary loading message on scanning image
-        // TODO: Add a loading spinner
+        loadingOverlay = LoadingOverlayHelper.showLoading(requireView());
         // TODO: If no image is detected, do not return an image from vector api
         cameraControls.removeAllViews();
         cameraControls.addView(ViewStatus.SetStatus(requireContext(), "Loading..."));
@@ -329,6 +331,7 @@ public class ScanFragment extends Fragment {
                     bundle.putString("parentComicIssueNumber", result.getParentComicIssueNumber());
                     bundle.putStringArrayList("comicVariants", (ArrayList<String>) result.getVariants());
 
+                    LoadingOverlayHelper.hideLoading(requireView());
                     // Navigate to ScanDetailFragment
                     requireActivity().runOnUiThread(() -> {
                         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
@@ -339,6 +342,7 @@ public class ScanFragment extends Fragment {
                 @Override
                 public void onFailure(String errorMessage) {
                     requireActivity().runOnUiThread(() -> {
+                        LoadingOverlayHelper.hideLoading(requireView());
                         ToastMsg.show(requireContext(), errorMessage);
                     });
                 }

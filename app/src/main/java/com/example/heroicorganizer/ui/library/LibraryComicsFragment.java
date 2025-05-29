@@ -1,21 +1,14 @@
 package com.example.heroicorganizer.ui.library;
 
-import android.animation.TimeInterpolator;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.transition.TransitionInflater;
-import android.util.Log;
 import android.view.*;
-import android.view.animation.Animation;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
@@ -29,20 +22,27 @@ import com.example.heroicorganizer.model.User;
 import com.example.heroicorganizer.presenter.LibraryComicPresenter;
 import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
-import com.example.heroicorganizer.ui.comic.ViewComicFragment;
+import com.example.heroicorganizer.ui.sorting.SortingFragment;
 import com.example.heroicorganizer.utils.LoadingOverlayHelper;
 import com.example.heroicorganizer.utils.ModalBox;
 import com.example.heroicorganizer.utils.ViewStatus;
 import com.google.firebase.auth.FirebaseAuth;
-import kotlinx.coroutines.Delay;
 
+import java.util.ArrayList;
+
+
+import java.util.Collections;
 import java.util.List;
 
-public class LibraryComicsFragment extends Fragment {
+
+public class LibraryComicsFragment extends Fragment implements SortingFragment.SortingCallback {
+
+private List<LibraryComic> currentComics = new ArrayList<>();
 
     public LibraryComicsFragment() {
     }
     private View loadingOverlay;
+    private List<LibraryComic> comicsList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,6 +128,12 @@ public class LibraryComicsFragment extends Fragment {
                     .show();
 
             return true;
+
+        } else if (item.getItemId() == R.id.sortComics) {
+            SortingFragment sortingDialog = new SortingFragment();
+            sortingDialog.setCallback(this);
+            sortingDialog.show(getParentFragmentManager(), "SortingDialog");
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -176,6 +182,8 @@ public class LibraryComicsFragment extends Fragment {
                 // Removes Loading...
                 comicsContainer.removeAllViews();
                 LoadingOverlayHelper.hideLoading(requireView());
+
+                currentComics = comics;
 
                 if (!comics.isEmpty()) {
                     for (LibraryComic comic : comics) {
@@ -246,4 +254,81 @@ public class LibraryComicsFragment extends Fragment {
         });
 
     }
+    private void reloadComics(List<LibraryComic> comics) {
+        GridLayout comicsContainer = requireView().findViewById(R.id.comicsContainer);
+        comicsContainer.removeAllViews();
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+
+        for (LibraryComic comic : comics) {
+            View comicCard = inflater.inflate(R.layout.item_card, comicsContainer, false);
+
+            ImageView coverImage = comicCard.findViewById(R.id.itemCoverImage);
+            TextView comicTitle = comicCard.findViewById(R.id.itemTitle);
+            TextView comicSubtitle = comicCard.findViewById(R.id.itemSubtitle);
+
+            comicTitle.setText(comic.getTitle());
+            comicSubtitle.setText(comic.getDeck());
+
+            if (comic.getCoverImage() != null && !comic.getCoverImage().isEmpty()) {
+                Glide.with(requireContext())
+                        .load(comic.getCoverImage())
+                        .fitCenter()
+                        .into(coverImage);
+            } else {
+                coverImage.setVisibility(View.GONE);
+            }
+
+            coverImage.setTransitionName("comicCover_" + comic.getId());
+
+            comicCard.setOnClickListener(v -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("id", comic.getId());
+                bundle.putString("title", comic.getTitle());
+                bundle.putString("deck", comic.getDeck());
+                bundle.putString("description", comic.getDescription());
+                bundle.putString("image", comic.getCoverImage());
+                bundle.putString("publishers", comic.getPublisher());
+                bundle.putString("issueNumber", comic.getIssue());
+
+                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+
+                androidx.navigation.fragment.FragmentNavigator.Extras extras =
+                        new androidx.navigation.fragment.FragmentNavigator.Extras.Builder()
+                                .addSharedElement(coverImage, "comicCover_" + comic.getId())
+                                .build();
+
+                navController.navigate(R.id.nav_library_comic_view_fade, bundle, null, extras);
+            });
+
+            comicsContainer.addView(comicCard);
+        }
+    }
+
+
+    public void onSortSelected(String sortOption) {
+        if (comicsList == null || comicsList.isEmpty()) return;
+
+        switch (sortOption) {
+            case "title":
+                Collections.sort(comicsList, (a, b) -> safeString(a.getTitle()).compareToIgnoreCase(safeString(b.getTitle())));
+                break;
+            case "author":
+                Collections.sort(comicsList, (a, b) -> safeString(a.getAuthor()).compareToIgnoreCase(safeString(b.getAuthor())));
+                break;
+            case "cover":
+                Collections.sort(comicsList, (a, b) -> safeString(a.getCoverArtist()).compareToIgnoreCase(safeString(b.getCoverArtist())));
+                break;
+            case "date":
+                Collections.sort(comicsList, (a, b) -> safeString(a.getPublishedDate()).compareToIgnoreCase(safeString(b.getPublishedDate())));
+                break;
+        }
+
+        reloadComics(currentComics);
+        ToastMsg.show(requireContext(), "Sorted by: " + sortOption);
+    }
+
+    private String safeString(String value) {
+        return value != null ? value : "";
+    }
+
 }

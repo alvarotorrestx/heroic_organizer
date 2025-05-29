@@ -1,5 +1,6 @@
 package com.example.heroicorganizer.ui.comic;
 
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -25,6 +27,12 @@ import com.example.heroicorganizer.presenter.LibraryComicPresenter;
 import com.example.heroicorganizer.presenter.LibraryFolderPresenter;
 import com.example.heroicorganizer.presenter.RecentComicsPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
+
+import com.example.heroicorganizer.ui.custom.MaskedLinearLayout;
+import com.example.heroicorganizer.ui.home.RecentComicsData;
+import com.example.heroicorganizer.ui.library.LibraryFragment;
+import com.example.heroicorganizer.ui.search.SearchFragment;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
@@ -43,6 +51,16 @@ public class ComicDetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ///
+        MaskedLinearLayout comicInfoTab = view.findViewById(R.id.comicDetailTab);
+        Drawable bg = ContextCompat.getDrawable(requireContext(), R.drawable.info_tabline_bg);
+        try {
+            comicInfoTab.setMaskedBackground(bg);
+        } catch (Exception e) {
+            Log.e("MaskedLayout", "Failed to set mask background", e);
+        }
+        ///
 
         User currentUser = new User();
         currentUser.setUid(FirebaseAuth.getInstance().getUid());
