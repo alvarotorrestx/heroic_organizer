@@ -29,9 +29,6 @@ import com.example.heroicorganizer.presenter.RecentComicsPresenter;
 import com.example.heroicorganizer.ui.ToastMsg;
 
 import com.example.heroicorganizer.ui.custom.MaskedLinearLayout;
-import com.example.heroicorganizer.ui.home.RecentComicsData;
-import com.example.heroicorganizer.ui.library.LibraryFragment;
-import com.example.heroicorganizer.ui.search.SearchFragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 

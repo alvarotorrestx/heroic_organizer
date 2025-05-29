@@ -301,7 +301,7 @@ public class ScanFragment extends Fragment {
 
     private void scanImage(Uri uri) {
         // Temporary loading message on scanning image
-        loadingOverlay = LoadingOverlayHelper.showLoading(requireView());
+//        loadingOverlay = LoadingOverlayHelper.showLoading(requireView());
         // TODO: If no image is detected, do not return an image from vector api
         cameraControls.removeAllViews();
         cameraControls.addView(ViewStatus.SetStatus(requireContext(), "Loading..."));
