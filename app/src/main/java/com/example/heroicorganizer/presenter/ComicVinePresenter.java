@@ -25,7 +25,7 @@ public class ComicVinePresenter {
         }
 
         String url = "https://comicvine.gamespot.com/api/search/?api_key=" + apiKey +
-                "&query=" + query + "&format=json";
+                "&query=" + query + "&format=json&limit=25";
 //        + "&limit=10" - Can add to url to limit results from response
 
         OkHttpClient client = new OkHttpClient();
@@ -54,7 +54,7 @@ public class ComicVinePresenter {
                 List<ComicVine.Result> filteredCharacters = new ArrayList<>();
                 for (ComicVine.Result result : apiResponse.results) {
                     String publisher = result.publisher != null ? result.publisher.name.toLowerCase() : "";
-                    if ((publisher.contains("marvel") || publisher.contains("dc")) && "character".equals(result.resource_type)) {
+                    if ((publisher.contains("marvel") || publisher.contains("dc"))) {
                         filteredCharacters.add(result);
                     }
                 }
